@@ -1,0 +1,324 @@
+:root {
+  --bg: #0c1117;
+  --panel: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --accent: #58a6ff;
+  --ok: #3fb950;
+  --warn: #d29922;
+  --danger: #f85149;
+  font-family: "DM Sans", system-ui, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 0 1.25rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+nav a {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+}
+
+nav a.active {
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem;
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+/* Chỉ video dùng nền đen (letterbox). Canvas overlay phải transparent để thấy khung hình bên dưới. */
+video {
+  max-width: 100%;
+  border-radius: 8px;
+  background: #000;
+  display: block;
+}
+
+canvas {
+  max-width: 100%;
+  border-radius: 8px;
+  background: transparent;
+}
+
+/* Trang Live — layout cân đối */
+.live-page {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.live-lead {
+  margin: 0.35rem 0 1.25rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.live-shell {
+  padding: 0;
+  overflow: hidden;
+}
+
+.live-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+  align-items: stretch;
+  min-height: 320px;
+}
+
+@media (max-width: 880px) {
+  .live-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.live-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0e14;
+  padding: 1rem 1.1rem;
+  min-height: 300px;
+}
+
+.live-stage-inner {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  line-height: 0;
+}
+
+.live-video {
+  width: 100%;
+  height: auto;
+  max-height: min(68vh, 540px);
+  object-fit: contain;
+  vertical-align: top;
+}
+
+.live-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.live-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem 1.35rem;
+  border-left: 1px solid var(--border);
+  background: rgba(22, 27, 34, 0.65);
+}
+
+@media (max-width: 880px) {
+  .live-aside {
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+}
+
+.live-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.live-status.on {
+  color: var(--ok);
+}
+
+.live-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.live-status.on .live-status-dot {
+  background: var(--ok);
+  box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.25);
+}
+
+.live-session {
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  word-break: break-all;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.live-results {
+  margin-top: 0.25rem;
+}
+
+.live-result-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+}
+
+.live-result-row:last-child {
+  border-bottom: none;
+}
+
+.live-result-name {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.live-result-meta {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.form-grid {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 420px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+input,
+select,
+button {
+  font: inherit;
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+button {
+  cursor: pointer;
+  background: #21262d;
+}
+
+button.primary {
+  background: var(--accent);
+  color: #0c1117;
+  border-color: transparent;
+  font-weight: 600;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge.known {
+  background: rgba(63, 185, 80, 0.2);
+  color: var(--ok);
+}
+
+.badge.unknown {
+  background: rgba(248, 81, 73, 0.15);
+  color: var(--danger);
+}
+
+.badge.uncertain {
+  background: rgba(210, 153, 34, 0.2);
+  color: var(--warn);
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.85rem;
+}

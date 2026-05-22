@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+node_modules/
+dist/
+faiss_indexes/*.index
+faiss_indexes/*.json
+!faiss_indexes/.gitkeep
