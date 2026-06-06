@@ -83,11 +83,21 @@ def create_app() -> FastAPI:
                 if data.get("type") != "frame":
                     await websocket.send_json({"error": "expected type=frame", "faces": []})
                     continue
+                import time
+                t0 = time.perf_counter()
                 b64 = data.get("image", "")
                 pipeline: FacePipeline = websocket.app.state.face_pipeline
                 faiss_index: FaissFaceIndex = websocket.app.state.faiss_index
+                
+                t_decode_start = time.perf_counter()
                 img = pipeline.decode_image_b64(b64)
+                t_decode_end = time.perf_counter()
+                
+                t_detect_start = time.perf_counter()
                 faces = await pipeline.process_frame(img)
+                t_detect_end = time.perf_counter()
+                
+                t_match_start = time.perf_counter()
                 frame_shape = faces[0]["frame_shape"] if faces else list(img.shape[:2])
                 out_faces: list[dict] = []
                 async with async_session_maker() as db:
@@ -133,7 +143,17 @@ def create_app() -> FastAPI:
                             item["similarity"] = m.get("similarity")
                         out_faces.append(item)
                     await db.commit()
+                t_match_end = time.perf_counter()
+                
                 await websocket.send_json({"faces": out_faces, "frame_shape": frame_shape})
+                t_total = time.perf_counter() - t0
+                print(
+                    f"[WS DIAG] Decode: {(t_decode_end - t_decode_start)*1000:.1f}ms | "
+                    f"Detect: {(t_detect_end - t_detect_start)*1000:.1f}ms | "
+                    f"Match/DB: {(t_match_end - t_match_start)*1000:.1f}ms | "
+                    f"Total: {t_total*1000:.1f}ms",
+                    flush=True
+                )
         except WebSocketDisconnect:
             return
 

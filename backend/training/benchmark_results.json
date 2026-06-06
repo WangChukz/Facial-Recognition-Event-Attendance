@@ -1,0 +1,34 @@
+[
+    {
+        "name": "Luồng 1: ArcFace Gốc + Cosine",
+        "backbone": "ArcFace Gốc (ResNet-50)",
+        "head": "COSINE",
+        "accuracy": "100.00%",
+        "latency": "58.432 ms",
+        "f1_score": "100.00%"
+    },
+    {
+        "name": "Luồng 2: ArcFace Gốc + FAISS",
+        "backbone": "ArcFace Gốc (ResNet-50)",
+        "head": "FAISS",
+        "accuracy": "100.00%",
+        "latency": "58.449 ms",
+        "f1_score": "100.00%"
+    },
+    {
+        "name": "Luồng 3: ArcFace Gốc + HNSW",
+        "backbone": "ArcFace Gốc (ResNet-50)",
+        "head": "HNSW",
+        "accuracy": "100.00%",
+        "latency": "58.530 ms",
+        "f1_score": "100.00%"
+    },
+    {
+        "name": "Luồng 4: ArcFace Gốc + SVM",
+        "backbone": "ArcFace Gốc (ResNet-50)",
+        "head": "SVM",
+        "accuracy": "100.00%",
+        "latency": "58.859 ms",
+        "f1_score": "100.00%"
+    }
+]

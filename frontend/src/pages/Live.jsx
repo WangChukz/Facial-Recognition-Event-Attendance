@@ -129,7 +129,7 @@ export default function Live() {
   useEffect(() => {
     if (!running) {
       wsRef.current?.close();
-      if (capRef.current) clearInterval(capRef.current);
+      if (capRef.current) clearTimeout(capRef.current);
       clearOverlay();
       return;
     }
@@ -139,22 +139,36 @@ export default function Live() {
     params.set("auto_attendance", "true");
     const ws = new WebSocket(wsUrl(`/api/ws/live?${params.toString()}`));
     wsRef.current = ws;
+
+    let active = true;
+
     ws.onopen = () => {
-      capRef.current = setInterval(() => sendFrame(ws), 250);
+      if (active) {
+        sendFrame(ws);
+      }
     };
     ws.onmessage = (ev) => {
+      if (!active) return;
       const data = JSON.parse(ev.data);
       lastFrameRef.current = data;
       setLast(data);
       requestAnimationFrame(() => drawOverlay(data));
+
+      // Gửi khung hình tiếp theo chỉ sau khi backend đã xử lý xong khung hình trước
+      capRef.current = setTimeout(() => {
+        if (active && ws.readyState === WebSocket.OPEN) {
+          sendFrame(ws);
+        }
+      }, 80); // Khoảng nghỉ 80ms giúp CPU bớt tải và tránh dồn ứ hàng đợi
     };
     ws.onerror = () => setErr("WebSocket lỗi");
     ws.onclose = () => {
-      if (capRef.current) clearInterval(capRef.current);
+      if (capRef.current) clearTimeout(capRef.current);
     };
     return () => {
+      active = false;
       ws.close();
-      if (capRef.current) clearInterval(capRef.current);
+      if (capRef.current) clearTimeout(capRef.current);
     };
   }, [running, eventId, sessionId, drawOverlay, clearOverlay]);
 

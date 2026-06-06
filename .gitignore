@@ -1,9 +1,31 @@
-.venv/
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.pyc
-.env
-node_modules/
-dist/
-faiss_indexes/*.index
-faiss_indexes/*.json
-!faiss_indexes/.gitkeep
+*.pyo
+*.pyd
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+backend/.venv/
+
+# Large Model files (ONNX, Pickle, NPZ, index)
+*.onnx
+*.onnx.data
+*.pkl
+*.npz
+*.index
+
+# Models directories
+/ai_models/
+ai_models/
+backend/app/models/
+
+# IDE files
+.vscode/
+.idea/
+
+# Database files
+/faiss_indexes/
+faiss_indexes/
