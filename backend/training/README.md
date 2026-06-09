@@ -69,3 +69,34 @@ Trong cuốn báo cáo bảo vệ đề tài, các bạn nên đưa các chỉ s
 1.  **Độ chính xác tập kiểm thử độc lập (Test set accuracy)**: Chứng minh khả năng nhận diện chính xác các bức ảnh chưa từng thấy trong quá trình học.
 2.  **Chỉ số F1-Score & Precision**: Thể hiện hiệu năng cân bằng trên tất cả 40 sinh viên.
 3.  **Tốc độ suy luận (Latency)**: Chứng minh rằng bộ phân lớp SVM xử lý chỉ mất **$< 1ms$** trên CPU, giúp hệ thống điểm danh siêu tốc tại các cổng ra vào.
+
+---
+
+## 📌 4. Tái tạo báo cáo theo kịch bản 5 case
+
+Các bảng trong kịch bản báo cáo được tổng hợp tại:
+
+- `training/FINAL_SCENARIO_REPORT.md`
+- `training/final_scenario_results.json`
+
+Chạy lại toàn bộ phần trích xuất embedding thật và sinh cache:
+
+```powershell
+cd c:\AI_event\AI_Project_2526
+$env:INSIGHTFACE_HOME='C:\AI_event\AI_Project_2526\ai_models'
+backend\.venv\Scripts\python.exe backend\training\evaluate_all_8_pipelines.py
+```
+
+Chạy lại bảng ArcFace pretrained + 4 classifier heads từ artifact SVM đã augmentation:
+
+```powershell
+backend\.venv\Scripts\python.exe backend\training\evaluate_comparison.py
+```
+
+Sinh báo cáo cuối theo đúng 5 case:
+
+```powershell
+backend\.venv\Scripts\python.exe backend\training\generate_final_scenario_report.py
+```
+
+Lưu ý: workspace hiện chưa có tập ảnh người lạ thu thập từ mạng; báo cáo hiện dùng `dataset_fake/real_embeddings.npy` làm proxy cho unknown rejection và ghi rõ nguồn trong phần Case 4.

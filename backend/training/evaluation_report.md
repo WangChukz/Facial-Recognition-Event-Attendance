@@ -1,17 +1,17 @@
 # Báo cáo Đánh giá So sánh Hiệu năng Đa Phương pháp (Real-Only Same-Domain)
 
 - **Tổng số sinh viên**: 39
-- **Số lượng mẫu huấn luyện (Train set)**: 141 ảnh
-- **Số lượng mẫu kiểm thử (Test set)**: 36 ảnh
+- **Số lượng mẫu huấn luyện (Train set)**: 200 ảnh
+- **Số lượng mẫu kiểm thử (Test set)**: 50 ảnh
 
 ## Bảng so sánh kết quả thực nghiệm trên Classifier Heads (độ trễ không tính Backbone)
 
 | Phương pháp nhận diện | Số ảnh kiểm thử | Dự đoán đúng | Độ chính xác (Accuracy %) | Tốc độ xử lý Head (ms) |
 | :--- | :---: | :---: | :---: | :---: |
-| **1. Cosine Similarity Match** | 36 | 36 | 100.00% | 0.0323 ms |
-| **2. FAISS L2 Flat Indexing** | 36 | 36 | 100.00% | 0.0495 ms |
-| **3. HNSW Flat Indexing** | 36 | 36 | 100.00% | 0.1300 ms |
-| **4. SVM Classifier Head (RBF)** | 36 | 36 | 100.00% | 0.4586 ms |
+| **1. Cosine Similarity Match** | 50 | 50 | 100.00% | 0.0089 ms |
+| **2. FAISS L2 Flat Indexing** | 50 | 50 | 100.00% | 0.0250 ms |
+| **3. HNSW Flat Indexing** | 50 | 50 | 100.00% | 0.0527 ms |
+| **4. SVM Classifier Head (RBF)** | 50 | 50 | 100.00% | 0.2075 ms |
 
 ### Nhận xét & Đánh giá Khoa học:
 

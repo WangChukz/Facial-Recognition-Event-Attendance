@@ -1,0 +1,431 @@
+{
+  "total": 85,
+  "embedding_dim": 512,
+  "samples": [
+    {
+      "id": 0,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Anh Thơ\\53.jpg",
+      "person": "ca sĩ Anh Thơ"
+    },
+    {
+      "id": 1,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Anh Thơ\\57.jpg",
+      "person": "ca sĩ Anh Thơ"
+    },
+    {
+      "id": 2,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Anh Thơ\\64.jpg",
+      "person": "ca sĩ Anh Thơ"
+    },
+    {
+      "id": 3,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Anh Thơ\\69.jpg",
+      "person": "ca sĩ Anh Thơ"
+    },
+    {
+      "id": 4,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bằng Kiều\\100.jpg",
+      "person": "ca sĩ Bằng Kiều"
+    },
+    {
+      "id": 5,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bằng Kiều\\83.jpg",
+      "person": "ca sĩ Bằng Kiều"
+    },
+    {
+      "id": 6,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bằng Kiều\\89.jpg",
+      "person": "ca sĩ Bằng Kiều"
+    },
+    {
+      "id": 7,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bằng Kiều\\90.jpg",
+      "person": "ca sĩ Bằng Kiều"
+    },
+    {
+      "id": 8,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bằng Kiều\\93.jpg",
+      "person": "ca sĩ Bằng Kiều"
+    },
+    {
+      "id": 9,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bảo Anh\\139.jpg",
+      "person": "ca sĩ Bảo Anh"
+    },
+    {
+      "id": 10,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bảo Anh\\147.jpg",
+      "person": "ca sĩ Bảo Anh"
+    },
+    {
+      "id": 11,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bảo Anh\\148.jpg",
+      "person": "ca sĩ Bảo Anh"
+    },
+    {
+      "id": 12,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bảo Thy\\163.jpg",
+      "person": "ca sĩ Bảo Thy"
+    },
+    {
+      "id": 13,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bảo Thy\\164.jpg",
+      "person": "ca sĩ Bảo Thy"
+    },
+    {
+      "id": 14,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bảo Thy\\165.jpg",
+      "person": "ca sĩ Bảo Thy"
+    },
+    {
+      "id": 15,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bigdaddy\\202.jpg",
+      "person": "ca sĩ Bigdaddy"
+    },
+    {
+      "id": 16,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bigdaddy\\203.jpg",
+      "person": "ca sĩ Bigdaddy"
+    },
+    {
+      "id": 17,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bigdaddy\\204.jpg",
+      "person": "ca sĩ Bigdaddy"
+    },
+    {
+      "id": 18,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bigdaddy\\207.jpg",
+      "person": "ca sĩ Bigdaddy"
+    },
+    {
+      "id": 19,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bích Phương\\261.jpg",
+      "person": "ca sĩ Bích Phương"
+    },
+    {
+      "id": 20,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bích Phương\\263.jpg",
+      "person": "ca sĩ Bích Phương"
+    },
+    {
+      "id": 21,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bích Phương\\264.jpg",
+      "person": "ca sĩ Bích Phương"
+    },
+    {
+      "id": 22,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bích Phương\\265.jpg",
+      "person": "ca sĩ Bích Phương"
+    },
+    {
+      "id": 23,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bùi Anh Tuấn\\309.jpg",
+      "person": "ca sĩ Bùi Anh Tuấn"
+    },
+    {
+      "id": 24,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Bùi Anh Tuấn\\312.jpg",
+      "person": "ca sĩ Bùi Anh Tuấn"
+    },
+    {
+      "id": 25,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Cao Thái Sơn\\318.jpg",
+      "person": "ca sĩ Cao Thái Sơn"
+    },
+    {
+      "id": 26,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Cao Thái Sơn\\319.jpg",
+      "person": "ca sĩ Cao Thái Sơn"
+    },
+    {
+      "id": 27,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Cao Thái Sơn\\336.jpg",
+      "person": "ca sĩ Cao Thái Sơn"
+    },
+    {
+      "id": 28,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Cao Thái Sơn\\337.jpg",
+      "person": "ca sĩ Cao Thái Sơn"
+    },
+    {
+      "id": 29,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Cao Thái Sơn\\345.jpg",
+      "person": "ca sĩ Cao Thái Sơn"
+    },
+    {
+      "id": 30,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Cát Tường\\359.jpg",
+      "person": "ca sĩ Cát Tường"
+    },
+    {
+      "id": 31,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Cát Tường\\381.jpg",
+      "person": "ca sĩ Cát Tường"
+    },
+    {
+      "id": 32,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Cát Tường\\383.jpg",
+      "person": "ca sĩ Cát Tường"
+    },
+    {
+      "id": 33,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Cẩm Ly\\416.jpg",
+      "person": "ca sĩ Cẩm Ly"
+    },
+    {
+      "id": 34,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Cẩm Ly\\417.jpg",
+      "person": "ca sĩ Cẩm Ly"
+    },
+    {
+      "id": 35,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Cẩm Ly\\418.jpg",
+      "person": "ca sĩ Cẩm Ly"
+    },
+    {
+      "id": 36,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Chi Dân\\466.jpg",
+      "person": "ca sĩ Chi Dân"
+    },
+    {
+      "id": 37,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Chi Dân\\467.jpg",
+      "person": "ca sĩ Chi Dân"
+    },
+    {
+      "id": 38,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Chi Dân\\468.jpg",
+      "person": "ca sĩ Chi Dân"
+    },
+    {
+      "id": 39,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Chi Dân\\480.jpg",
+      "person": "ca sĩ Chi Dân"
+    },
+    {
+      "id": 40,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Chi Dân\\481.jpg",
+      "person": "ca sĩ Chi Dân"
+    },
+    {
+      "id": 41,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Dịch Dương Thiên Tỉ\\494.jpg",
+      "person": "ca sĩ Dịch Dương Thiên Tỉ"
+    },
+    {
+      "id": 42,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Dịch Dương Thiên Tỉ\\534.jpg",
+      "person": "ca sĩ Dịch Dương Thiên Tỉ"
+    },
+    {
+      "id": 43,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Doãn Hiếu\\564.jpg",
+      "person": "ca sĩ Doãn Hiếu"
+    },
+    {
+      "id": 44,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Don Nguyễn\\590.jpg",
+      "person": "ca sĩ Don Nguyễn"
+    },
+    {
+      "id": 45,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Don Nguyễn\\595.jpg",
+      "person": "ca sĩ Don Nguyễn"
+    },
+    {
+      "id": 46,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Don Nguyễn\\598.jpg",
+      "person": "ca sĩ Don Nguyễn"
+    },
+    {
+      "id": 47,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Dương Triệu Vũ\\634.jpg",
+      "person": "ca sĩ Dương Triệu Vũ"
+    },
+    {
+      "id": 48,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Dương Triệu Vũ\\635.jpg",
+      "person": "ca sĩ Dương Triệu Vũ"
+    },
+    {
+      "id": 49,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Dương Triệu Vũ\\636.jpg",
+      "person": "ca sĩ Dương Triệu Vũ"
+    },
+    {
+      "id": 50,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Dương Triệu Vũ\\637.jpg",
+      "person": "ca sĩ Dương Triệu Vũ"
+    },
+    {
+      "id": 51,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Dương Triệu Vũ\\638.jpg",
+      "person": "ca sĩ Dương Triệu Vũ"
+    },
+    {
+      "id": 52,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Emily\\666.jpg",
+      "person": "ca sĩ Emily"
+    },
+    {
+      "id": 53,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Emily\\668.jpg",
+      "person": "ca sĩ Emily"
+    },
+    {
+      "id": 54,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Emily\\669.jpg",
+      "person": "ca sĩ Emily"
+    },
+    {
+      "id": 55,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Erik\\711.jpg",
+      "person": "ca sĩ Erik"
+    },
+    {
+      "id": 56,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Erik\\713.jpg",
+      "person": "ca sĩ Erik"
+    },
+    {
+      "id": 57,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Erik\\714.jpg",
+      "person": "ca sĩ Erik"
+    },
+    {
+      "id": 58,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Erik\\717.jpg",
+      "person": "ca sĩ Erik"
+    },
+    {
+      "id": 59,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Erik\\721.jpg",
+      "person": "ca sĩ Erik"
+    },
+    {
+      "id": 60,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Fanny Trần\\744.jpg",
+      "person": "ca sĩ Fanny Trần"
+    },
+    {
+      "id": 61,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Fanny Trần\\745.jpg",
+      "person": "ca sĩ Fanny Trần"
+    },
+    {
+      "id": 62,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Fanny Trần\\747.jpg",
+      "person": "ca sĩ Fanny Trần"
+    },
+    {
+      "id": 63,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Fanny Trần\\748.jpg",
+      "person": "ca sĩ Fanny Trần"
+    },
+    {
+      "id": 64,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Gin Tuấn Kiệt\\771.jpg",
+      "person": "ca sĩ Gin Tuấn Kiệt"
+    },
+    {
+      "id": 65,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Gin Tuấn Kiệt\\772.jpg",
+      "person": "ca sĩ Gin Tuấn Kiệt"
+    },
+    {
+      "id": 66,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Hari Won\\808.jpg",
+      "person": "ca sĩ Hari Won"
+    },
+    {
+      "id": 67,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đan Trường\\4040.jpg",
+      "person": "ca sĩ Đan Trường"
+    },
+    {
+      "id": 68,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đàm Vĩnh Hưng\\4108.jpg",
+      "person": "ca sĩ Đàm Vĩnh Hưng"
+    },
+    {
+      "id": 69,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đàm Vĩnh Hưng\\4109.jpg",
+      "person": "ca sĩ Đàm Vĩnh Hưng"
+    },
+    {
+      "id": 70,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đàm Vĩnh Hưng\\4112.jpg",
+      "person": "ca sĩ Đàm Vĩnh Hưng"
+    },
+    {
+      "id": 71,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đàm Vĩnh Hưng\\4114.jpg",
+      "person": "ca sĩ Đàm Vĩnh Hưng"
+    },
+    {
+      "id": 72,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đàm Vĩnh Hưng\\4115.jpg",
+      "person": "ca sĩ Đàm Vĩnh Hưng"
+    },
+    {
+      "id": 73,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đăng Khôi\\4129.jpg",
+      "person": "ca sĩ Đăng Khôi"
+    },
+    {
+      "id": 74,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đăng Khôi\\4130.jpg",
+      "person": "ca sĩ Đăng Khôi"
+    },
+    {
+      "id": 75,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đăng Khôi\\4131.jpg",
+      "person": "ca sĩ Đăng Khôi"
+    },
+    {
+      "id": 76,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đăng Khôi\\4132.jpg",
+      "person": "ca sĩ Đăng Khôi"
+    },
+    {
+      "id": 77,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đinh Duy Chinh\\4159.jpg",
+      "person": "ca sĩ Đinh Duy Chinh"
+    },
+    {
+      "id": 78,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đinh Duy Chinh\\4160.jpg",
+      "person": "ca sĩ Đinh Duy Chinh"
+    },
+    {
+      "id": 79,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đinh Duy Chinh\\4162.jpg",
+      "person": "ca sĩ Đinh Duy Chinh"
+    },
+    {
+      "id": 80,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đinh Duy Chinh\\4163.jpg",
+      "person": "ca sĩ Đinh Duy Chinh"
+    },
+    {
+      "id": 81,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đông Nhi\\4183.jpg",
+      "person": "ca sĩ Đông Nhi"
+    },
+    {
+      "id": 82,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đông Nhi\\4184.jpg",
+      "person": "ca sĩ Đông Nhi"
+    },
+    {
+      "id": 83,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đông Nhi\\4187.jpg",
+      "person": "ca sĩ Đông Nhi"
+    },
+    {
+      "id": 84,
+      "image_path": "data_mạng\\data_mạng\\ca sĩ Đông Nhi\\4188.jpg",
+      "person": "ca sĩ Đông Nhi"
+    }
+  ]
+}

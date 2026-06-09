@@ -13,7 +13,7 @@ import numpy as np
 import onnxruntime as ort
 import faiss
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
 # Tự động thêm PYTHONPATH
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -256,10 +256,24 @@ def main():
     faiss.normalize_L2(X_test_orig)
     faiss.normalize_L2(X_train_ft)
     faiss.normalize_L2(X_test_ft)
+    cache_path = os.path.join(current_dir, "scenario_embeddings_cache.npz")
+    np.savez_compressed(
+        cache_path,
+        X_train_orig=X_train_orig,
+        y_train_orig=y_train_orig,
+        X_test_orig=X_test_orig,
+        y_test_orig=y_test_orig,
+        X_train_ft=X_train_ft,
+        y_train_ft=y_train_ft,
+        X_test_ft=X_test_ft,
+        y_test_ft=y_test_ft,
+    )
+    logger.info(f"Da luu cache embedding danh gia tai: {cache_path}")
     
     # ------------------ 3. THỰC THI CHẠY ĐỐI CHỨNG 8 LUỒNG ------------------
-    def run_evaluation(X_tr: np.ndarray, X_te: np.ndarray, y_tr: np.ndarray, y_te: np.ndarray, head_type: str) -> Tuple[float, float, float]:
+    def run_evaluation(X_tr: np.ndarray, X_te: np.ndarray, y_tr: np.ndarray, y_te: np.ndarray, head_type: str) -> Tuple[float, float, float, float, float, float]:
         t0 = time.perf_counter()
+        scores = []
         
         if head_type == "cosine":
             y_pred = []
@@ -267,11 +281,13 @@ def main():
                 similarities = np.dot(X_tr, test_emb)
                 best_match_idx = np.argmax(similarities)
                 y_pred.append(y_tr[best_match_idx])
+                scores.append(float(similarities[best_match_idx]))
         elif head_type == "faiss":
             index = faiss.IndexFlatIP(512)
             index.add(X_tr)
-            sims, ids = index.search(X_te, 1)
+            distances, ids = index.search(X_te, 1)
             y_pred = [y_tr[i] if i != -1 else -1 for i in ids.flatten()]
+            scores = [float(1.0 - (d / 2.0)) for d in distances.flatten()]
         elif head_type == "hnsw":
             index = faiss.IndexHNSWFlat(512, 32)
             index.hnsw.efConstruction = 200
@@ -279,16 +295,22 @@ def main():
             index.add(X_tr)
             sims, ids = index.search(X_te, 1)
             y_pred = [y_tr[i] if i != -1 else -1 for i in ids.flatten()]
+            scores = [float(s) for s in sims.flatten()]
         elif head_type == "svm":
             # SVC với probability=True để tương thích ngược
             clf = SVC(kernel='rbf', C=2.0, probability=True, random_state=42)
             clf.fit(X_tr, y_tr)
             y_pred = clf.predict(X_te)
+            probs = clf.predict_proba(X_te)
+            scores = [float(s) for s in np.max(probs, axis=1)]
             
         latency_ms = ((time.perf_counter() - t0) / len(X_te)) * 1000
         acc = accuracy_score(y_te, y_pred) * 100
+        precision = precision_score(y_te, y_pred, average='weighted', zero_division=0) * 100
+        recall = recall_score(y_te, y_pred, average='weighted', zero_division=0) * 100
         f1 = f1_score(y_te, y_pred, average='weighted', zero_division=0) * 100
-        return acc, latency_ms, f1
+        avg_score = float(np.mean(scores)) if scores else 0.0
+        return acc, precision, recall, f1, avg_score, latency_ms
 
     results = []
     configs = [
@@ -306,19 +328,25 @@ def main():
 
     for name, X_tr, X_te, y_tr, y_te, head, model_desc in configs:
         logger.info(f"Đang thực thi đánh giá {name}...")
-        acc, lat, f1 = run_evaluation(X_tr, X_te, y_tr, y_te, head)
+        acc, precision, recall, f1, avg_score, head_lat = run_evaluation(X_tr, X_te, y_tr, y_te, head)
         
         # Cộng thêm thời gian chạy mạng neuron (ResNet-50: 58.4ms, ResNet-18: 12.05ms)
         net_lat = 12.05 if "FT" in model_desc else 58.40
-        total_lat = lat + net_lat
+        total_lat = head_lat + net_lat
         
         results.append({
             "name": name,
             "backbone": model_desc,
             "head": head.upper(),
             "accuracy": f"{acc:.2f}%",
+            "precision": f"{precision:.2f}%",
+            "recall": f"{recall:.2f}%",
             "latency": f"{total_lat:.3f} ms",
-            "f1_score": f"{f1:.2f}%"
+            "head_latency": f"{head_lat:.4f} ms",
+            "f1_score": f"{f1:.2f}%",
+            "similarity_avg": f"{avg_score:.4f}",
+            "test_samples": int(len(y_te)),
+            "correct_predictions": int(round(acc * len(y_te) / 100))
         })
         
     # In bảng kết quả đối chứng thực tế

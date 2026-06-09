@@ -4,7 +4,7 @@
         "backbone": "ArcFace Gốc (ResNet-50)",
         "head": "COSINE",
         "accuracy": "100.00%",
-        "latency": "58.432 ms",
+        "latency": "58.409 ms",
         "f1_score": "100.00%"
     },
     {
@@ -12,7 +12,7 @@
         "backbone": "ArcFace Gốc (ResNet-50)",
         "head": "FAISS",
         "accuracy": "100.00%",
-        "latency": "58.449 ms",
+        "latency": "58.425 ms",
         "f1_score": "100.00%"
     },
     {
@@ -20,7 +20,7 @@
         "backbone": "ArcFace Gốc (ResNet-50)",
         "head": "HNSW",
         "accuracy": "100.00%",
-        "latency": "58.530 ms",
+        "latency": "58.453 ms",
         "f1_score": "100.00%"
     },
     {
@@ -28,7 +28,7 @@
         "backbone": "ArcFace Gốc (ResNet-50)",
         "head": "SVM",
         "accuracy": "100.00%",
-        "latency": "58.859 ms",
+        "latency": "58.608 ms",
         "f1_score": "100.00%"
     }
 ]

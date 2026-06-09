@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     det_size_height: int = 640
     recognition_threshold: float = 0.45
     unknown_threshold: float = 0.35
+    enrichment_threshold: float = 0.75
+    enrichment_max_ratio: float = 0.35
+    enrichment_max_embeddings_per_user: int = 20
+    enrichment_dedupe_seconds: int = 60
     dedupe_window_seconds: int = 120
     frame_process_workers: int = 2
     onnx_providers: str = "CUDAExecutionProvider,CPUExecutionProvider"

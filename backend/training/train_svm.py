@@ -111,13 +111,13 @@ def process_and_extract(data_dir: str, pipeline: FacePipeline, use_augment: bool
     meta_path = "c:/AI_event/dataset/dataset/metadata.xlsx"
     if not os.path.exists(meta_path):
         meta_path = os.path.join(os.path.dirname(data_dir), "metadata.xlsx")
-        
+
     meta_map = {}
     if os.path.exists(meta_path):
         try:
             df_meta = pd.read_excel(meta_path)
             logger.info(f"Đã nạp file metadata thành công từ: {meta_path} (Tìm thấy {len(df_meta)} sinh viên trong danh sách)")
-            
+
             def remove_vietnamese_diacritics(text):
                 if not isinstance(text, str):
                     return ""
@@ -134,7 +134,7 @@ def process_and_extract(data_dir: str, pipeline: FacePipeline, use_augment: bool
                 sclass = str(row.get('Lớp', '')).strip()
                 # Định dạng ngày sinh dạng chuỗi YYYY-MM-DD
                 dob = str(row.get('Ngày sinh', '')).strip().split()[0] if row.get('Ngày sinh') else ""
-                
+
                 clean_name = remove_vietnamese_diacritics(name).lower()
                 meta_map[clean_name] = {
                     "student_id": student_id,
@@ -149,7 +149,7 @@ def process_and_extract(data_dir: str, pipeline: FacePipeline, use_augment: bool
 
     # Lấy danh sách các thư mục sinh viên (loại bỏ file ẩn/hệ thống)
     student_folders = sorted([
-        f for f in os.listdir(data_dir) 
+        f for f in os.listdir(data_dir)
         if os.path.isdir(os.path.join(data_dir, f)) and not f.startswith(".")
     ])
 
@@ -164,7 +164,7 @@ def process_and_extract(data_dir: str, pipeline: FacePipeline, use_augment: bool
         clean_folder = folder.replace("_real", "").lower()
         if clean_folder == "phamtrungkien":
             clean_folder = "nguyentrungkien"
-            
+
         student_info = meta_map.get(clean_folder)
         if student_info:
             label_map[idx] = {
@@ -186,9 +186,9 @@ def process_and_extract(data_dir: str, pipeline: FacePipeline, use_augment: bool
                 "clean_name": folder.replace("_real", "")
             }
             logger.warning(f"[{idx + 1}/{len(student_folders)}] Không tìm thấy metadata cho folder: '{folder}'")
-            
+
         folder_path = os.path.join(data_dir, folder)
-        
+
         # Hỗ trợ nhiều định dạng ảnh phổ biến và duyệt đệ quy (hỗ trợ cả các folder con lồng nhau)
         valid_extensions = (".jpg", ".jpeg", ".png", ".webp", ".bmp")
         images = []
@@ -216,7 +216,7 @@ def process_and_extract(data_dir: str, pipeline: FacePipeline, use_augment: bool
             try:
                 faces = pipeline.process_frame_sync(img, use_adaptive_clahe=True)
                 v = pipeline.validate_single_face(faces, min_det=0.60, min_face_size=80)
-                
+
                 if not v["ok"]:
                     logger.warning(f"  -> Ảnh '{img_name}' không vượt qua cổng chất lượng: {v['reason']}")
                     continue
@@ -228,7 +228,7 @@ def process_and_extract(data_dir: str, pipeline: FacePipeline, use_augment: bool
 
                 # Cắt mặt để làm đầu vào cho Augmentations chuyên sâu
                 face_crop = crop_face_with_margin(img, face["bbox"], margin=0.25)
-                
+
                 # Bước 2: Tăng cường dữ liệu (nếu bật chế độ augment)
                 if use_augment:
                     # Các pipeline tăng cường có sẵn
@@ -238,13 +238,13 @@ def process_and_extract(data_dir: str, pipeline: FacePipeline, use_augment: bool
                         (COMBINED_AUG, 3), # Sinh 3 ảnh biến đổi kết hợp
                         (OCC_AUG, 2)       # Sinh 2 ảnh giả lập khẩu trang/kính
                     ]
-                    
+
                     for aug_pipe, count in configs:
                         for c_idx in range(count):
                             try:
                                 aug_res = aug_pipe(image=face_crop)
                                 aug_img = aug_res["image"]
-                                
+
                                 # Đưa ảnh tăng cường qua InsightFace để lấy vector mới
                                 aug_faces = pipeline.process_frame_sync(aug_img, use_adaptive_clahe=True)
                                 if aug_faces:
@@ -263,35 +263,35 @@ def process_and_extract(data_dir: str, pipeline: FacePipeline, use_augment: bool
 
 def main():
     args = parse_args()
-    
+
     logger.info("=== HỆ THỐNG HUẤN LUYỆN SVM CHO SINH VIÊN HỌC VIỆN NGÂN HÀNG ===")
     logger.info(f"Đường dẫn dataset: {args.data_dir}")
     logger.info(f"Có tăng cường ảnh (Augmentation): {args.augment}")
-    
+
     # Khởi tạo Face Pipeline của dự án
     logger.info("Đang khởi tạo mô hình trích xuất đặc trưng InsightFace ArcFace...")
     pipeline = FacePipeline()
-    
+
     t_start = time.time()
-    
+
     # Thực hiện tiền xử lý & trích xuất vector
     try:
         X, y, label_map = process_and_extract(args.data_dir, pipeline, args.augment)
     except FileNotFoundError:
         sys.exit(1)
-        
+
     if len(X) == 0:
         logger.error("Không trích xuất được bất kỳ khuôn mặt hợp lệ nào từ dataset. Vui lòng kiểm tra lại chất lượng ảnh đầu vào.")
         sys.exit(1)
-        
+
     logger.info(f"Quá trình trích xuất hoàn tất! Tổng cộng thu về: {X.shape[0]} vector đặc trưng (512 chiều).")
-    
+
     # Chuẩn hóa L2 cho tất cả các vector đặc trưng để đưa về mặt cầu đơn vị
     import faiss
     X_norm = np.array(X, dtype=np.float32)
     faiss.normalize_L2(X_norm)
     X = X_norm
-    
+
     # Đảm bảo mỗi sinh viên có ít nhất 2 mẫu (tránh crash khi train_test_split với stratify)
     unique_labels, counts = np.unique(y, return_counts=True)
     for label, count in zip(unique_labels, counts):
@@ -301,57 +301,66 @@ def main():
             for idx_to_dup in indices:
                 X = np.vstack([X, X[idx_to_dup]])
                 y = np.append(y, label)
-    
+
     # Phân chia dữ liệu train/test
+    # Đảm bảo test_size đủ lớn để chứa ít nhất 1 mẫu/lớp (tránh lỗi với dataset nhỏ)
+    n_classes = len(np.unique(y))
+    n_samples = len(y)
+    min_test_size = n_classes  # ít nhất 1 mẫu/lớp trong test set
+    actual_test_size = max(int(n_samples * args.test_size), min_test_size)
+    # Không vượt quá 50% tổng mẫu
+    actual_test_size = min(actual_test_size, n_samples // 2)
+    if actual_test_size != int(n_samples * args.test_size):
+        logger.warning(f"test_size tự động điều chỉnh từ {int(n_samples * args.test_size)} → {actual_test_size} mẫu (cần >= n_classes={n_classes})")
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, 
-        test_size=args.test_size, 
-        random_state=42, 
+        X, y,
+        test_size=actual_test_size,
+        random_state=42,
         stratify=y
     )
     logger.info(f"Đã phân chia tập dữ liệu: Train = {X_train.shape[0]} mẫu, Test = {X_test.shape[0]} mẫu.")
-    
+
     # Huấn luyện bộ phân lớp SVM
     logger.info("Đang cấu hình và huấn luyện mô hình SVM Classifier (Kernel RBF, Probability=True)...")
     # C=2.0 tăng độ phạt lỗi để phân tách sinh viên tốt hơn, probability=True để xuất ra xác suất %
     svm_model = SVC(kernel='rbf', C=2.0, gamma='scale', probability=True, random_state=42)
-    
+
     svm_start = time.time()
     svm_model.fit(X_train, y_train)
     logger.info(f"Đã huấn luyện xong SVM trong {time.time() - svm_start:.2f} giây!")
-    
+
     # Đánh giá hiệu năng mô hình
     y_pred = svm_model.predict(X_test)
     accuracy = np.mean(y_pred == y_test)
-    
+
     logger.info("\n" + "="*50)
     logger.info(f"ĐỘ CHÍNH XÁC TẬP KIỂM THỬ (TEST SET ACCURACY): {accuracy * 100:.2f}%")
     logger.info("="*50 + "\n")
-    
+
     # In báo cáo phân lớp chi tiết (chỉ cho các lớp thực tế xuất hiện trong dữ liệu)
     present_classes = sorted(list(set(y)))
     target_names = [
-        label_map[c]["name"] if isinstance(label_map[c], dict) else str(label_map[c]) 
+        label_map[c]["name"] if isinstance(label_map[c], dict) else str(label_map[c])
         for c in present_classes
     ]
     logger.info("BÁO CÁO PHÂN LỚP CHI TIẾT (CLASSIFICATION REPORT):")
     print(classification_report(y_test, y_pred, labels=present_classes, target_names=target_names))
-    
+
     # Lưu Model ra file .pkl
     os.makedirs(os.path.dirname(args.model_out), exist_ok=True)
     joblib.dump(svm_model, args.model_out)
     logger.info(f"Đã lưu mô hình SVM tại: {args.model_out}")
-    
+
     # Lưu tập dữ liệu split để làm cơ sở A/B test đánh giá so sánh
     split_out = os.path.join(os.path.dirname(args.model_out), "dataset_split.npz")
     np.savez(split_out, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)
     logger.info(f"Đã lưu tập đặc trưng split tại: {split_out}")
-    
+
     # Lưu Label encoder ra file .json
     with open(args.label_out, 'w', encoding='utf-8') as f:
         json.dump(label_map, f, ensure_ascii=False, indent=4)
     logger.info(f"Đã lưu mã hóa nhãn tại: {args.label_out}")
-    
+
     total_time = time.time() - t_start
     logger.info(f"=== TOÀN BỘ QUÁ TRÌNH HOÀN TẤT SAU {total_time:.2f} GIÂY ===")
     logger.info("Hệ thống đã sẵn sàng cho nhận diện sinh viên Học viện Ngân hàng thời gian thực!")

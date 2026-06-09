@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import uuid
+import asyncio
 from contextlib import asynccontextmanager
 
 import numpy as np
@@ -13,7 +14,7 @@ from app.api import routes_attendance, routes_events, routes_faces, routes_users
 from app.config import get_settings
 from app.db.models import AttendanceDirection, AttendanceLog, Base, FaceEmbedding, User
 from app.db.session import async_session_maker, engine
-from app.services.attendance_logic import match_identity, should_log_attendance
+from app.services.attendance_logic import match_identity_with_voting, maybe_enrich_gallery, should_log_attendance
 from app.services.face_pipeline import FacePipeline
 from app.services.faiss_indexer import FaissFaceIndex
 
@@ -100,9 +101,10 @@ def create_app() -> FastAPI:
                 t_match_start = time.perf_counter()
                 frame_shape = faces[0]["frame_shape"] if faces else list(img.shape[:2])
                 out_faces: list[dict] = []
+                gallery_changed = False
                 async with async_session_maker() as db:
                     for face in faces:
-                        m = match_identity(faiss_index, face["embedding"])
+                        m = match_identity_with_voting(faiss_index, face["embedding"], top_k=10, vote_threshold=0.6)
                         item: dict = {
                             "bbox": face["bbox"],
                             "det_score": face["det_score"],
@@ -111,12 +113,14 @@ def create_app() -> FastAPI:
                             "user_id": None,
                             "full_name": None,
                             "attendance_logged": False,
+                            "gallery_enriched": False,
                         }
                         if m["status"] == "known" and m.get("user_id"):
                             uid = m["user_id"]
                             u = await db.get(User, uid)
                             item["user_id"] = str(uid)
                             item["full_name"] = u.full_name if u else None
+                            logged_now = False
                             if auto_attendance and event_id is not None:
                                 ok, reason = await should_log_attendance(
                                     db,
@@ -136,13 +140,31 @@ def create_app() -> FastAPI:
                                         )
                                     )
                                     item["attendance_logged"] = True
+                                    logged_now = True
                                 else:
                                     item["skip_reason"] = reason
+                            if (not auto_attendance) or logged_now or event_id is None:
+                                enriched, reason, fid = await maybe_enrich_gallery(
+                                    db,
+                                    faiss_index,
+                                    user_id=uid,
+                                    embedding=face["embedding"],
+                                    similarity=m.get("similarity"),
+                                    source="webcam_ws",
+                                )
+                                item["gallery_enriched"] = enriched
+                                if enriched:
+                                    gallery_changed = True
+                                    item["enriched_faiss_id"] = fid
+                                elif reason != "below_enrichment_threshold":
+                                    item["enrichment_skip_reason"] = reason
                         elif m["status"] == "uncertain":
                             item["user_id"] = str(m["user_id"]) if m.get("user_id") else None
                             item["similarity"] = m.get("similarity")
                         out_faces.append(item)
                     await db.commit()
+                if gallery_changed:
+                    await asyncio.get_event_loop().run_in_executor(None, faiss_index.persist)
                 t_match_end = time.perf_counter()
                 
                 await websocket.send_json({"faces": out_faces, "frame_shape": frame_shape})

@@ -4,7 +4,8 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from sqlalchemy import select
+import numpy as np
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
@@ -44,6 +45,71 @@ async def should_log_attendance(
     if r.scalar_one_or_none():
         return False, "dedupe_window"
     return True, "ok"
+
+
+async def maybe_enrich_gallery(
+    session: AsyncSession,
+    faiss_index: FaissFaceIndex,
+    *,
+    user_id: uuid.UUID,
+    embedding: Any,
+    similarity: float | None,
+    source: str = "webcam_ws",
+) -> tuple[bool, str, int | None]:
+    """Append a high-confidence real-world embedding to the gallery.
+
+    Progressive enrichment is intentionally conservative: primary enrollment
+    embeddings remain the anchor, enriched embeddings are capped by count,
+    ratio, and a short per-user dedupe window.
+    """
+    settings = get_settings()
+    if similarity is None or float(similarity) < settings.enrichment_threshold:
+        return False, "below_enrichment_threshold", None
+
+    total_q = select(func.count()).select_from(FaceEmbedding).where(FaceEmbedding.user_id == user_id)
+    total = int((await session.execute(total_q)).scalar_one())
+    if total <= 0:
+        return False, "no_primary_gallery", None
+
+    enriched_q = (
+        select(func.count())
+        .select_from(FaceEmbedding)
+        .where(FaceEmbedding.user_id == user_id, FaceEmbedding.is_primary.is_(False))
+    )
+    enriched = int((await session.execute(enriched_q)).scalar_one())
+    if enriched >= settings.enrichment_max_embeddings_per_user:
+        return False, "max_enriched_embeddings", None
+    if enriched / max(total, 1) >= settings.enrichment_max_ratio:
+        return False, "max_enriched_ratio", None
+
+    since = datetime.now(timezone.utc) - timedelta(seconds=settings.enrichment_dedupe_seconds)
+    recent_q = (
+        select(func.count())
+        .select_from(FaceEmbedding)
+        .where(
+            FaceEmbedding.user_id == user_id,
+            FaceEmbedding.is_primary.is_(False),
+            FaceEmbedding.created_at >= since,
+        )
+    )
+    recent = int((await session.execute(recent_q)).scalar_one())
+    if recent > 0:
+        return False, "enrichment_dedupe_window", None
+
+    fid = await next_faiss_id(session)
+    emb = np.asarray(embedding, dtype=np.float32)
+    fe = FaceEmbedding(
+        user_id=user_id,
+        faiss_id=fid,
+        embedding_dim=int(emb.size),
+        embedding_vector=emb.tobytes(),
+        is_primary=False,
+        image_path=f"enriched:{source}",
+    )
+    session.add(fe)
+    await session.flush()
+    faiss_index.add_with_id(emb, fid, fe.id, user_id)
+    return True, "ok", fid
 
 
 def match_identity_with_voting(
