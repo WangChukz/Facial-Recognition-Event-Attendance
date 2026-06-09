@@ -16,7 +16,7 @@ COPY backend/app ./app
 
 # Copy AI models & faiss indexes (pre-built, committed to repo)
 COPY faiss_indexes ./faiss_indexes
-COPY ai_models ./ai_models
+# COPY ai_models ./ai_models
 
 ENV PYTHONUNBUFFERED=1
 EXPOSE 8000
