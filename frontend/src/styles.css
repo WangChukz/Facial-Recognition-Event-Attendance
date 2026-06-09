@@ -1,0 +1,516 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f6f8fc;
+  --panel: #ffffff;
+  --border: #dce3ee;
+  --text: #1f2937;
+  --muted: #667085;
+  --accent: #2257c2;
+  --ok: #15803d;
+  --warn: #b45309;
+  --danger: #be123c;
+  font-family: "DM Sans", system-ui, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--bg);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.25rem;
+  width: 100%;
+}
+
+.app-shell {
+  width: 100%;
+  min-height: 100dvh;
+}
+
+.app-shell--admin {
+  padding: 0;
+  margin: 0;
+  max-width: none;
+  overflow: hidden;
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 0 1.25rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+nav a {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+}
+
+nav a.active {
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  min-width: 0;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem;
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(260px, 420px) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Chỉ video dùng nền đen (letterbox). Canvas overlay phải transparent để thấy khung hình bên dưới. */
+video {
+  max-width: 100%;
+  border-radius: 8px;
+  background: #000;
+  display: block;
+}
+
+canvas {
+  max-width: 100%;
+  border-radius: 8px;
+  background: transparent;
+}
+
+/* Trang Live — layout cân đối */
+.live-page {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.live-lead {
+  margin: 0.35rem 0 1.25rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.live-shell {
+  padding: 0;
+  overflow: hidden;
+}
+
+.live-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+  align-items: stretch;
+  min-height: 320px;
+}
+
+@media (max-width: 880px) {
+  .live-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.live-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0e14;
+  padding: 1rem 1.1rem;
+  min-height: 300px;
+}
+
+.live-stage-inner {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  line-height: 0;
+}
+
+.live-video {
+  width: 100%;
+  height: auto;
+  max-height: min(68vh, 540px);
+  object-fit: contain;
+  vertical-align: top;
+}
+
+.live-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.live-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem 1.35rem;
+  border-left: 1px solid var(--border);
+  background: rgba(22, 27, 34, 0.65);
+}
+
+@media (max-width: 880px) {
+  .live-aside {
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+}
+
+.live-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.live-status.on {
+  color: var(--ok);
+}
+
+.live-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.live-status.on .live-status-dot {
+  background: var(--ok);
+  box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.25);
+}
+
+.live-session {
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  word-break: break-all;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.live-results {
+  margin-top: 0.25rem;
+}
+
+.live-result-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+}
+
+.live-result-row:last-child {
+  border-bottom: none;
+}
+
+.live-result-name {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.live-result-meta {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.form-grid {
+  display: grid;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+input,
+select,
+button {
+  font: inherit;
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  max-width: 100%;
+}
+
+button {
+  cursor: pointer;
+  background: #21262d;
+}
+
+button.primary {
+  background: var(--accent);
+  color: #0c1117;
+  border-color: transparent;
+  font-weight: 600;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  table-layout: fixed;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+  vertical-align: middle;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge.known {
+  background: rgba(63, 185, 80, 0.2);
+  color: var(--ok);
+}
+
+.badge.unknown {
+  background: rgba(248, 81, 73, 0.15);
+  color: var(--danger);
+}
+
+.badge.uncertain {
+  background: rgba(210, 153, 34, 0.2);
+  color: var(--warn);
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* ========== Kiosk Overrides ========== */
+/* Vô hiệu hoá các global CSS khi ở trang Kiosk (ClientSimulation) */
+.kiosk-page {
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+.kiosk-page video {
+  max-width: none;
+  border-radius: 0;
+  background: #000;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kiosk-page label {
+  display: revert;
+  flex-direction: revert;
+  gap: revert;
+  font-size: revert;
+  color: revert;
+}
+
+.kiosk-page input,
+.kiosk-page select {
+  font: inherit;
+  background: white;
+  color: #111;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+}
+
+.kiosk-page button {
+  font: inherit;
+  padding: revert;
+  background: revert;
+  color: revert;
+  border: revert;
+  border-radius: revert;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes kiosk-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-in {
+  animation: fade-in 0.25s ease-out forwards;
+}
+
+/* ========== Admin Light Theme Overrides ========== */
+/* Ghi đè dark theme khi vào khu vực Admin */
+.admin-content {
+  --bg:     #f9fafb;
+  --panel:  #ffffff;
+  --border: #dce3ee;
+  --text:   #1f2937;
+  --muted:  #667085;
+  --accent: #2257c2;
+  --ok:     #15803d;
+  --warn:   #b45309;
+  --danger: #be123c;
+  color: #1f2937;
+  background-color: #f6f8fc;
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+.admin-content .panel {
+  background: #ffffff;
+  border: 1px solid #dce3ee;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 10px 28px rgba(38,57,89,0.08);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.admin-content h1 { color: #1e3266; font-size: 1.4rem; margin: 0 0 1rem; font-weight: 700; }
+.admin-content h2 { color: #374151; font-size: 1rem;   margin: 0 0 0.75rem; font-weight: 600; }
+
+.admin-content label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.admin-content input,
+.admin-content select {
+  font: inherit;
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  border: 1.5px solid #dce3ee;
+  background: #ffffff;
+  color: #1f2937;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-content input:focus,
+.admin-content select:focus {
+  outline: none;
+  border-color: #2257c2;
+  box-shadow: 0 0 0 3px rgba(34,87,194,0.12);
+}
+
+.admin-content button {
+  font: inherit;
+  cursor: pointer;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  padding: 0.45rem 0.8rem;
+  transition: background 0.15s;
+}
+
+.admin-content button:hover { background: #e8edf5; }
+
+.admin-content button.primary {
+  background: #2257c2;
+  color: #ffffff;
+  border-color: transparent;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  margin-top: 0.5rem;
+}
+.admin-content button.primary:hover { background: #173f95; }
+
+.admin-content button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.admin-content .table { width: 100%; border-collapse: collapse; font-size: 0.9rem; color: #1f2937; table-layout: fixed; }
+.admin-content .table th { background: #f5f7fb; color: #374151; font-weight: 700; }
+.admin-content .table th,
+.admin-content .table td { text-align: left; padding: 0.65rem 0.75rem; border-bottom: 1px solid #dce3ee; overflow-wrap: anywhere; }
+.admin-content .table tbody tr:hover { background: #f3f7ff; }
+
+.admin-content .muted { color: #9ca3af; font-size: 0.85rem; }
+.admin-content a { color: #2563eb; }
+
+.admin-content .badge.known    { background: rgba(22,163,74,0.12);  color: #16a34a; }
+.admin-content .badge.unknown  { background: rgba(220,38,38,0.10);  color: #dc2626; }
+.admin-content .badge.uncertain{ background: rgba(217,119,6,0.12);  color: #d97706; }

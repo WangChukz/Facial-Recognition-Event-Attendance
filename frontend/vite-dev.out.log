@@ -1,0 +1,45 @@
+
+> event-face-attendance-ui@1.0.0 dev
+> vite --host 127.0.0.1
+
+Port 5173 is in use, trying another one...
+
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m1220[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5174[22m/[39m
+[2m7:23:12 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m7:28:02 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/styles.css[22m
+[2m7:28:26 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m7:28:53 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m7:29:11 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/ClientSimulation.jsx, /src/styles.css[22m
+[2m7:29:33 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/ClientSimulation.jsx, /src/styles.css[22m
+[2m7:29:49 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/ClientSimulation.jsx, /src/styles.css[22m
+[2m7:30:56 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/ClientSimulation.jsx, /src/styles.css[22m
+[2m7:31:30 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/ClientSimulation.jsx, /src/styles.css[22m
+[2m7:31:54 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/ClientSimulation.jsx, /src/styles.css[22m
+[2m7:58:14 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m7:58:24 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m7:58:33 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m7:58:49 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m7:59:08 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/styles.css[22m
+[2m7:59:28 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m8:04:55 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m8:05:24 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m8:05:25 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m8:06:48 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\src\pages\Dashboard.jsx, /src/styles.css[22m
+[2m8:11:00 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m8:14:17 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m8:15:02 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m8:37:34 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/ClientSimulation.jsx, /src/styles.css[22m
+[2m8:44:20 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/styles.css[22m
+[2m8:44:40 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/styles.css[22m
+[2m8:45:06 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m8:45:44 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Events.jsx, /src/styles.css[22m
+[2m8:46:07 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Users.jsx, /src/styles.css[22m
+[2m8:46:27 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/RegisterFace.jsx, /src/styles.css[22m
+[2m8:46:58 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m8:56:37 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/styles.css[22m
+[2m8:56:50 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AdminLayout.jsx, /src/styles.css[22m
+[2m8:57:02 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/styles.css[22m
+[2m9:27:02 PM[22m [36m[1m[vite][22m[39m [32mvite.config.js changed, restarting server...[39m
+[2m9:27:11 PM[22m [36m[1m[vite][22m[39m server restarted.

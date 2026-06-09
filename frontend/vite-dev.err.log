@@ -1,0 +1,860 @@
+[2m7:25:06 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:06 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:09 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:09 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:09 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:09 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:10 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:10 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:11 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:11 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:11 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:11 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:11 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:11 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:12 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:12 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:12 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:12 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:13 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:13 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:14 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:14 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:34 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:34 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:35 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:35 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:37 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:37 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:39 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:39 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:40 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:40 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:40 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:40 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:40 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:40 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:41 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:25:41 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:26:21 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:26:21 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:34 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:34 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:39 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:39 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:40 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:40 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:41 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:41 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:42 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:42 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:43 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:43 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:45 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:45 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:46 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:46 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:47 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:47 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:47 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:47 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:48 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:32:48 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:06 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:06 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:06 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:06 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:08 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:08 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:18 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:18 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:20 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:20 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:22 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:22 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:23 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:23 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:23 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:23 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:23 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:23 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:24 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:24 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:25 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m7:33:25 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:14 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:14 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:41 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:41 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:41 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:41 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:41 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:41 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:42 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:42 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:43 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:43 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:43 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:43 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:43 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:43 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:01:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:04:55 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\src\components\AdminLayout.jsx: Unexpected token (128:10)
+
+[0m [90m 126 |[31m         [33m>[31m
+ [90m 127 |[31m           [33m<[31m[33mdiv[31m
+[31m[1m>[22m[31m[90m 128 |[31m           [33m<[31m[33mdiv[31m
+ [90m     |[31m           [31m[1m^[22m[31m
+ [90m 129 |[31m             style[33m=[31m{{
+ [90m 130 |[31m               height[33m:[31m [35m48[31m[33m,[31m
+ [90m 131 |[31m               width[33m:[31m [35m48[31m[33m,[31m[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Admin/Desktop/AI/AI_Project_2526-hieupt-i2026/frontend/src/components/AdminLayout.jsx[39m:128:10
+[33m  126|          >
+  127|            <div
+  128|            <div
+     |            ^
+  129|              style={{
+  130|                height: 48,[39m
+      at constructor (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.unexpected (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:6636:16)
+      at JSXParserMixin.jsxParseIdentifier (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4581:12)
+      at JSXParserMixin.jsxParseNamespacedName (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4588:23)
+      at JSXParserMixin.jsxParseAttribute (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4664:22)
+      at JSXParserMixin.jsxParseOpeningElementAfterName (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4679:28)
+      at JSXParserMixin.jsxParseOpeningElementAt (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4674:17)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4698:33)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4710:32)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4710:32)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4710:32)
+      at JSXParserMixin.jsxParseElement (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12438:16)
+      at JSXParserMixin.parseExpression (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.parseReturnStatement (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:13159:28)
+      at JSXParserMixin.parseStatementContent (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12815:21)
+      at JSXParserMixin.parseStatementLike (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12784:17)
+      at JSXParserMixin.parseStatementListItem (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12764:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:13333:61)
+      at JSXParserMixin.parseBlockBody (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:13326:10)
+      at JSXParserMixin.parseBlock (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:13314:10)
+      at JSXParserMixin.parseFunctionBody (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12117:24)
+      at JSXParserMixin.parseFunctionBodyAndFinish (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12103:10)
+      at C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:13462:12
+      at JSXParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12420:14)
+[2m8:05:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:05:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:05:57 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:05:57 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:05:57 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:05:57 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:05:57 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:05:57 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:06:07 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:06:07 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:47 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:47 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:53 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:53 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:56 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:56 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:59 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:59 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:59 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:07:59 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:03 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:03 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:03 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:03 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:07 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:07 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:07 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:07 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:10 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:10 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:13 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:13 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:17 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:17 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:21 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:21 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:25 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:08:25 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:09:06 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:09:06 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:09:08 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:09:08 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:46 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:46 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:46 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:46 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:46 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:47 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:48 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:48 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:48 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:48 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:48 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:48 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:49 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:49 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:52 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:52 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:53 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:53 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:55 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:11:55 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:21 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:21 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:25 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:25 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:26 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:26 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:29 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:29 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:29 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:29 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:29 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:29 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:32 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:32 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:33 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:33 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:12:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:14:17 PM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\src\components\AdminLayout.jsx: Unexpected token (126:10)
+
+[0m [90m 124 |[31m             display[33m:[31m [32m"flex"[31m[33m,[31m
+ [90m 125 |[31m             alignItems[33m:[31m [32m"center"[31m[33m,[31m
+[31m[1m>[22m[31m[90m 126 |[31m           [33m<[31m[33mimg[31m
+ [90m     |[31m           [31m[1m^[22m[31m
+ [90m 127 |[31m             src[33m=[31m[32m"/logo.png"[31m
+ [90m 128 |[31m             alt[33m=[31m[32m"BAV Logo"[31m
+ [90m 129 |[31m             style[33m=[31m{{[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Admin/Desktop/AI/AI_Project_2526-hieupt-i2026/frontend/src/components/AdminLayout.jsx[39m:126:10
+[33m  124|              display: "flex",
+  125|              alignItems: "center",
+  126|            <img
+     |            ^
+  127|              src="/logo.png"
+  128|              alt="BAV Logo"[39m
+      at constructor (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:365:19)
+      at JSXParserMixin.raise (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at JSXParserMixin.unexpected (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:6636:16)
+      at JSXParserMixin.parsePropertyName (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12041:18)
+      at JSXParserMixin.parsePropertyDefinition (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11906:10)
+      at JSXParserMixin.parseObjectLike (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11849:21)
+      at JSXParserMixin.parseExprAtom (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11356:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at JSXParserMixin.parseExpressionBase (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10797:39
+      at JSXParserMixin.allowInAnd (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseExpression (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at JSXParserMixin.jsxParseExpressionContainer (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4644:31)
+      at JSXParserMixin.jsxParseAttributeValue (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4616:21)
+      at JSXParserMixin.jsxParseAttribute (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4665:38)
+      at JSXParserMixin.jsxParseOpeningElementAfterName (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4679:28)
+      at JSXParserMixin.jsxParseOpeningElementAt (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4674:17)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4698:33)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4710:32)
+      at JSXParserMixin.jsxParseElementAt (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4710:32)
+      at JSXParserMixin.jsxParseElement (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at JSXParserMixin.parseExprAtom (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10817:39
+      at JSXParserMixin.allowInAnd (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at JSXParserMixin.parseExprAtom (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at JSXParserMixin.parseExprAtom (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at JSXParserMixin.parseExprSubscripts (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at JSXParserMixin.parseUpdate (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at JSXParserMixin.parseMaybeUnary (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at JSXParserMixin.parseExprOps (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at JSXParserMixin.parseMaybeConditional (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at JSXParserMixin.parseMaybeAssign (C:\Users\Admin\Desktop\AI\AI_Project_2526-hieupt-i2026\frontend\node_modules\@babel\parser\lib\index.js:10848:21)
+[2m8:15:23 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:23 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:24 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:24 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:25 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:25 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:26 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:26 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:29 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:29 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:29 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:29 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:29 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:29 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:30 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:30 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:32 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:32 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:32 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:32 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:32 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:32 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/attendance/history?limit=1000[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:33 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:33 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:35 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:35 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:36 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:38 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:15:38 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:16:22 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:16:22 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:16:24 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:16:24 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:16:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:16:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:16:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/events[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:16:44 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:16:45 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+[2m8:16:45 PM[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/users[39m
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
