@@ -9,7 +9,7 @@ from fastapi import FastAPI, Query, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func, select
 
-from app.api import routes_attendance, routes_events, routes_faces, routes_users
+from app.api import routes_attendance, routes_cards, routes_events, routes_faces, routes_users
 from app.config import get_settings
 from app.db.models import AttendanceDirection, AttendanceLog, Base, FaceEmbedding, User
 from app.db.session import async_session_maker, engine
@@ -62,6 +62,7 @@ def create_app() -> FastAPI:
     app.include_router(routes_users.router, prefix="/api")
     app.include_router(routes_events.router, prefix="/api")
     app.include_router(routes_faces.router, prefix="/api")
+    app.include_router(routes_cards.router, prefix="/api")
     app.include_router(routes_attendance.router, prefix="/api")
 
     @app.get("/api/health")

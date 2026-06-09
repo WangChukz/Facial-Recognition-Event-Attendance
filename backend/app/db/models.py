@@ -38,6 +38,7 @@ class User(Base):
 
     embeddings: Mapped[list["FaceEmbedding"]] = relationship(back_populates="user")
     attendance: Mapped[list["AttendanceLog"]] = relationship(back_populates="user")
+    card_images: Mapped[list["CardImage"]] = relationship(back_populates="user")
 
 
 class Event(Base):
@@ -83,6 +84,19 @@ class FaceEmbedding(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     user: Mapped["User"] = relationship(back_populates="embeddings")
+
+
+class CardImage(Base):
+    __tablename__ = "card_images"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    image_type: Mapped[str] = mapped_column(String(32), default="front")  # "front", "back", "full_body"
+    image_path: Mapped[str] = mapped_column(String(512), nullable=False)
+    original_filename: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    uploaded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    user: Mapped["User"] = relationship(back_populates="card_images")
 
 
 class AttendanceLog(Base):

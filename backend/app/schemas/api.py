@@ -108,3 +108,22 @@ class RecognitionFaceOut(BaseModel):
 class FrameRecognitionResponse(BaseModel):
     faces: list[RecognitionFaceOut]
     frame_shape: list[int] = Field(default_factory=list)
+
+
+class CardImageOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    user_id: UUID
+    image_type: str
+    image_path: str
+    original_filename: str | None
+    uploaded_at: datetime
+
+
+class CardImageUploadResponse(BaseModel):
+    id: UUID
+    user_id: UUID
+    image_type: str
+    image_path: str
+    uploaded_at: datetime

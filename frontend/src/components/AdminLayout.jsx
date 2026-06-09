@@ -8,6 +8,7 @@ import {
   Shield,
   UserCheck,
   ChevronRight,
+  LayoutDashboard,
 } from "lucide-react";
 
 const C = {
@@ -24,7 +25,7 @@ const C = {
   dangerText: "#be123c",
 };
 
-const SIDEBAR_W = 220;
+const SIDEBAR_W = 240;
 
 function SideLink({ to, icon: Icon, label }) {
   return (
@@ -34,20 +35,20 @@ function SideLink({ to, icon: Icon, label }) {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 8,
-            padding: "8px 12px",
-            borderRadius: 6,
+            gap: 10,
+            padding: "10px 16px",
+            borderRadius: 8,
             margin: "2px 8px",
             backgroundColor: isActive ? C.activeBg : "transparent",
             color: isActive ? C.active : C.muted,
-            fontWeight: isActive ? 600 : 500,
-            fontSize: 13,
+            fontWeight: isActive ? 700 : 500,
+            fontSize: 14,
             cursor: "pointer",
-            border: isActive ? `1px solid ${C.active}` : "1px solid transparent",
-            transition: "all 0.16s ease",
+            borderLeft: isActive ? `3px solid ${C.active}` : "3px solid transparent",
+            transition: "background 0.16s ease, color 0.16s ease, transform 0.16s ease",
           }}
         >
-          <Icon size={16} style={{ flexShrink: 0, opacity: isActive ? 1 : 0.72 }} />
+          <Icon size={17} style={{ flexShrink: 0, opacity: isActive ? 1 : 0.72 }} />
           <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {label}
           </span>
@@ -74,10 +75,9 @@ function SideSection({ label }) {
   );
 }
 
-import { Camera } from "lucide-react";
-
 const PAGE_TITLES = {
-  "/admin/users": "Quản lý Người dùng",
+  "/admin": "Dashboard",
+  "/admin/users": "Sinh viên",
   "/admin/events": "Sự kiện",
   "/admin/register-face": "Đăng ký Khuôn mặt",
   "/admin/history": "Lịch sử Điểm danh",
@@ -116,44 +116,54 @@ export default function AdminLayout() {
           zIndex: 10,
         }}
       >
+        <div
+          style={{
+            padding: "18px 20px",
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            borderBottom: `1px solid rgba(255,255,255,0.08)`,
+          }}
+        >
           <div
             style={{
-              padding: "18px 20px",
+              height: 44,
+              width: 44,
+              backgroundColor: "#60a5fa",
+              padding: 8,
+              borderRadius: 8,
+              objectFit: "contain",
+              border: `1px solid rgba(255,255,255,0.2)`,
               display: "flex",
               alignItems: "center",
-              gap: 12,
-              borderBottom: `1px solid rgba(255,255,255,0.08)`,
+              justifyContent: "center",
+              fontWeight: 800,
+              color: "#ffffff",
+              fontSize: 18,
             }}
           >
-            <img
-            src="/logo.png"
-            alt="BAV Logo"
-            style={{
-              height: 40,
-              width: 40,
-              objectFit: "contain",
-            }}
-          />
+            BAV
+          </div>
           <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 11, fontWeight: 800, color: C.text, lineHeight: 1.3 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: C.text, lineHeight: 1.3 }}>
               HỌC VIỆN NGÂN HÀNG
             </div>
-            <div style={{ fontSize: 9, color: C.muted, marginTop: 2, lineHeight: 1.3 }}>
+            <div style={{ fontSize: 10, color: C.muted, marginTop: 2, lineHeight: 1.3 }}>
               HỆ THỐNG ĐIỂM DANH BẰNG KHUÔN MẶT
             </div>
           </div>
         </div>
 
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: "12px 0 16px", marginBottom: 0 }}>
-          <SideSection label="TỔNG QUAN" />
-          <SideLink to="/admin/users" icon={Users} label="Người dùng" />
+        <nav style={{ flex: 1, display: "block", padding: "12px 0 16px", borderBottom: "none", marginBottom: 0 }}>
+          <SideSection label="QUẢN LÝ" />
+          <SideLink to="/admin" icon={LayoutDashboard} label="Dashboard" />
+          <SideLink to="/admin/users" icon={Users} label="Sinh viên" />
           <SideLink to="/admin/events" icon={Calendar} label="Sự kiện" />
 
           <SideSection label="ĐIỂM DANH" />
           <SideLink to="/admin/register-face" icon={UserCheck} label="Đăng ký khuôn mặt" />
-          <SideLink to="/" icon={Camera} label="Webcam realtime" />
           <SideLink to="/admin/history" icon={History} label="Lịch sử điểm danh" />
-        </div>
+        </nav>
 
         <div
           style={{

@@ -160,49 +160,35 @@ function EventCard({ event }) {
     <div
       style={{
         display: "flex",
-        gap: "16px",
-        padding: "16px",
-        backgroundColor: "#ffffff",
+        gap: "12px",
+        padding: "12px",
+        backgroundColor: "#f9fafb",
         borderRadius: "8px",
         border: "1px solid #e5e7eb",
-        alignItems: "center"
       }}
     >
       <div
         style={{
-          width: 80,
-          height: 56,
-          borderRadius: "6px",
-          background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          width: 64,
+          height: 64,
+          borderRadius: "8px",
+          backgroundColor: "#2257c2",
           flexShrink: 0,
-          color: "white",
-          fontSize: "10px",
-          fontWeight: "bold",
-          textAlign: "center",
-          padding: "4px"
         }}
-      >
-        Sự kiện
-      </div>
-      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "6px" }}>
-        <div style={{ fontSize: "14px", fontWeight: 700, color: "#111827" }}>
+      />
+      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "4px" }}>
+        <div style={{ fontSize: "14px", fontWeight: 700, color: "#1f2937" }}>
           {event.name}
         </div>
-        <div style={{ display: "flex", gap: "16px", fontSize: "12px", color: "#6b7280" }}>
-          <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-            <Calendar size={14} /> {new Date(event.date).toLocaleDateString("vi-VN")}
-          </span>
-          <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-            {event.location || "Chưa xác định"}
-          </span>
+        <div style={{ fontSize: "12px", color: "#8490a3" }}>
+          📅 {new Date(event.date).toLocaleDateString("vi-VN")}
+        </div>
+        <div style={{ fontSize: "12px", color: "#8490a3" }}>
+          📍 {event.location || "Chưa xác định"}
         </div>
       </div>
       <div style={{ textAlign: "right", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-        <div style={{ fontSize: "12px", fontWeight: 600, color: "#1a56db", backgroundColor: "#eef4ff", padding: "4px 10px", borderRadius: "999px" }}>
+        <div style={{ fontSize: "13px", fontWeight: 700, color: "#2257c2" }}>
           {event.participant_count || 0} sinh viên
         </div>
       </div>
@@ -286,20 +272,13 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "24px" }}>
-        <div>
-          <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#111827", margin: "0 0 8px" }}>
-            Xin chào, Admin! 👋
-          </h1>
-          <p style={{ fontSize: "14px", color: "#6b7280", margin: 0 }}>
-            Chào mừng bạn đến với hệ thống điểm danh bằng khuôn mặt.
-          </p>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 16px", backgroundColor: "#ffffff", border: "1px solid #dce3ee", borderRadius: 8, fontSize: 14, color: "#4b5563", cursor: "pointer", boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}>
-          <Calendar size={16} />
-          22/05/2024 - 22/05/2024
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-        </div>
+      <div style={{ marginBottom: "24px" }}>
+        <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#1e3266", margin: "0 0 8px" }}>
+          Xin chào, Admin! 👋
+        </h1>
+        <p style={{ fontSize: "14px", color: "#8490a3", margin: 0 }}>
+          Chào mừng bạn đến với hệ thống điểm danh bằng khuôn mặt.
+        </p>
       </div>
 
       {/* Stats Grid */}
@@ -323,7 +302,7 @@ export default function Dashboard() {
           title="Tổng sự kiện"
           value={stats.totalEvents}
           link="/admin/events"
-          color="#15a34a"
+          color="#7c3aed"
         />
         <StatCard
           icon={CheckCircle2}
@@ -430,37 +409,43 @@ export default function Dashboard() {
           >
             <thead>
               <tr style={{ backgroundColor: "#f5f7fb", borderBottom: "1px solid #dce3ee" }}>
-                <th style={{ padding: "12px 16px", textAlign: "left", fontWeight: 600, color: "#4b5563" }}>STT</th>
-                <th style={{ padding: "12px 16px", textAlign: "left", fontWeight: 600, color: "#4b5563" }}>Sự kiện</th>
-                <th style={{ padding: "12px 16px", textAlign: "left", fontWeight: 600, color: "#4b5563" }}>Mã sinh viên</th>
-                <th style={{ padding: "12px 16px", textAlign: "left", fontWeight: 600, color: "#4b5563" }}>Họ và tên</th>
-                <th style={{ padding: "12px 16px", textAlign: "left", fontWeight: 600, color: "#4b5563" }}>Thời gian</th>
-                <th style={{ padding: "12px 16px", textAlign: "left", fontWeight: 600, color: "#4b5563" }}>Similarity</th>
-                <th style={{ padding: "12px 16px", textAlign: "left", fontWeight: 600, color: "#4b5563" }}>Kết quả</th>
-                <th style={{ padding: "12px 16px", textAlign: "left", fontWeight: 600, color: "#4b5563" }}>Ảnh chụp</th>
+                <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 700, color: "#374151" }}>STT</th>
+                <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 700, color: "#374151" }}>
+                  Sự kiện
+                </th>
+                <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 700, color: "#374151" }}>
+                  Mã sinh viên
+                </th>
+                <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 700, color: "#374151" }}>
+                  Hướng
+                </th>
+                <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 700, color: "#374151" }}>
+                  Thời gian
+                </th>
+                <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 700, color: "#374151" }}>
+                  Similarity
+                </th>
+                <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 700, color: "#374151" }}>
+                  Kết quả
+                </th>
               </tr>
             </thead>
             <tbody>
-              {logs.map((log, i) => {
-                const names = ["Nguyễn Văn An", "Trần Thị Bích Ngọc", "Lê Minh Hoàng", "Phạm Quốc Dũng", "Hoàng Thu Trang"];
-                const mockName = names[i % names.length];
-                return (
+              {logs.map((log, i) => (
                 <tr key={i} style={{ borderBottom: "1px solid #dce3ee" }}>
-                  <td style={{ padding: "12px 16px", color: "#6b7280" }}>{i + 1}</td>
-                  <td style={{ padding: "12px 16px" }}>Event {i + 1}</td>
-                  <td style={{ padding: "12px 16px", color: "#4b5563" }}>
-                    {log.user_id?.substring(0, 8)}
+                  <td style={{ padding: "10px 12px" }}>{i + 1}</td>
+                  <td style={{ padding: "10px 12px" }}>Event</td>
+                  <td style={{ padding: "10px 12px", fontSize: "12px", color: "#8490a3" }}>
+                    {log.user_id?.substring(0, 8)}...
                   </td>
-                  <td style={{ padding: "12px 16px", fontWeight: 500 }}>
-                    {mockName}
-                  </td>
-                  <td style={{ padding: "12px 16px", color: "#6b7280" }}>
+                  <td style={{ padding: "10px 12px" }}>{log.direction}</td>
+                  <td style={{ padding: "10px 12px", fontSize: "12px", color: "#8490a3" }}>
                     {new Date(log.created_at).toLocaleString("vi-VN")}
                   </td>
-                  <td style={{ padding: "12px 16px", color: "#6b7280" }}>
+                  <td style={{ padding: "10px 12px" }}>
                     {log.similarity != null ? log.similarity.toFixed(2) : "—"}
                   </td>
-                  <td style={{ padding: "12px 16px" }}>
+                  <td style={{ padding: "10px 12px" }}>
                     <span
                       style={{
                         display: "inline-block",
@@ -481,15 +466,8 @@ export default function Dashboard() {
                       {log.similarity != null && log.similarity > 0.7 ? "Thành công" : "Thất bại"}
                     </span>
                   </td>
-                  <td style={{ padding: "12px 16px" }}>
-                    <img 
-                      src={`https://i.pravatar.cc/150?u=${log.user_id || i}`} 
-                      alt="avatar" 
-                      style={{ width: 32, height: 32, borderRadius: "6px", objectFit: "cover" }}
-                    />
-                  </td>
                 </tr>
-              )})}
+              ))}
             </tbody>
           </table>
         </div>
