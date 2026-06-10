@@ -1,0 +1,50 @@
+{
+  "experiment": "Case 5 – Progressive Gallery Enrichment",
+  "thresholds": {
+    "recognition": 0.45,
+    "unknown": 0.35,
+    "enrichment": 0.75
+  },
+  "results": {
+    "subcase_1_baseline": {
+      "subcase": "1_baseline",
+      "description": "Gallery = chỉ enroll (1 ảnh/SV)",
+      "gallery_size": 39,
+      "test_samples": 72,
+      "accuracy": 98.61,
+      "avg_similarity": 0.5754,
+      "uncertain_count": 8,
+      "latency_ms": 0.0428
+    },
+    "subcase_2_enriched": {
+      "subcase": "2_enriched",
+      "description": "Gallery = enroll + enrichment (threshold=0.75)",
+      "gallery_size": 57,
+      "enriched_added": 18,
+      "enriched_rejected": 84,
+      "test_samples": 72,
+      "accuracy": 98.61,
+      "avg_similarity": 0.5951,
+      "uncertain_count": 8,
+      "latency_ms": 0.0156
+    },
+    "subcase_3_unknown_rejection": {
+      "subcase": "3_unknown_rejection",
+      "description": "Unknown Rejection sau enrichment (100 random impostor probes)",
+      "gallery_size": 57,
+      "impostor_count": 100,
+      "correctly_rejected": 100,
+      "false_accepts": 0,
+      "uncertain_count": 0,
+      "rejection_rate": 100.0,
+      "avg_similarity": 0.0953,
+      "latency_ms": 0.022
+    }
+  },
+  "delta_analysis": {
+    "accuracy_delta": 0.0,
+    "similarity_delta": 0.0197,
+    "uncertain_reduction": 0,
+    "gallery_growth": 18
+  }
+}

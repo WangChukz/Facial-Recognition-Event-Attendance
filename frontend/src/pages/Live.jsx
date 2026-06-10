@@ -16,8 +16,6 @@ export default function Live() {
   const [running, setRunning] = useState(false);
   const [last, setLast] = useState(null);
   const [err, setErr] = useState("");
-  const [devices, setDevices] = useState([]);
-  const [selectedDeviceId, setSelectedDeviceId] = useState("");
   const wsRef = useRef(null);
   const capRef = useRef(null);
 
@@ -112,38 +110,21 @@ export default function Live() {
 
   useEffect(() => {
     let stream;
-    let isCancelled = false;
     (async () => {
       try {
-        const devs = await navigator.mediaDevices.enumerateDevices();
-        const videoDevs = devs.filter((d) => d.kind === "videoinput");
-        if (!isCancelled) setDevices(videoDevs);
-
-        let targetId = selectedDeviceId;
-        if (!targetId && videoDevs.length > 0) {
-          targetId = videoDevs[0].deviceId;
-          if (!isCancelled) setSelectedDeviceId(targetId);
-        }
-
-        const constraints = targetId
-          ? { video: { deviceId: { exact: targetId } }, audio: false }
-          : { video: true, audio: false };
-
-        stream = await navigator.mediaDevices.getUserMedia(constraints);
-        if (!isCancelled && videoRef.current) {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        if (videoRef.current) {
           videoRef.current.srcObject = stream;
           await videoRef.current.play();
-          setErr(""); // Xoá lỗi cũ nếu mở thành công
         }
       } catch (e) {
-        if (!isCancelled) setErr("Không mở được webcam: " + e.message);
+        setErr("Không mở được webcam: " + e.message);
       }
     })();
     return () => {
-      isCancelled = true;
       stream?.getTracks().forEach((t) => t.stop());
     };
-  }, [selectedDeviceId]);
+  }, []);
 
   useEffect(() => {
     if (!running) {
@@ -247,18 +228,6 @@ export default function Live() {
               <span className="live-status-dot" />
               {running ? "Đang gửi & nhận diện" : "Chờ bật"}
             </div>
-
-            <label>
-              Camera
-              <select value={selectedDeviceId} onChange={(e) => setSelectedDeviceId(e.target.value)}>
-                {devices.length === 0 && <option value="">Đang tìm camera...</option>}
-                {devices.map((d, i) => (
-                  <option key={d.deviceId || i} value={d.deviceId}>
-                    {d.label || `Camera ${i + 1}`}
-                  </option>
-                ))}
-              </select>
-            </label>
 
             <label>
               Sự kiện (auto check-in)

@@ -1,0 +1,58 @@
+[
+    {
+        "name": "Luồng 1: ArcFace Gốc + FAISS",
+        "backbone": "ArcFace Gốc (ResNet-50)",
+        "head": "FAISS",
+        "accuracy": "100.00%",
+        "precision": "100.00%",
+        "recall": "100.00%",
+        "latency": "58.418 ms",
+        "head_latency": "0.0176 ms",
+        "f1_score": "100.00%",
+        "similarity_avg": "0.7016",
+        "test_samples": 174,
+        "correct_predictions": 174
+    },
+    {
+        "name": "Luồng 2: ArcFace Gốc + HNSW",
+        "backbone": "ArcFace Gốc (ResNet-50)",
+        "head": "HNSW",
+        "accuracy": "100.00%",
+        "precision": "100.00%",
+        "recall": "100.00%",
+        "latency": "58.419 ms",
+        "head_latency": "0.0189 ms",
+        "f1_score": "100.00%",
+        "similarity_avg": "0.8066",
+        "test_samples": 174,
+        "correct_predictions": 174
+    },
+    {
+        "name": "Luồng 3: ArcFace Tinh chỉnh + FAISS",
+        "backbone": "ResNet-18 ArcFace FT",
+        "head": "FAISS",
+        "accuracy": "20.69%",
+        "precision": "17.37%",
+        "recall": "20.69%",
+        "latency": "12.079 ms",
+        "head_latency": "0.0290 ms",
+        "f1_score": "17.20%",
+        "similarity_avg": "0.6787",
+        "test_samples": 174,
+        "correct_predictions": 36
+    },
+    {
+        "name": "Luồng 4: ArcFace Tinh chỉnh + HNSW",
+        "backbone": "ResNet-18 ArcFace FT",
+        "head": "HNSW",
+        "accuracy": "20.69%",
+        "precision": "17.37%",
+        "recall": "20.69%",
+        "latency": "12.231 ms",
+        "head_latency": "0.1810 ms",
+        "f1_score": "17.20%",
+        "similarity_avg": "0.7150",
+        "test_samples": 174,
+        "correct_predictions": 36
+    }
+]

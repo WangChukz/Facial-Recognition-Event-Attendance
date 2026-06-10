@@ -1,0 +1,31 @@
+{
+    "num_students": 16000,
+    "num_queries": 500,
+    "flat_build_ms": 7.640900003025308,
+    "hnsw_build_ms": 6097.431100002723,
+    "hnsw_config": {
+        "M": 32,
+        "efConstruction": 200,
+        "efSearch": 64
+    },
+    "results_by_topk": {
+        "1": {
+            "flat_latency_ms": 0.05755019999924116,
+            "hnsw_latency_ms": 0.1644668000008096,
+            "flat_recall_pct": 100.0,
+            "hnsw_recall_pct": 100.0
+        },
+        "3": {
+            "flat_latency_ms": 0.05607440000312636,
+            "hnsw_latency_ms": 0.17434659999707947,
+            "flat_recall_pct": 100.0,
+            "hnsw_recall_pct": 100.0
+        },
+        "10": {
+            "flat_latency_ms": 0.0591807999953744,
+            "hnsw_latency_ms": 0.18011639999895124,
+            "flat_recall_pct": 100.0,
+            "hnsw_recall_pct": 100.0
+        }
+    }
+}

@@ -44,23 +44,23 @@ class ArcMarginProduct(nn.Module):
 
     def forward(self, input: torch.Tensor, label: torch.Tensor) -> torch.Tensor:
         # Chuẩn hóa L2 cho đặc trưng đầu vào và ma trận trọng số
-        cosine = F.linear(F.normalize(input), F.normalize(self.weight))
+        cos_theta = F.linear(F.normalize(input), F.normalize(self.weight))
         
         # Tính sin(theta) = sqrt(1 - cos^2(theta))
-        sine = torch.sqrt((1.0 - torch.pow(cosine, 2)).clamp(0, 1))
+        sine = torch.sqrt((1.0 - torch.pow(cos_theta, 2)).clamp(0, 1))
         
         # Tính cos(theta + m) = cos(theta)*cos(m) - sin(theta)*sin(m)
-        phi = cosine * np.cos(self.m) - sine * np.sin(self.m)
+        phi = cos_theta * np.cos(self.m) - sine * np.sin(self.m)
         
         # Ngăn chặn cos(theta + m) vượt quá giới hạn bằng cách nới lỏng khi cos(theta) < 0
-        phi = torch.where(cosine > 0, phi, cosine)
+        phi = torch.where(cos_theta > 0, phi, cos_theta)
         
         # Chuyển nhãn lớp sang dạng One-hot vector
-        one_hot = torch.zeros(cosine.size(), device=input.device)
+        one_hot = torch.zeros(cos_theta.size(), device=input.device)
         one_hot.scatter_(1, label.view(-1, 1).long(), 1)
         
-        # Kết hợp: Nếu đúng lớp thì dùng phi = cos(theta + m), nếu sai lớp giữ nguyên cosine = cos(theta)
-        output = (one_hot * phi) + ((1.0 - one_hot) * cosine)
+        # Kết hợp: đúng lớp dùng phi = cos(theta + m), sai lớp giữ nguyên cos(theta).
+        output = (one_hot * phi) + ((1.0 - one_hot) * cos_theta)
         
         # Nhân tỷ lệ phóng đại s
         output *= self.s

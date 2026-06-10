@@ -10,7 +10,7 @@ venv/
 ENV/
 backend/.venv/
 
-# Node modules (JavaScript)
+# Node modules and build output (JavaScript)
 node_modules/
 frontend/node_modules/
 dist/
@@ -33,5 +33,5 @@ backend/app/models/
 .idea/
 
 # Database files
-# /faiss_indexes/
-# faiss_indexes/
+/faiss_indexes/
+faiss_indexes/

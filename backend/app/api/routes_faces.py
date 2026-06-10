@@ -10,7 +10,7 @@ from app.config import get_settings
 from app.db.models import FaceEmbedding, User
 from app.db.session import get_db
 from app.schemas.api import FaceRegisterResponse
-from app.services.attendance_logic import match_identity, next_faiss_id
+from app.services.attendance_logic import match_identity_with_voting, next_faiss_id
 from app.services.face_pipeline import FacePipeline
 from app.services.faiss_indexer import FaissFaceIndex
 from app.services.enrollment_v2 import generate_augmented_embeddings, assess_enrollment_quality
@@ -46,8 +46,19 @@ def _run_face_processing(pipeline: FacePipeline, img: np.ndarray):
     if not quality["ok"]:
         return {"error": "quality", "reasons": quality["reasons"]}
 
-    # Step 3: augmented embeddings (disabled as requested by user)
-    embeddings = [face["embedding"]]
+    # Step 3: augmented embeddings (the slow part)
+    def process_for_augment(frame):
+        results = pipeline.process_frame_sync(frame, use_adaptive_clahe=True)
+        return results if results else []
+
+    embeddings = generate_augmented_embeddings(
+        img,
+        process_for_augment,
+        n_geometric=7,
+        n_photo=5,
+        n_combined=2,
+        n_occlusion=2,
+    )
 
     return {
         "face": face,
@@ -150,7 +161,7 @@ async def match_debug(
         return {"hits": [], "message": "no_face"}
     faces.sort(key=lambda x: x["det_score"], reverse=True)
     emb = faces[0]["embedding"]
-    m = match_identity(faiss_index, emb)
+    m = match_identity_with_voting(faiss_index, emb, top_k=10, vote_threshold=0.6)
     return {
         "match": m,
         "bbox": faces[0]["bbox"],

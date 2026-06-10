@@ -1,71 +1,85 @@
-# Hướng dẫn huấn luyện Bộ Phân Lớp Sinh Viên (SVM Classifier Head) — Đề tài Học viện Ngân hàng
+# Hướng dẫn thực nghiệm Đánh giá Hiệu năng Nhận diện Khuôn mặt (FAISS Flat & HNSW) — Đề tài Học viện Ngân hàng
 
-Mục này chứa kịch bản huấn luyện offline bộ phân lớp **SVM (Support Vector Machine) RBF Kernel** để nhận diện danh tính của 40 sinh viên thuộc Học viện Ngân hàng từ một bức ảnh chân dung đơn lẻ (được tăng cường).
+Thư mục này chứa các kịch bản kiểm thử, đánh giá hiệu năng (Offline Benchmark) của hệ thống nhận diện khuôn mặt điểm danh sử dụng các chỉ mục **FAISS Flat** và **FAISS HNSW** (đã loại bỏ Cosine Similarity và SVM theo yêu cầu nghiệp vụ để tập trung vào các giải pháp tìm kiếm vector mật độ cao hiệu năng lớn).
 
 ---
 
 ## 📂 1. Chuẩn bị Dữ liệu đầu vào
 
-Các bạn hãy tạo một thư mục dữ liệu tại bất cứ đâu (mặc định khuyến nghị là `c:\AI_event\dataset_students`) và tổ chức các thư mục sinh viên bên trong đúng theo quy chuẩn dưới đây:
+Hệ thống sử dụng tập dữ liệu thực tế tại thư mục `c:\AI_event\dataset\dataset` để đánh giá:
+- `enroll/`: Chứa 39 ảnh đăng ký của 39 sinh viên Học viện Ngân hàng (dạng `TênSinhViên_enroll.jpg`).
+- `real/`: Chứa 39 thư mục sinh viên (dạng `TênSinhViên_real/`), mỗi thư mục chứa khoảng 5-6 ảnh thực tế chụp tại cổng điểm danh để làm tập test.
+- `metadata.xlsx`: File danh sách sinh viên khớp giữa Mã sinh viên, Họ và tên, Lớp.
 
-```text
-c:\AI_event\dataset_students\
-├── SV001_NguyenVanA\
-│   ├── image_01.jpg
-│   ├── image_02.jpg
-│   ├── image_03.jpg
-│   ├── image_04.jpg
-│   └── image_05.jpg
-├── SV002_TranThiB\
-│   ├── image_01.png
-│   └── ...
-└── SV040_LeVanC\
-    └── ...
-```
-
-> [!IMPORTANT]
-> - Tên thư mục con nên có cấu trúc dạng: `[MãSinhViên]_[HọTênViếtLiền]` (Ví dụ: `SV001_NguyenVanA`). Hệ thống sẽ tự động tách chuỗi này để trích xuất Mã Sinh Viên (`SV001`) và Tên Sinh Viên (`NguyenVanA`) hiển thị lên màn hình điểm danh.
-> - Mỗi sinh viên nên có ít nhất **5 ảnh gốc** chụp rõ mặt, đủ các góc thẳng, hơi nghiêng nhẹ, ánh sáng rõ ràng.
+Ngoài ra, tập dữ liệu lớn giả lập (Synthetic Dataset) với 16.000 sinh viên tại `C:\AI_event\DATA_FAKE...` được sử dụng để đánh giá khả năng mở rộng (Scalability Benchmark).
 
 ---
 
-## ⚡ 2. Hướng dẫn Chạy Huấn luyện
+## ⚡ 2. Các Kịch Bản Kiểm Thử (Case 1, 2, 4, 5)
 
-### Bước 1: Kích hoạt Môi trường ảo (Virtual Environment)
-Mở cửa sổ dòng lệnh (Terminal / PowerShell) và di chuyển vào thư mục dự án `backend`, sau đó kích hoạt môi trường ảo:
+Chúng ta tiến hành chạy kiểm thử theo các kịch bản sau:
 
+### Case 1: Đánh giá mô hình ArcFace Pretrained (ResNet-50) + FAISS Flat / HNSW
+Đánh giá độ chính xác nhận diện trên 39 sinh viên thực tế bằng mô hình pre-trained gốc.
+
+### Case 2: Đánh giá mô hình Fine-tuned (ResNet-18 ArcFace) + FAISS Flat / HNSW
+So sánh độ chính xác và độ trễ của mô hình tự huấn luyện (fine-tuned) trên tập dữ liệu trường học so với mô hình pre-trained gốc để chứng minh ảnh hưởng của "Domain Gap" và "Few-shot Learning".
+
+### Case 4: Benchmark Khả năng Mở rộng (Scalability Benchmark)
+Đo lường độ trễ tìm kiếm (Search Latency) và thời gian dựng chỉ mục (Index Build Time) của **FAISS Flat** vs **HNSW** khi số lượng sinh viên tăng dần: $N = 1.000, 4.000, 8.000, 16.000$ sinh viên giả lập.
+
+### Case 5: Tự động Làm giàu Thư viện Ảnh (Progressive Gallery Enrichment)
+Đánh giá hiệu quả của cơ chế tự động thêm ảnh chất lượng cao vào Gallery khi điểm danh thành công:
+- **Trước Enrichment**: Thư viện chỉ có 1 ảnh đăng ký gốc (baseline).
+- **Sau Enrichment**: Thư viện tự động cập nhật các ảnh điểm danh đạt ngưỡng tin cậy cao ($\ge 0.75$).
+- **Đánh giá Unknown Rejection**: Đo lường khả năng loại bỏ người lạ sau khi thư viện được cập nhật.
+
+---
+
+## 🚀 3. Hướng dẫn Chạy Kiểm thử & Sinh Báo cáo
+
+Mở PowerShell tại thư mục dự án và kích hoạt môi trường ảo:
 ```powershell
 cd c:\AI_event\AI_Project_2526\backend
 .venv\Scripts\activate
 ```
 
-### Bước 2: Chạy Script Huấn luyện
-Để chạy huấn luyện với đường dẫn dữ liệu mặc định (`c:\AI_event\dataset_students`), chỉ cần chạy:
+Chạy lần lượt các bước kiểm thử để cập nhật dữ liệu:
 
+### Bước 1: Trích xuất Embedding và chạy đối chứng 4 luồng chính
+Chạy đánh giá Case 1 & Case 2 trên tập dữ liệu thực tế, sinh file cache embedding cho các bước sau:
 ```powershell
-python training/train_svm.py
+$env:PYTHONIOENCODING='utf-8'
+python training/evaluate_all_8_pipelines.py
 ```
 
-Nếu tập dữ liệu của bạn nằm ở một thư mục khác, hãy truyền tham số `--data_dir`:
-
+### Bước 2: Chạy đối sánh chi tiết Case 1 & Case 2
+Chạy kịch bản đối sánh trực tiếp độ chính xác giữa FAISS Flat và HNSW:
 ```powershell
-python training/train_svm.py --data_dir "D:/Data/NganHangStudents"
+python training/evaluate_comparison.py
 ```
 
-### Quá trình hoạt động của Script:
-1.  **Quét Dữ Liệu**: Tự động duyệt qua toàn bộ 40 thư mục sinh viên.
-2.  **Tăng Cường Ảnh (Augmentation)**: Tự động nhân bản 5 ảnh gốc của mỗi bạn thành **~100 ảnh biến thể** khác nhau về góc nghiêng (Geometric) và độ tương phản ánh sáng (Photometric).
-3.  **Trích Xuất Vector**: Dùng mô hình ArcFace InsightFace để chuyển hóa 4.000 ảnh biến thể thành các vector đặc trưng 512 chiều.
-4.  **Huấn Luyện Model**: Huấn luyện một bộ phân lớp SVM (RBF kernel) học cách phân tách 40 lớp sinh viên trên không gian vector.
-5.  **Lưu kết quả**:
-    -   Lưu file model học máy tại: `backend/app/models/student_svm_classifier.pkl`
-    -   Lưu file map nhãn tại: `backend/app/models/label_encoder.json`
+### Bước 3: Benchmark hiệu năng mở rộng (Case 4)
+Chạy kiểm thử đo độ trễ tìm kiếm với quy mô từ 1k đến 16k sinh viên:
+```powershell
+python training/case4_scalability_benchmark.py
+```
+
+### Bước 4: Kiểm thử Gallery Enrichment (Case 5)
+Chạy mô phỏng quá trình tự động cập nhật thư viện ảnh và đánh giá Unknown Rejection:
+```powershell
+python training/case5_gallery_enrichment.py
+```
+
+### Bước 5: Tổng hợp và Xuất báo cáo
+Chạy script tổng hợp kết quả của tất cả các case vào báo cáo Markdown và cập nhật file dữ liệu kết quả:
+```powershell
+python training/generate_final_scenario_report.py
+```
 
 ---
 
-## 🎯 3. Điểm cộng Nghiên cứu Khoa học (Học thuật)
-
-Trong cuốn báo cáo bảo vệ đề tài, các bạn nên đưa các chỉ số đánh giá mà script huấn luyện in ra màn hình khi hoàn thành:
-1.  **Độ chính xác tập kiểm thử độc lập (Test set accuracy)**: Chứng minh khả năng nhận diện chính xác các bức ảnh chưa từng thấy trong quá trình học.
-2.  **Chỉ số F1-Score & Precision**: Thể hiện hiệu năng cân bằng trên tất cả 40 sinh viên.
-3.  **Tốc độ suy luận (Latency)**: Chứng minh rằng bộ phân lớp SVM xử lý chỉ mất **$< 1ms$** trên CPU, giúp hệ thống điểm danh siêu tốc tại các cổng ra vào.
+## 🎯 4. Các tệp kết quả sinh ra
+- `training/results/FINAL_SCENARIO_REPORT.md`: Báo cáo kết quả tổng hợp bằng Markdown.
+- `training/results/final_scenario_results.json`: Tệp kết quả dạng JSON để vẽ biểu đồ hoặc import tự động.
+- `training/results/BAO_CAO_THUC_NGHIEM_5_CASE_NHAN_DIEN_KHUON_MAT.docx`: Báo cáo Word học thuật phục vụ nghiệm thu đề tài.
