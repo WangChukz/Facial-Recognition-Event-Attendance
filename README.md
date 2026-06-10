@@ -58,3 +58,11 @@ Nếu bạn dùng Docker qua WSL, hãy chạy `docker compose` **bên trong WSL*
 - `docker/` — Dockerfile + compose + nginx
 
 Chi tiết kiến trúc AI, FAISS, API, bảo mật và mở rộng: xem phản hồi chi tiết trong chat (bài làm mô tả đầy đủ các mục 1–20).
+
+## 🚀 Tính năng nổi bật mới (Nhánh Hieu)
+
+Nhánh `Hieu` đã gộp (merge) và bổ sung các tính năng nâng cao sau:
+1. **Thuật toán bỏ phiếu AI (Voting Logic):** Sử dụng Top-10 kết quả lân cận gần nhất trong FAISS và cơ chế biểu quyết để nhận diện chính xác, giảm thiểu tối đa sai số.
+2. **Tự động làm phong phú thư viện ảnh (Gallery Enrichment):** Tự động học và lưu thêm các vector đặc trưng khuôn mặt của sinh viên trong quá trình điểm danh thực tế (khi độ tin cậy đạt mức $\ge 0.75$).
+3. **Kiểm soát điểm danh chặt chẽ:** Chỉ cho phép điểm danh đối với những sinh viên đã được gán (assign) vào sự kiện đó trong phần quản trị Admin (chống điểm danh tự do / người ngoài).
+4. **Tối ưu hóa Docker trên Windows:** Loại bỏ cơ chế auto-reload của uvicorn trong file compose để tránh lỗi crash I/O watchfiles trên hệ điều hành Windows.
