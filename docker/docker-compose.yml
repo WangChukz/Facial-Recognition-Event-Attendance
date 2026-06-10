@@ -32,8 +32,6 @@ services:
       - ../ai_models:/app/ai_models
       # Mount code trực tiếp vào container để Auto-reload khi sửa code
       - ../backend/app:/app/app
-    # Ghi đè lệnh chạy để bật tính năng tự khởi động lại (Reload)
-    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
   frontend:
     build:
