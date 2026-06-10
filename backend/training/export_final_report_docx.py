@@ -360,6 +360,13 @@ def build_report(data: dict[str, Any]) -> Document:
     headers = ["STT", "Thuật toán", "Accuracy", "Precision", "Recall", "F1-Score", "Sim TB", "Unk.Rej.", "Latency Head"]
 
     doc.add_heading("3. Case 1 - Fine-tune ResNet-18", level=1)
+    add_paragraph(doc, "Mô tả thiết kế thực nghiệm:")
+    add_bullets(doc, [
+        "Huấn luyện: Sử dụng mạng ResNet-18 ArcFace được tinh chỉnh (fine-tune) trên tập huấn luyện đăng ký trong 40 epochs.",
+        "Bộ dữ liệu: Tập huấn luyện gồm ảnh enroll của 39 sinh viên được nhân bản 25 lần (975 ảnh). Tập kiểm thử (test) gồm 174 ảnh thực tế từ webcam lớp học.",
+        "Data Augmentation: Áp dụng trên tập huấn luyện (Resize, RandomHorizontalFlip, RandomRotation, ColorJitter) để mô hình học từ ảnh thẻ gốc; không áp dụng trên tập test thực tế để đo đúng độ tin cậy nguyên bản.",
+        "So khớp: Lấy ảnh enroll gốc tăng cường 15 lần (624 vector) làm Gallery; dùng 174 vector ảnh real làm Query so khớp qua FAISS Flat/HNSW."
+    ])
     add_table(doc, headers, known_case_rows(data["case_1_finetune_resnet18"]))
     add_case_evaluation(
         doc,
@@ -369,6 +376,13 @@ def build_report(data: dict[str, Any]) -> Document:
     )
 
     doc.add_heading("4. Case 2 - ArcFace Pretrained", level=1)
+    add_paragraph(doc, "Mô tả thiết kế thực nghiệm:")
+    add_bullets(doc, [
+        "Huấn luyện: Không thực hiện tinh chỉnh (pretrained), sử dụng trực tiếp mô hình ArcFace ResNet-50 (buffalo_l) có sẵn của InsightFace để trích xuất đặc trưng.",
+        "Bộ dữ liệu: Tập Gallery gồm ảnh enroll của 39 sinh viên. Tập kiểm thử (test) gồm đúng 174 ảnh thực tế từ webcam lớp học (đồng bộ với Case 1).",
+        "Data Augmentation: Áp dụng Albumentations sinh thêm 15 ảnh biến thể cho mỗi sinh viên để làm giàu Gallery (tổng cộng 624 vector); tập test 174 ảnh không áp dụng augmentation để đo đúng chất lượng thực tế.",
+        "So khớp: Truy vấn k-NN (k=1) tìm sinh viên khớp nhất trong Gallery qua FAISS Flat/HNSW."
+    ])
     add_table(doc, headers, known_case_rows(data["case_2_pretrained_arcface"]))
     add_case_evaluation(
         doc,
@@ -378,6 +392,13 @@ def build_report(data: dict[str, Any]) -> Document:
     )
 
     doc.add_heading("5. Case 3 - Synthetic 16.000 Embeddings", level=1)
+    add_paragraph(doc, "Mô tả thiết kế thực nghiệm:")
+    add_bullets(doc, [
+        "Huấn luyện: Không huấn luyện, kiểm thử trên dữ liệu vector đặc trưng giả lập có sẵn.",
+        "Bộ dữ liệu: Tập Gallery gồm 16.000 vector đặc trưng (enroll_embeddings.npy). Tập truy vấn (test) gồm 500 vector đặc trưng (real_embeddings.npy).",
+        "Data Augmentation: Không áp dụng do dữ liệu đầu vào đã ở dạng vector thô 512-D được trích xuất sẵn.",
+        "Kiểm thử: Xây dựng chỉ mục Flat và HNSW ở các quy mô N = 500, 1.000, 5.000, 16.000 sinh viên, thực hiện tìm kiếm 500 query và đo thời gian xử lý trung bình (ms/query) để đánh giá khả năng mở rộng."
+    ])
     add_table(
         doc,
         ["STT", "Thuật toán", "N=500", "N=1.000", "N=5.000", "N=16.000", "Nhận xét"],
@@ -391,6 +412,13 @@ def build_report(data: dict[str, Any]) -> Document:
     )
 
     doc.add_heading("6. Case 4 - Unknown Rejection", level=1)
+    add_paragraph(doc, "Mô tả thiết kế thực nghiệm:")
+    add_bullets(doc, [
+        "Huấn luyện: Không tinh chỉnh mô hình, trích xuất đặc trưng trực tiếp.",
+        "Bộ dữ liệu: Tập Gallery gồm 624 vector đặc trưng của 39 sinh viên thật. Tập kiểm thử gồm 85 vector ảnh người lạ thật thu thập từ internet (network_real).",
+        "Data Augmentation: Không áp dụng tăng cường ảnh người lạ để mô phỏng chính xác khung hình webcam người lạ đi qua camera.",
+        "Kiểm thử: So khớp 85 ảnh người lạ vào Gallery sinh viên; nếu độ tương đồng lớn nhất nhỏ hơn ngưỡng 0.45, coi như từ chối thành công. Đo tỷ lệ từ chối đúng (Unknown Rejection Rate) và độ trễ tìm kiếm."
+    ])
     add_table(doc, headers, unknown_rows(data["case_4_unknown_rejection"]))
     add_case_evaluation(
         doc,
@@ -400,6 +428,13 @@ def build_report(data: dict[str, Any]) -> Document:
     )
 
     doc.add_heading("7. Case 5 - Progressive Gallery Enrichment", level=1)
+    add_paragraph(doc, "Mô tả thiết kế thực nghiệm:")
+    add_bullets(doc, [
+        "Huấn luyện: Không huấn luyện mô hình học máy, tự động cập nhật thư viện ở tầng logic ứng dụng.",
+        "Bộ dữ liệu: Dữ liệu của 39 sinh viên. Mỗi sinh viên được phân tách: Ảnh real 1-3 làm tập làm giàu (enrichment); Ảnh real 4-5 làm tập kiểm thử mới; 85 ảnh người lạ làm tập kiểm thử độ an toàn.",
+        "Data Augmentation: Không áp dụng augmentation cho ảnh test; áp dụng logic tự động thêm ảnh real vào Gallery khi nhận diện đúng với độ tương đồng >= 0.75.",
+        "Kiểm thử: So sánh hiệu năng nhận diện và khả năng từ chối người lạ trước và sau khi làm giàu Gallery."
+    ])
     add_table(doc, headers, enrichment_rows(data["case_5_enrichment"]))
     add_case_evaluation(
         doc,

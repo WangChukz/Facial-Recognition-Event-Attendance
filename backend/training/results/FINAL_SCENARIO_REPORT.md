@@ -21,37 +21,61 @@
 
 ## 3. Case 1 - Fine-tune ResNet-18
 
+**Thiết kế thực nghiệm:**
+- **Huấn luyện:** Sử dụng mạng ResNet-18 ArcFace được tinh chỉnh (fine-tune) trên tập huấn luyện đăng ký trong 40 epochs.
+- **Bộ dữ liệu:** Tập huấn luyện gồm ảnh enroll của 39 sinh viên được nhân bản 25 lần (975 ảnh). Tập kiểm thử (test) gồm 174 ảnh thực tế từ webcam lớp học.
+- **Data Augmentation:** Áp dụng trên tập huấn luyện (Resize, RandomHorizontalFlip, RandomRotation, ColorJitter) để mô hình học từ ảnh thẻ gốc; không áp dụng trên tập test thực tế để đo đúng độ tin cậy nguyên bản.
+- **So khớp:** Lấy ảnh enroll gốc tăng cường 15 lần (624 vector) làm Gallery; dùng 174 vector ảnh real làm Query so khớp qua FAISS Flat/HNSW.
+
 | STT | Thuật toán | Accuracy | Precision | Recall | F1-Score | Similarity TB | Unk.Rej. | Latency Head |
 | :--: | :-- | --: | --: | --: | --: | --: | --: | --: |
-| 1 | FAISS Flat | 20.69% | 17.37% | 20.69% | 17.20% | 0.6425 | N/A | 0.0087 ms |
-| 2 | FAISS HNSW | 20.69% | 18.85% | 20.69% | 17.38% | 0.6418 | N/A | 0.0051 ms |
+| 1 | FAISS Flat | 20.69% | 17.37% | 20.69% | 17.20% | 0.6425 | N/A | 0.0211 ms |
+| 2 | FAISS HNSW | 20.69% | 19.53% | 20.69% | 17.15% | 0.6416 | N/A | 0.0080 ms |
 
 Nhận xét: kết quả fine-tune ResNet-18 hiện không vượt pretrained ArcFace trên dữ liệu thật; đây là bằng chứng cho domain gap/few-shot như kịch bản mong muốn.
 
 ## 4. Case 2 - ArcFace Pretrained
 
+**Thiết kế thực nghiệm:**
+- **Huấn luyện:** Không thực hiện tinh chỉnh (pretrained), sử dụng trực tiếp mô hình ArcFace ResNet-50 (buffalo_l) có sẵn của InsightFace để trích xuất đặc trưng.
+- **Bộ dữ liệu:** Tập Gallery gồm ảnh enroll của 39 sinh viên. Tập kiểm thử (test) gồm đúng 174 ảnh thực tế từ webcam lớp học (đồng bộ với Case 1).
+- **Data Augmentation:** Áp dụng Albumentations sinh thêm 15 ảnh biến thể cho mỗi sinh viên để làm giàu Gallery (tổng cộng 624 vector); tập test 174 ảnh không áp dụng augmentation để đo đúng chất lượng thực tế.
+- **So khớp:** Truy vấn k-NN (k=1) tìm sinh viên khớp nhất trong Gallery qua FAISS Flat/HNSW.
+
 | STT | Thuật toán | Accuracy | Precision | Recall | F1-Score | Similarity TB | Unk.Rej. | Latency Head |
 | :--: | :-- | --: | --: | --: | --: | --: | --: | --: |
-| 1 | FAISS Flat | 100.00% | 100.00% | 100.00% | 100.00% | 0.5967 | N/A | 0.0008 ms |
-| 2 | FAISS HNSW | 100.00% | 100.00% | 100.00% | 100.00% | 0.5967 | N/A | 0.0020 ms |
+| 1 | FAISS Flat | 100.00% | 100.00% | 100.00% | 100.00% | 0.5967 | N/A | 0.0019 ms |
+| 2 | FAISS HNSW | 100.00% | 100.00% | 100.00% | 100.00% | 0.5967 | N/A | 0.0031 ms |
 
 Nhận xét: pretrained ArcFace đang là backbone ổn định nhất trong workspace hiện tại.
 
 ## 5. Case 3 - Synthetic 16.000
 
+**Thiết kế thực nghiệm:**
+- **Huấn luyện:** Không huấn luyện, kiểm thử trên dữ liệu vector đặc trưng giả lập có sẵn.
+- **Bộ dữ liệu:** Tập Gallery gồm 16.000 vector đặc trưng (enroll_embeddings.npy). Tập truy vấn (test) gồm 500 vector đặc trưng (real_embeddings.npy).
+- **Data Augmentation:** Không áp dụng do dữ liệu đầu vào đã ở dạng vector thô 512-D được trích xuất sẵn.
+- **Kiểm thử:** Xây dựng chỉ mục Flat và HNSW ở các quy mô N = 500, 1.000, 5.000, 16.000 sinh viên, thực hiện tìm kiếm 500 query và đo thời gian xử lý trung bình (ms/query) để đánh giá khả năng mở rộng.
+
 | STT | Thuật toán | N=500 | N=1.000 | N=5.000 | N=16.000 | Nhận xét |
 | :--: | :-- | --: | --: | --: | --: | :-- |
-| 1 | FAISS Flat | 0.0023 ms | 0.0046 ms | 0.0156 ms | 0.0700 ms |  |
-| 2 | FAISS HNSW | 0.0053 ms | 0.0075 ms | 0.0141 ms | 0.0349 ms |  |
+| 1 | FAISS Flat | 0.0071 ms | 0.0040 ms | 0.0154 ms | 0.0534 ms |  |
+| 2 | FAISS HNSW | 0.0098 ms | 0.0111 ms | 0.0173 ms | 0.0331 ms |  |
 
 Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat vượt trội ở quy mô lớn (ví dụ ở N=16.000, HNSW chỉ mất 0.0420 ms so với Flat là 0.1336 ms, tức nhanh hơn ~3.18x). Cấu trúc đồ thị phân cấp (Hierarchical Graph) của HNSW giúp độ trễ tìm kiếm tăng chậm theo quy mô O(log N) thay vì tăng tuyến tính O(N) của Flat. Ở quy mô nhỏ (N < 1.000), Flat vẫn có ưu thế nhẹ về độ trễ cực đại do không tốn chi phí duyệt đồ thị phức tạp.
 
 ## 6. Case 4 - Unknown Rejection
 
+**Thiết kế thực nghiệm:**
+- **Huấn luyện:** Không tinh chỉnh mô hình, trích xuất đặc trưng trực tiếp.
+- **Bộ dữ liệu:** Tập Gallery gồm 624 vector đặc trưng của 39 sinh viên thật. Tập kiểm thử gồm 85 vector ảnh người lạ thật thu thập từ internet (network_real).
+- **Data Augmentation:** Không áp dụng tăng cường ảnh người lạ để mô phỏng chính xác khung hình webcam người lạ đi qua camera.
+- **Kiểm thử:** So khớp 85 ảnh người lạ vào Gallery sinh viên; nếu độ tương đồng lớn nhất nhỏ hơn ngưỡng 0.45, coi như từ chối thành công. Đo tỷ lệ từ chối đúng (Unknown Rejection Rate) và độ trễ tìm kiếm.
+
 | STT | Thuật toán | Accuracy | Precision | Recall | F1-Score | Sim TB | Unk.Rej. | Latency Head |
 | :--: | :-- | --: | --: | --: | --: | --: | --: | --: |
-| 1 | FAISS Flat | N/A | N/A | N/A | N/A | 0.1719 | 100.00% | 0.0022 ms |
-| 2 | FAISS HNSW | N/A | N/A | N/A | N/A | 0.1719 | 100.00% | 0.0026 ms |
+| 1 | FAISS Flat | N/A | N/A | N/A | N/A | 0.1719 | 100.00% | 0.0031 ms |
+| 2 | FAISS HNSW | N/A | N/A | N/A | N/A | 0.1719 | 100.00% | 0.0040 ms |
 
 Dữ liệu test: **network_real** (ảnh thực từ mạng - 125 ảnh)
 
@@ -59,11 +83,17 @@ Dữ liệu test: **network_real** (ảnh thực từ mạng - 125 ảnh)
 
 ## 7. Case 5 - Progressive Gallery Enrichment
 
+**Thiết kế thực nghiệm:**
+- **Huấn luyện:** Không huấn luyện mô hình học máy, tự động cập nhật thư viện ở tầng logic ứng dụng.
+- **Bộ dữ liệu:** Dữ liệu của 39 sinh viên. Mỗi sinh viên được phân tách: Ảnh real 1-3 làm tập làm giàu (enrichment); Ảnh real 4-5 làm tập kiểm thử mới; 85 ảnh người lạ làm tập kiểm thử độ an toàn.
+- **Data Augmentation:** Không áp dụng augmentation cho ảnh test; áp dụng logic tự động thêm ảnh real vào Gallery khi nhận diện đúng với độ tương đồng >= 0.75.
+- **Kiểm thử:** So sánh hiệu năng nhận diện và khả năng từ chối người lạ trước và sau khi làm giàu Gallery.
+
 | STT | Trạng thái gallery | Accuracy | Precision | Recall | F1-Score | Sim TB | Unk.Rej. | Latency Head |
 | :--: | :-- | --: | --: | --: | --: | --: | --: | --: |
-| 1 | Không enrich | 100.00% | 100.00% | 100.00% | 100.00% | 0.5782 | N/A | 0.0014 ms |
-| 2 | Có enrich | 100.00% | 100.00% | 100.00% | 100.00% | 0.7771 | N/A | 0.0124 ms |
-| 3 | Có enrich + unknown proxy | N/A | N/A | N/A | N/A | 0.1938 | 100.00% | 0.0110 ms |
+| 1 | Không enrich | 100.00% | 100.00% | 100.00% | 100.00% | 0.5782 | N/A | 0.0074 ms |
+| 2 | Có enrich | 100.00% | 100.00% | 100.00% | 100.00% | 0.7771 | N/A | 0.0057 ms |
+| 3 | Có enrich + unknown proxy | N/A | N/A | N/A | N/A | 0.1938 | 100.00% | 0.0066 ms |
 
 Logic runtime đã được hoàn thiện: live WebSocket dùng voting top-10 và tự enrich khi similarity >= 0.75, có giới hạn tỷ lệ enriched/total, số embedding enriched tối đa và dedupe window.
 
