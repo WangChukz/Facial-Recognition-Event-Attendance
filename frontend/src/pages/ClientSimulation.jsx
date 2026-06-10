@@ -459,15 +459,24 @@ export default function ClientSimulation() {
       const key = `${selSession?.id || ""}:${known.user_id || known.full_name || ""}`;
       if (lastSuccessRef.current !== key) {
         lastSuccessRef.current = key;
-        setResult({
-          ok: true,
-          data: {
-            name: known.full_name || "Sinh viên",
-            code: known.student_code || "N/A",
-            time: new Date().toLocaleTimeString("vi-VN"),
-            sim: known.similarity ? known.similarity.toFixed(2) : "N/A",
-          },
-        });
+        if (known.attendance_logged) {
+          setResult({
+            ok: true,
+            data: {
+              name: known.full_name || "Sinh viên",
+              code: known.student_code || "N/A",
+              time: new Date().toLocaleTimeString("vi-VN"),
+              sim: known.similarity ? known.similarity.toFixed(2) : "N/A",
+            },
+          });
+        } else {
+          const reasonMsg = known.skip_reason === "not_assigned"
+            ? `Chưa được gán vào sự kiện (${known.full_name}).`
+            : known.skip_reason === "dedupe_window"
+            ? `Bạn vừa mới điểm danh xong (${known.full_name}).`
+            : `Không thể điểm danh (${known.full_name}).`;
+          setResult({ ok: false, msg: reasonMsg });
+        }
       }
       return;
     }

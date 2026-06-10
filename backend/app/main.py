@@ -121,6 +121,7 @@ def create_app() -> FastAPI:
                             u = await db.get(User, uid)
                             item["user_id"] = str(uid)
                             item["full_name"] = u.full_name if u else None
+                            item["student_code"] = u.student_code if u else None
                             logged_now = False
                             if auto_attendance and event_id is not None:
                                 ok, reason = await should_log_attendance(

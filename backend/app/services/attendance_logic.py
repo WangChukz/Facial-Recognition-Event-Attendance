@@ -9,7 +9,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
-from app.db.models import AttendanceDirection, AttendanceLog, FaceEmbedding
+from app.db.models import AttendanceDirection, AttendanceLog, FaceEmbedding, EventRegistration
 from app.services.faiss_indexer import FaissFaceIndex
 
 
@@ -26,7 +26,18 @@ async def should_log_attendance(
     event_id: uuid.UUID,
     direction: AttendanceDirection,
 ) -> tuple[bool, str]:
-    """Chống duplicate: không ghi lại cùng hướng trong cửa sổ thời gian."""
+    """Chống duplicate: không ghi lại cùng hướng trong cửa sổ thời gian.
+    Chỉ cho phép điểm danh nếu sinh viên đã được gán vào sự kiện.
+    """
+    # Kiểm tra xem sinh viên có được gán (assign) vào sự kiện này không
+    reg_q = select(EventRegistration).where(
+        EventRegistration.event_id == event_id,
+        EventRegistration.user_id == user_id
+    )
+    reg_r = await session.execute(reg_q)
+    if not reg_r.scalar_one_or_none():
+        return False, "not_assigned"
+
     settings = get_settings()
     window = timedelta(seconds=settings.dedupe_window_seconds)
     since = datetime.now(timezone.utc) - window
@@ -45,6 +56,7 @@ async def should_log_attendance(
     if r.scalar_one_or_none():
         return False, "dedupe_window"
     return True, "ok"
+
 
 
 async def maybe_enrich_gallery(

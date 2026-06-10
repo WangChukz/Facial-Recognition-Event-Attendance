@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import AttendanceDirection, AttendanceLog, User
+from app.db.models import AttendanceDirection, AttendanceLog, User, EventRegistration
 from app.db.session import get_db
 from app.schemas.api import AttendanceCheckInRequest, AttendanceLogOut
 
@@ -35,6 +35,16 @@ async def check_in(
     u = await session.get(User, body.user_id)
     if not u:
         raise HTTPException(404, "User not found")
+    
+    # Kiểm tra xem sinh viên đã được gán vào sự kiện chưa
+    reg_q = select(EventRegistration).where(
+        EventRegistration.event_id == body.event_id,
+        EventRegistration.user_id == body.user_id
+    )
+    reg_r = await session.execute(reg_q)
+    if not reg_r.scalar_one_or_none():
+        raise HTTPException(400, "Sinh viên chưa được gán vào sự kiện này")
+
     log = AttendanceLog(
         user_id=body.user_id,
         event_id=body.event_id,
@@ -57,6 +67,16 @@ async def check_out(
     u = await session.get(User, body.user_id)
     if not u:
         raise HTTPException(404, "User not found")
+        
+    # Kiểm tra xem sinh viên đã được gán vào sự kiện chưa
+    reg_q = select(EventRegistration).where(
+        EventRegistration.event_id == body.event_id,
+        EventRegistration.user_id == body.user_id
+    )
+    reg_r = await session.execute(reg_q)
+    if not reg_r.scalar_one_or_none():
+        raise HTTPException(400, "Sinh viên chưa được gán vào sự kiện này")
+
     log = AttendanceLog(
         user_id=body.user_id,
         event_id=body.event_id,
@@ -69,3 +89,4 @@ async def check_out(
     await session.commit()
     await session.refresh(log)
     return log
+
