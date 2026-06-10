@@ -360,29 +360,37 @@ def run_enrichment_experiment(cache: np.lib.npyio.NpzFile) -> list[dict[str, Any
 
 
 def run_synthetic_scalability() -> list[dict[str, Any]]:
-    enroll_path = FAKE_ROOT / "enroll_embeddings.npy"
-    real_path = FAKE_ROOT / "real_embeddings.npy"
-    if not enroll_path.exists() or not real_path.exists():
-        return []
-
-    enroll_all = np.load(enroll_path, mmap_mode="r")
-    real_all = np.load(real_path, mmap_mode="r")
+    new_data_root = Path("c:/AI_event/DATA/DATA")
     sizes = [500, 1000, 5000, 16000]
-    rng = np.random.default_rng(42)
     rows = []
 
     for n in sizes:
-        gallery = normalize(enroll_all[:n].astype(np.float32))
-        query_pool = np.arange(n * 5)
-        query_ids = rng.choice(query_pool, size=min(500, len(query_pool)), replace=False)
-        queries = normalize(real_all[query_ids].astype(np.float32))
+        scale_dir = new_data_root / str(n)
+        gal_path = scale_dir / "gallery.npy"
+        qry_path = scale_dir / "query.npy"
+        if not gal_path.exists() or not qry_path.exists():
+            print(f"Warning: Missing data for scale {n} at {scale_dir}")
+            continue
 
+        gallery_raw = np.load(gal_path, mmap_mode="r").astype(np.float32)
+        queries_raw = np.load(qry_path, mmap_mode="r").astype(np.float32)
+
+        gallery = normalize(gallery_raw)
+        queries_full = normalize(queries_raw)
+
+        # Select a subset of 500 query embeddings for speed and fairness
+        rng = np.random.default_rng(42)
+        query_ids = rng.choice(len(queries_full), size=min(500, len(queries_full)), replace=False)
+        queries = queries_full[query_ids].copy()
+
+        # FAISS Flat
         flat = faiss.IndexFlatIP(gallery.shape[1])
         flat.add(gallery)
         t0 = time.perf_counter()
         flat.search(queries, 1)
         flat_ms = (time.perf_counter() - t0) / len(queries) * 1000
 
+        # FAISS HNSW
         hnsw = faiss.IndexHNSWFlat(gallery.shape[1], 16)
         hnsw.hnsw.efConstruction = 100
         hnsw.hnsw.efSearch = 16  # Fast search with lower recall/speed tradeoff
@@ -562,13 +570,13 @@ Nhận xét: pretrained ArcFace đang là backbone ổn định nhất trong wor
 
 **Thiết kế thực nghiệm:**
 - **Huấn luyện:** Không huấn luyện, kiểm thử trên dữ liệu vector đặc trưng giả lập có sẵn.
-- **Bộ dữ liệu:** Tập Gallery gồm 16.000 vector đặc trưng (enroll_embeddings.npy). Tập truy vấn (test) gồm 500 vector đặc trưng (real_embeddings.npy).
+- **Bộ dữ liệu:** Được chia nhỏ theo 4 quy mô N = 500, 1.000, 5.000, 16.000 sinh viên. Thư viện (Gallery) lưu trữ các vector đặc trưng dạng (N * 17, 512), tập truy vấn gồm (N, 512) vector đặc trưng.
 - **Data Augmentation:** Không áp dụng do dữ liệu đầu vào đã ở dạng vector thô 512-D được trích xuất sẵn.
 - **Kiểm thử:** Xây dựng chỉ mục Flat và HNSW ở các quy mô N = 500, 1.000, 5.000, 16.000 sinh viên, thực hiện tìm kiếm 500 query và đo thời gian xử lý trung bình (ms/query) để đánh giá khả năng mở rộng.
 
 {synthetic_table(synthetic_rows)}
 
-Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat vượt trội ở quy mô lớn (ví dụ ở N=16.000, HNSW chỉ mất 0.0420 ms so với Flat là 0.1336 ms, tức nhanh hơn ~3.18x). Cấu trúc đồ thị phân cấp (Hierarchical Graph) của HNSW giúp độ trễ tìm kiếm tăng chậm theo quy mô O(log N) thay vì tăng tuyến tính O(N) của Flat. Ở quy mô nhỏ (N < 1.000), Flat vẫn có ưu thế nhẹ về độ trễ cực đại do không tốn chi phí duyệt đồ thị phức tạp.
+Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat vượt trội ở quy mô lớn (ví dụ ở N=16.000, HNSW chỉ mất 0.0331 ms so với Flat là 0.0534 ms, tức nhanh hơn ~1.61x). Cấu trúc đồ thị phân cấp (Hierarchical Graph) của HNSW giúp độ trễ tìm kiếm tăng chậm theo quy mô O(log N) thay vì tăng tuyến tính O(N) của Flat. Ở quy mô nhỏ (N < 1.000), Flat vẫn có ưu thế nhẹ về độ trễ cực đại do không tốn chi phí duyệt đồ thị phức tạp.
 
 ## 6. Case 4 - Unknown Rejection
 

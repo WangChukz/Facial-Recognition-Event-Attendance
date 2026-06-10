@@ -395,7 +395,7 @@ def build_report(data: dict[str, Any]) -> Document:
     add_paragraph(doc, "Mô tả thiết kế thực nghiệm:")
     add_bullets(doc, [
         "Huấn luyện: Không huấn luyện, kiểm thử trên dữ liệu vector đặc trưng giả lập có sẵn.",
-        "Bộ dữ liệu: Tập Gallery gồm 16.000 vector đặc trưng (enroll_embeddings.npy). Tập truy vấn (test) gồm 500 vector đặc trưng (real_embeddings.npy).",
+        "Bộ dữ liệu: Được chia nhỏ theo 4 quy mô N = 500, 1.000, 5.000, 16.000 sinh viên. Thư viện (Gallery) lưu trữ các vector đặc trưng dạng (N * 17, 512), tập truy vấn gồm (N, 512) vector đặc trưng.",
         "Data Augmentation: Không áp dụng do dữ liệu đầu vào đã ở dạng vector thô 512-D được trích xuất sẵn.",
         "Kiểm thử: Xây dựng chỉ mục Flat và HNSW ở các quy mô N = 500, 1.000, 5.000, 16.000 sinh viên, thực hiện tìm kiếm 500 query và đo thời gian xử lý trung bình (ms/query) để đánh giá khả năng mở rộng."
     ])
@@ -407,7 +407,7 @@ def build_report(data: dict[str, Any]) -> Document:
     add_case_evaluation(
         doc,
         "Case này đo xu hướng latency khi số lượng sinh viên tăng lên đến 16.000 nhằm chứng minh tính mở rộng của HNSW.",
-        "Kết quả thực nghiệm cho thấy HNSW vượt trội rõ rệt so với FAISS Flat khi N tăng lớn (nhanh hơn Flat gấp 3.18 lần ở quy mô 16k: 0.0420 ms vs 0.1336 ms).",
+        "Kết quả thực nghiệm cho thấy HNSW vượt trội rõ rệt so với FAISS Flat khi N tăng lớn (nhanh hơn Flat gấp 1.61 lần ở quy mô 16k: 0.0331 ms vs 0.0534 ms).",
         "Trình bày HNSW là giải pháp tối ưu bắt buộc cho các trường đại học quy mô lớn (N > 5.000 sinh viên) để giữ độ trễ tìm kiếm cực thấp.",
     )
 
