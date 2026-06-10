@@ -12,7 +12,6 @@ import cv2
 import numpy as np
 import onnxruntime as ort
 import faiss
-from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
 # Tự động thêm PYTHONPATH
@@ -33,7 +32,7 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[logging.StreamHandler(sys.stdout)]
 )
-logger = logging.getLogger("8_Pipeline_RealWorld_Benchmark")
+logger = logging.getLogger("6_Pipeline_RealWorld_Benchmark")
 
 from app.ai_core.pipeline import FacePipeline
 from app.ai_core.utils.augmentation import (
@@ -256,7 +255,7 @@ def main():
     faiss.normalize_L2(X_test_orig)
     faiss.normalize_L2(X_train_ft)
     faiss.normalize_L2(X_test_ft)
-    cache_path = os.path.join(current_dir, "scenario_embeddings_cache.npz")
+    cache_path = os.path.join(current_dir, "results", "scenario_embeddings_cache.npz")
     np.savez_compressed(
         cache_path,
         X_train_orig=X_train_orig,
@@ -270,19 +269,12 @@ def main():
     )
     logger.info(f"Da luu cache embedding danh gia tai: {cache_path}")
     
-    # ------------------ 3. THỰC THI CHẠY ĐỐI CHỨNG 8 LUỒNG ------------------
+    # ------------------ 3. THỰC THI CHẠY ĐỐI CHỨNG 4 LUỒNG ------------------
     def run_evaluation(X_tr: np.ndarray, X_te: np.ndarray, y_tr: np.ndarray, y_te: np.ndarray, head_type: str) -> Tuple[float, float, float, float, float, float]:
         t0 = time.perf_counter()
         scores = []
-        
-        if head_type == "cosine":
-            y_pred = []
-            for test_emb in X_te:
-                similarities = np.dot(X_tr, test_emb)
-                best_match_idx = np.argmax(similarities)
-                y_pred.append(y_tr[best_match_idx])
-                scores.append(float(similarities[best_match_idx]))
-        elif head_type == "faiss":
+
+        if head_type == "faiss":
             index = faiss.IndexFlatIP(512)
             index.add(X_tr)
             distances, ids = index.search(X_te, 1)
@@ -296,13 +288,8 @@ def main():
             sims, ids = index.search(X_te, 1)
             y_pred = [y_tr[i] if i != -1 else -1 for i in ids.flatten()]
             scores = [float(s) for s in sims.flatten()]
-        elif head_type == "svm":
-            # SVC với probability=True để tương thích ngược
-            clf = SVC(kernel='rbf', C=2.0, probability=True, random_state=42)
-            clf.fit(X_tr, y_tr)
-            y_pred = clf.predict(X_te)
-            probs = clf.predict_proba(X_te)
-            scores = [float(s) for s in np.max(probs, axis=1)]
+        else:
+            raise ValueError(f"Unsupported head_type: {head_type}")
             
         latency_ms = ((time.perf_counter() - t0) / len(X_te)) * 1000
         acc = accuracy_score(y_te, y_pred) * 100
@@ -315,15 +302,11 @@ def main():
     results = []
     configs = [
         # Nhóm A: ArcFace Gốc (ResNet-50)
-        ("Luồng 1: ArcFace Gốc + Cosine", X_train_orig, X_test_orig, y_train_orig, y_test_orig, "cosine", "ArcFace Gốc (ResNet-50)"),
-        ("Luồng 2: ArcFace Gốc + FAISS", X_train_orig, X_test_orig, y_train_orig, y_test_orig, "faiss", "ArcFace Gốc (ResNet-50)"),
-        ("Luồng 3: ArcFace Gốc + HNSW", X_train_orig, X_test_orig, y_train_orig, y_test_orig, "hnsw", "ArcFace Gốc (ResNet-50)"),
-        ("Luồng 4: ArcFace Gốc + SVM", X_train_orig, X_test_orig, y_train_orig, y_test_orig, "svm", "ArcFace Gốc (ResNet-50)"),
+        ("Luồng 1: ArcFace Gốc + FAISS", X_train_orig, X_test_orig, y_train_orig, y_test_orig, "faiss", "ArcFace Gốc (ResNet-50)"),
+        ("Luồng 2: ArcFace Gốc + HNSW", X_train_orig, X_test_orig, y_train_orig, y_test_orig, "hnsw", "ArcFace Gốc (ResNet-50)"),
         # Nhóm B: ArcFace Tinh chỉnh (ResNet-18)
-        ("Luồng 5: ArcFace Tinh chỉnh + Cosine", X_train_ft, X_test_ft, y_train_ft, y_test_ft, "cosine", "ResNet-18 ArcFace FT"),
-        ("Luồng 6: ArcFace Tinh chỉnh + FAISS", X_train_ft, X_test_ft, y_train_ft, y_test_ft, "faiss", "ResNet-18 ArcFace FT"),
-        ("Luồng 7: ArcFace Tinh chỉnh + HNSW", X_train_ft, X_test_ft, y_train_ft, y_test_ft, "hnsw", "ResNet-18 ArcFace FT"),
-        ("Luồng 8: ArcFace Tinh chỉnh + SVM", X_train_ft, X_test_ft, y_train_ft, y_test_ft, "svm", "ResNet-18 ArcFace FT")
+        ("Luồng 3: ArcFace Tinh chỉnh + FAISS", X_train_ft, X_test_ft, y_train_ft, y_test_ft, "faiss", "ResNet-18 ArcFace FT"),
+        ("Luồng 4: ArcFace Tinh chỉnh + HNSW", X_train_ft, X_test_ft, y_train_ft, y_test_ft, "hnsw", "ResNet-18 ArcFace FT"),
     ]
 
     for name, X_tr, X_te, y_tr, y_te, head, model_desc in configs:
@@ -360,7 +343,7 @@ def main():
     print("="*95 + "\n")
     
     # Ghi đè vào tệp JSON kết quả để cập nhật tệp Word tự động
-    res_path = os.path.join(current_dir, "benchmark_results.json")
+    res_path = os.path.join(current_dir, "results", "benchmark_results.json")
     with open(res_path, 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=4)
     logger.info(f"Đã lưu kết quả đối chứng thực tế mới tại: {res_path}")

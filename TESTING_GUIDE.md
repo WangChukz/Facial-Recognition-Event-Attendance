@@ -10,7 +10,7 @@ pip install -r requirements.txt
 
 Key new packages:
 - `albumentations>=1.3.0` — Fast image augmentation
-- `scikit-learn>=1.3.0` — For similarity calculations
+- `scikit-learn>=1.3.0` — For evaluation metrics and reports
 
 ## Testing Phase 1 (Quality Improvements)
 
@@ -145,13 +145,17 @@ Improvements from:
 2. **Check embeddings are different**
    ```python
    # After enrollment, query FAISS
-   from sklearn.metrics.pairwise import cosine_similarity
-   
+   import numpy as np
+
    embeddings = [... fetch all embeddings for a user ...]
    # Should see similarity range like 0.35-0.99 between variants
    for e1 in embeddings[:3]:
        for e2 in embeddings[1:4]:
-           sim = cosine_similarity(e1, e2)[0][0]
+           v1 = np.asarray(e1, dtype=np.float32).reshape(-1)
+           v2 = np.asarray(e2, dtype=np.float32).reshape(-1)
+           v1 = v1 / max(np.linalg.norm(v1), 1e-12)
+           v2 = v2 / max(np.linalg.norm(v2), 1e-12)
+           sim = float(np.dot(v1, v2))
            print(f"Similarity: {sim:.3f}")
    ```
 

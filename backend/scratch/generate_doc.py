@@ -151,10 +151,8 @@ def main():
         "├── pipeline.py             # Trích xuất Face Detection + Alignment\n"
         "├── classifiers/            # Thư mục chứa các Classifier Heads\n"
         "│   ├── base_classifier.py  # Lớp cơ sở trừu tượng (Abstract Base Class)\n"
-        "│   ├── cosine_matcher.py   # Bộ so khớp Cosine Similarity\n"
         "│   ├── faiss_matcher.py    # Bộ so khớp FAISS Index\n"
-        "│   ├── hnsw_matcher.py     # Bộ so khớp HNSW Index\n"
-        "│   └── svm_matcher.py      # Bộ phân lớp SVM RBF phi tuyến\n"
+        "│   └── hnsw_matcher.py     # Bộ so khớp HNSW Index\n"
         "└── utils/\n"
         "    ├── augmentation.py     # Data Augmentation chuyên sâu (Albumentations)\n"
         "    └── preprocessing.py    # Tiền xử lý (Adaptive CLAHE nâng cao)"
@@ -165,7 +163,7 @@ def main():
     p = doc.add_paragraph()
     p.add_run("Kiến trúc sử dụng mô hình thiết kế OOP (Object-Oriented Programming). Lớp ")
     p.add_run("BaseFaceClassifier").bold = True
-    p.add_run(" định nghĩa giao diện trừu tượng duy nhất. Các bộ phân loại như SVM, FAISS, HNSW và Cosine kế thừa từ lớp này, giúp backend FastAPI có thể dễ dàng thay đổi thuật toán nhận diện chỉ bằng cách tráo đổi lớp đối tượng mà không phải viết lại code API.")
+    p.add_run(" định nghĩa giao diện trừu tượng duy nhất. Hai bộ so khớp FAISS và HNSW kế thừa từ lớp này, giúp backend FastAPI có thể dễ dàng thay đổi thuật toán nhận diện chỉ bằng cách tráo đổi lớp đối tượng mà không phải viết lại code API.")
     
     # PHẦN III: KẾT QUẢ THỰC NGHIỆM ĐỐI CHIẾU 8 LUỒNG
     h3 = doc.add_heading("PHẦN III: PHƯƠNG PHÁP LUẬN VÀ KẾT QUẢ THỰC NGHIỆM", level=1)
@@ -219,12 +217,11 @@ def main():
     doc.add_heading("Nhận xét và thảo luận khoa học:", level=2)
     p_analysis = doc.add_paragraph()
     p_analysis.add_run(
-        "1. Hiệu năng tuyệt đối về độ chính xác: Khi đánh giá hoàn toàn trên tập dữ liệu webcam hiện trường thực tế (đồng miền), cả 4 phương pháp so khớp Classifier Heads (Cosine, FAISS L2, HNSW, SVM RBF) đều đạt độ chính xác tuyệt đối 100.00%. Kết quả này chứng minh khi loại bỏ được khoảng cách miền dữ liệu (Domain Gap), không gian vector đặc trưng 512 chiều trích xuất từ ArcFace ResNet-50 gốc sở hữu tính phân tách sinh học hoàn hảo giữa các sinh viên Học viện Ngân hàng.\n"
-        "2. Tối ưu hóa độ trễ xử lý (Latency Benchmark): Bộ phân lớp Cosine Similarity (so khớp phẳng qua numpy) cho tốc độ xử lý nhanh nhất với độ trễ xử lý đầu Classifier chỉ ~0.03 ms. FAISS L2 Flat bám sát phía sau với ~0.05 ms và HNSW Flat đạt ~0.13 ms. Bộ phân lớp SVM RBF có độ trễ lớn nhất là ~0.45 ms do overhead tính toán hàm phi tuyến và hiệu chuẩn xác suất Platt, nhưng vẫn ở mức cực kỳ tối ưu cho các bài toán thời gian thực.\n"
+        "1. Hiệu năng tuyệt đối về độ chính xác: Khi đánh giá hoàn toàn trên tập dữ liệu webcam hiện trường thực tế (đồng miền), hai phương pháp so khớp Classifier Heads (FAISS L2 và HNSW) đều đạt độ chính xác tuyệt đối 100.00%. Kết quả này chứng minh khi loại bỏ được khoảng cách miền dữ liệu (Domain Gap), không gian vector đặc trưng 512 chiều trích xuất từ ArcFace ResNet-50 gốc sở hữu tính phân tách sinh học hoàn hảo giữa các sinh viên Học viện Ngân hàng.\n"
+        "2. Tối ưu hóa độ trễ xử lý (Latency Benchmark): FAISS L2 Flat có độ trễ thấp ở quy mô lớp học, trong khi HNSW có lợi thế mở rộng khi gallery tăng lớn nhờ cấu trúc tìm kiếm xấp xỉ.\n"
         "3. Đề xuất kiến nghị triển khai thực tế:\n"
-        "  - Cho quy mô cấp lớp học (dưới 1.000 sinh viên): Đề tài kiến nghị sử dụng Luồng 1 (Cosine Similarity) hoặc Luồng 2 (FAISS L2 Flat) nhờ tính linh hoạt tuyệt đối (không cần huấn luyện lại khi có sinh viên mới) và tốc độ xử lý tức thời.\n"
-        "  - Cho quy mô cấp trường lớn (trên 10.000 sinh viên): Đề tài kiến nghị sử dụng Luồng 3 (FAISS HNSW Flat) để tối ưu thời gian tìm kiếm theo thang logarith O(log N) thay vì O(N).\n"
-        "  - Cho yêu cầu bảo mật cao chống người lạ: Đề tài kiến nghị sử dụng Luồng 4 (SVM RBF) kết hợp lọc ngưỡng xác suất Platt tin cậy nhằm phát hiện và từ chối điểm danh người lạ một cách hoàn hảo."
+        "  - Cho quy mô cấp lớp học (dưới 1.000 sinh viên): Đề tài kiến nghị sử dụng FAISS L2 Flat nhờ tính linh hoạt tuyệt đối (không cần huấn luyện lại khi có sinh viên mới) và tốc độ xử lý tức thời.\n"
+        "  - Cho quy mô cấp trường lớn (trên 10.000 sinh viên): Đề tài kiến nghị sử dụng FAISS HNSW Flat để tối ưu thời gian tìm kiếm khi gallery mở rộng."
     )
     p_analysis.italic = True
     
@@ -245,7 +242,7 @@ def main():
     
     doc.add_heading("Giai đoạn 2: Huấn luyện tinh chỉnh mô hình thích ứng", level=2)
     doc.add_paragraph(
-        "Huấn luyện bộ phân lớp SVM (Nhánh 1) hoặc chạy tinh chỉnh deep learning PyTorch ArcFace (Nhánh 2). Lưu tệp trọng số mô hình đã tối ưu hóa (.onnx hoặc .pkl) và tệp ánh xạ nhãn JSON vào thư mục app/models/.",
+        "Chạy tinh chỉnh deep learning PyTorch ArcFace khi cần thích ứng dữ liệu, sau đó lưu tệp trọng số mô hình đã tối ưu hóa (.onnx) và tệp ánh xạ nhãn JSON vào thư mục app/models/.",
         style='List Bullet'
     )
     

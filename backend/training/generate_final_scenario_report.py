@@ -7,10 +7,8 @@ from pathlib import Path
 from typing import Any
 
 import faiss
-import joblib
 import numpy as np
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
-from sklearn.svm import SVC
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -21,13 +19,20 @@ MODELS = BACKEND / "app" / "models"
 DATASET = Path(r"C:\AI_event\dataset\dataset")
 FAKE_ROOT = Path(r"C:\AI_event\DATA_FAKE-20260608T190448Z-3-001\DATA_FAKE\dataset_fake\dataset_fake")
 
-BENCHMARK_JSON = TRAINING / "benchmark_results.json"
-EMBED_CACHE = TRAINING / "scenario_embeddings_cache.npz"
-SYNTH_JSON = TRAINING / "synthetic_scalability_results.json"
-FINAL_JSON = TRAINING / "final_scenario_results.json"
-FINAL_MD = TRAINING / "FINAL_SCENARIO_REPORT.md"
-NETWORK_EMBEDDINGS = TRAINING / "network_embeddings.npy"
-NETWORK_METADATA = TRAINING / "network_embeddings_metadata.json"
+RESULTS = TRAINING / "results"
+BENCHMARK_JSON = RESULTS / "benchmark_results.json"
+EMBED_CACHE = RESULTS / "scenario_embeddings_cache.npz"
+SYNTH_JSON = RESULTS / "synthetic_scalability_results.json"
+FINAL_JSON = RESULTS / "final_scenario_results.json"
+FINAL_MD = RESULTS / "FINAL_SCENARIO_REPORT.md"
+NETWORK_EMBEDDINGS = RESULTS / "network_embeddings.npy"
+NETWORK_METADATA = RESULTS / "network_embeddings_metadata.json"
+
+COMPARISON_METHODS = [("faiss", "FAISS"), ("hnsw", "HNSW")]
+HEAD_NAMES = {
+    "FAISS": "FAISS Flat",
+    "HNSW": "FAISS HNSW",
+}
 
 
 def pct_value(value: Any) -> float | None:
@@ -65,7 +70,8 @@ def load_json(path: Path, default: Any) -> Any:
 
 def benchmark_rows_by_backbone(rows: list[dict[str, Any]], needle: str) -> list[dict[str, Any]]:
     out = [r for r in rows if needle.lower() in str(r.get("backbone", "")).lower()]
-    order = {"COSINE": 0, "FAISS": 1, "HNSW": 2, "SVM": 3}
+    out = [r for r in out if str(r.get("head", "")).upper() in HEAD_NAMES]
+    order = {"FAISS": 0, "HNSW": 1}
     return sorted(out, key=lambda r: order.get(str(r.get("head", "")).upper(), 99))
 
 
@@ -83,12 +89,7 @@ def table_for_known_case(rows: list[dict[str, Any]]) -> str:
     ]
     for idx, row in enumerate(rows, 1):
         head = str(row.get("head", "")).upper()
-        name = {
-            "COSINE": "Cosine Similarity",
-            "FAISS": "FAISS Flat",
-            "HNSW": "FAISS HNSW",
-            "SVM": "SVM (Platt)",
-        }.get(head, head)
+        name = HEAD_NAMES.get(head, head)
         lines.append(
             "| {idx} | {name} | {acc} | {pre} | {rec} | {f1} | {sim} | {unk} | {lat} |".format(
                 idx=idx,
@@ -115,9 +116,7 @@ def evaluate_classifier(
     scores: list[float] = []
 
     # Build models first (not included in latency)
-    if method == "cosine":
-        pass  # No setup needed
-    elif method == "faiss":
+    if method == "faiss":
         index = faiss.IndexFlatIP(gallery.shape[1])
         index.add(gallery)
     elif method == "hnsw":
@@ -125,20 +124,12 @@ def evaluate_classifier(
         index.hnsw.efConstruction = 100
         index.hnsw.efSearch = 16  # Fast search config
         index.add(gallery)
-    elif method == "svm":
-        clf = SVC(kernel="rbf", C=2.0, probability=True, random_state=42)
-        clf.fit(gallery, gallery_y)
     else:
         raise ValueError(method)
 
     # Measure inference time only
     t0 = time.perf_counter()
-    if method == "cosine":
-        sims = queries @ gallery.T
-        best = np.argmax(sims, axis=1)
-        pred = gallery_y[best]
-        scores = [float(v) for v in np.max(sims, axis=1)]
-    elif method == "faiss":
+    if method == "faiss":
         sims, ids = index.search(queries, 1)
         pred = gallery_y[ids.reshape(-1)]
         scores = [float(v) for v in sims.reshape(-1)]
@@ -146,10 +137,8 @@ def evaluate_classifier(
         distances, ids = index.search(queries, 1)
         pred = gallery_y[ids.reshape(-1)]
         scores = [float(1.0 - (v / 2.0)) for v in distances.reshape(-1)]
-    elif method == "svm":
-        pred = clf.predict(queries)
-        probs = clf.predict_proba(queries)
-        scores = [float(v) for v in np.max(probs, axis=1)]
+    else:
+        raise ValueError(method)
 
     latency = (time.perf_counter() - t0) / max(len(queries), 1) * 1000
 
@@ -173,7 +162,7 @@ def rows_from_arrays(
     backbone: str,
 ) -> list[dict[str, Any]]:
     rows = []
-    for method, head in [("cosine", "COSINE"), ("faiss", "FAISS"), ("hnsw", "HNSW"), ("svm", "SVM")]:
+    for method, head in COMPARISON_METHODS:
         metrics = evaluate_classifier(gallery, gallery_y, queries, query_y, method)
         rows.append(
             {
@@ -207,7 +196,7 @@ def load_pretrained_case_rows() -> tuple[list[dict[str, Any]], np.ndarray | None
         gallery_y,
         queries,
         query_y,
-        backbone="ArcFace Pretrained (ResNet-50, SVM train trên enroll augmented)",
+        backbone="ArcFace Pretrained (ResNet-50)",
     ), gallery, gallery_y
 
 
@@ -248,11 +237,9 @@ def evaluate_unknown_rejection(gallery: np.ndarray, gallery_y: np.ndarray) -> li
         return []
 
     rows = []
-    for method in ["cosine", "faiss", "hnsw", "svm"]:
+    for method, head in COMPARISON_METHODS:
         # Build models first (not included in latency)
-        if method == "cosine":
-            pass  # No setup needed
-        elif method == "faiss":
+        if method == "faiss":
             index = faiss.IndexFlatIP(gallery.shape[1])
             index.add(gallery)
         elif method == "hnsw":
@@ -260,17 +247,12 @@ def evaluate_unknown_rejection(gallery: np.ndarray, gallery_y: np.ndarray) -> li
             index.hnsw.efConstruction = 100
             index.hnsw.efSearch = 16  # Fast search config
             index.add(gallery)
-        else:  # svm
-            clf = SVC(kernel="rbf", C=2.0, probability=True, random_state=42)
-            clf.fit(gallery, gallery_y)
+        else:
+            raise ValueError(method)
 
         # Measure inference time only
         t0 = time.perf_counter()
-        if method == "cosine":
-            sims = unknown @ gallery.T
-            best_scores = np.max(sims, axis=1)
-            rejected = best_scores < 0.45
-        elif method == "faiss":
+        if method == "faiss":
             sims, _ = index.search(unknown, 1)
             best_scores = sims.reshape(-1)
             rejected = best_scores < 0.45
@@ -278,14 +260,12 @@ def evaluate_unknown_rejection(gallery: np.ndarray, gallery_y: np.ndarray) -> li
             distances, _ = index.search(unknown, 1)
             best_scores = 1.0 - (distances.reshape(-1) / 2.0)
             rejected = best_scores < 0.45
-        else:  # svm
-            probs = clf.predict_proba(unknown)
-            best_scores = np.max(probs, axis=1)
-            rejected = best_scores < 0.75
+        else:
+            raise ValueError(method)
 
         rows.append(
             {
-                "head": method.upper() if method != "cosine" else "COSINE",
+                "head": head,
                 "unknown_rejection": float(np.mean(rejected) * 100),
                 "similarity_avg": float(np.mean(best_scores)),
                 "head_latency_ms": (time.perf_counter() - t0) / len(unknown) * 1000,
@@ -384,10 +364,6 @@ def run_synthetic_scalability() -> list[dict[str, Any]]:
         query_ids = rng.choice(query_pool, size=min(500, len(query_pool)), replace=False)
         queries = normalize(real_all[query_ids].astype(np.float32))
 
-        t0 = time.perf_counter()
-        _ = np.argmax(queries @ gallery.T, axis=1)
-        cosine_ms = (time.perf_counter() - t0) / len(queries) * 1000
-
         flat = faiss.IndexFlatIP(gallery.shape[1])
         flat.add(gallery)
         t0 = time.perf_counter()
@@ -404,20 +380,11 @@ def run_synthetic_scalability() -> list[dict[str, Any]]:
 
         rows.extend(
             [
-                {"head": "COSINE", "n": n, "latency_ms": float(cosine_ms)},
                 {"head": "FAISS", "n": n, "latency_ms": float(flat_ms)},
                 {"head": "HNSW", "n": n, "latency_ms": float(hnsw_ms)},
             ]
         )
 
-    rows.append(
-        {
-            "head": "SVM",
-            "n": None,
-            "latency_ms": None,
-            "note": "Không benchmark SVM Platt trên synthetic 16k vì dataset fake chỉ có 1 enroll/class; SVC đa lớp xác suất không có ý nghĩa và không đại diện khi thiếu augmentation.",
-        }
-    )
     with SYNTH_JSON.open("w", encoding="utf-8") as f:
         json.dump(rows, f, ensure_ascii=False, indent=2)
     return rows
@@ -425,10 +392,8 @@ def run_synthetic_scalability() -> list[dict[str, Any]]:
 
 def synthetic_table(rows: list[dict[str, Any]]) -> str:
     methods = [
-        ("COSINE", "Cosine Similarity"),
         ("FAISS", "FAISS Flat"),
         ("HNSW", "FAISS HNSW"),
-        ("SVM", "SVM (Platt)"),
     ]
     sizes = [500, 1000, 5000, 16000]
     lines = [
@@ -444,7 +409,7 @@ def synthetic_table(rows: list[dict[str, Any]]) -> str:
 
 
 def unknown_table(rows: list[dict[str, Any]]) -> str:
-    name_map = {"COSINE": "Cosine Similarity", "FAISS": "FAISS Flat", "HNSW": "FAISS HNSW", "SVM": "SVM (Platt)"}
+    name_map = HEAD_NAMES
     lines = [
         "| STT | Thuật toán | Accuracy | Precision | Recall | F1-Score | Sim TB | Unk.Rej. | Latency Head |",
         "| :--: | :-- | --: | --: | --: | --: | --: | --: | --: |",
@@ -530,7 +495,6 @@ def main() -> None:
         "notes": {
             "unknown_dataset": f"Sử dụng dữ liệu {unknown_source}: {'ảnh thực từ mạng' if unknown_source == 'network_real' else 'synthetic proxy'}.",
             "cache": cache_note,
-            "svm_synthetic": "SVM Platt không benchmark ở 16k synthetic vì dataset fake chỉ có 1 enroll/class.",
         },
     }
     with FINAL_JSON.open("w", encoding="utf-8") as f:
@@ -540,7 +504,7 @@ def main() -> None:
 
 ## 1. Cấu trúc dự án đã đọc
 
-- `backend/`: FastAPI, WebSocket live, InsightFace/ArcFace pipeline, FAISS index, SVM classifier, training/evaluation scripts.
+- `backend/`: FastAPI, WebSocket live, InsightFace/ArcFace pipeline, FAISS index, training/evaluation scripts.
 - `frontend/`: React + Vite cho dashboard, đăng ký khuôn mặt, live camera, lịch sử và sự kiện.
 - `database/init.sql`: schema PostgreSQL cho users, events, face_embeddings, attendance_logs.
 - `ai_models/`: model InsightFace `buffalo_l` dùng cho pretrained ArcFace.
@@ -551,9 +515,9 @@ def main() -> None:
 
 | Case | Nội dung | Trạng thái |
 | :--: | :-- | :-- |
-| 1 | Fine-tune ResNet-18 trên 39 SV thật | Có số liệu trong benchmark 8 luồng. Kết quả hiện tại thấp, phù hợp mục tiêu chứng minh fine-tune kém cross-domain. |
-| 2 | ArcFace pretrained trên 39 SV thật, so sánh 4 head | Đã có đủ 4 thuật toán: Cosine, FAISS Flat, HNSW, SVM. |
-| 3 | Synthetic 16.000 embeddings, benchmark scalability | Đã bổ sung benchmark N=500/1.000/5.000/16.000 cho Cosine/FAISS/HNSW. SVM Platt được ghi chú không phù hợp với synthetic 1 enroll/class. |
+| 1 | Fine-tune ResNet-18 trên 39 SV thật | Có số liệu benchmark cho FAISS Flat và HNSW. Kết quả hiện tại thấp, phù hợp mục tiêu chứng minh fine-tune kém cross-domain. |
+| 2 | ArcFace pretrained trên 39 SV thật, so sánh 2 thuật toán | Đã có đủ 2 thuật toán: FAISS Flat và HNSW. |
+| 3 | Synthetic 16.000 embeddings, benchmark scalability | Đã bổ sung benchmark N=500/1.000/5.000/16.000 cho FAISS/HNSW. |
 | 4 | Dữ liệu mạng/người lạ, unknown rejection | {'✅ Đã nhận dữ liệu ảnh mạng; đang test với embedding thực' if unknown_source == 'network_real' else '⚠️ Chưa có dữ liệu mạng; test với synthetic proxy'} |
 | 5 | Progressive Gallery Enrichment | Đã bổ sung logic runtime trong WebSocket và báo cáo mô phỏng enrichment từ cache embedding real. |
 

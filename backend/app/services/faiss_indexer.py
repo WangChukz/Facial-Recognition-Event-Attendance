@@ -20,7 +20,7 @@ class FaissMetaRow:
 
 class FaissFaceIndex:
     """
-    L2-normalized embeddings + IndexFlatIP (+ IDMap) => cosine similarity qua inner product.
+    L2-normalized embeddings + IndexFlatIP (+ IDMap) => inner-product similarity score.
     """
 
     def __init__(self, index_path: str, meta_path: str, dim: int = 512) -> None:

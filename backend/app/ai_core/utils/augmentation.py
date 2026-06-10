@@ -106,13 +106,18 @@ def filter_embeddings(
     if not embeddings:
         return []
 
-    from sklearn.metrics.pairwise import cosine_similarity
-
-    orig = embeddings[0].reshape(1, -1)
+    orig = np.asarray(embeddings[0], dtype=np.float32).reshape(-1)
+    orig_norm = np.linalg.norm(orig)
+    if orig_norm > 0:
+        orig = orig / orig_norm
     filtered = [embeddings[0]]
 
     for emb in embeddings[1:]:
-        sim = cosine_similarity(orig, emb.reshape(1, -1))[0][0]
+        candidate = np.asarray(emb, dtype=np.float32).reshape(-1)
+        candidate_norm = np.linalg.norm(candidate)
+        if candidate_norm > 0:
+            candidate = candidate / candidate_norm
+        sim = float(np.dot(orig, candidate))
         if min_similarity <= sim <= max_similarity:
             filtered.append(emb)
 

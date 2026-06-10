@@ -21,7 +21,7 @@ class HNSWMetaRow:
 class HNSWFaceIndex:
     """
     HNSW-based face index with L2-normalized embeddings + IndexHNSWFlat (METRIC_INNER_PRODUCT) 
-    => cosine similarity via inner product.
+    => inner-product similarity score.
     
     Key differences from FaissFaceIndex:
     - Uses IndexHNSWFlat (HNSW does NOT support IndexIDMap2)
@@ -151,7 +151,7 @@ class HNSWFaceIndex:
 
     def search(self, embedding: np.ndarray, top_k: int = 5) -> list[dict[str, Any]]:
         """
-        Search for top-k nearest neighbors using cosine similarity (via inner product on normalized vectors).
+        Search for top-k nearest neighbors using inner product on normalized vectors.
         
         Returns:
             List of dicts with keys: faiss_id, similarity, user_id, embedding_id
