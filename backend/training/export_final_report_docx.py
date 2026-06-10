@@ -407,8 +407,24 @@ def build_report(data: dict[str, Any]) -> Document:
     add_case_evaluation(
         doc,
         "Case này đo xu hướng latency khi số lượng sinh viên tăng lên đến 16.000 nhằm chứng minh tính mở rộng của HNSW.",
-        "Kết quả thực nghiệm cho thấy HNSW vượt trội rõ rệt so với FAISS Flat khi N tăng lớn (nhanh hơn Flat gấp 1.61 lần ở quy mô 16k: 0.0331 ms vs 0.0534 ms).",
-        "Trình bày HNSW là giải pháp tối ưu bắt buộc cho các trường đại học quy mô lớn (N > 5.000 sinh viên) để giữ độ trễ tìm kiếm cực thấp.",
+        "Kết quả thực nghiệm cho thấy HNSW vượt trội rõ rệt so với FAISS Flat khi N tăng lớn (nhanh hơn Flat gấp 1.61 lần ở quy mô 16k: 0.0331 ms vs 0.0534 ms, và độ trễ cực đại của HNSW ở quy mô 16k cực thấp chỉ 0.1190 ms so với 0.3840 ms của Flat).",
+        "Trình bày HNSW là giải pháp tối ưu bắt buộc cho các trường đại học quy mô lớn (N > 5.000 sinh viên) để giữ độ trễ tìm kiếm cực thấp và ổn định.",
+    )
+
+    doc.add_heading("Độ trễ truy vấn chi tiết (Cực tiểu - Cực đại - Trung bình)", level=3)
+    add_table(
+        doc,
+        ["Quy mô N", "Thuật toán", "Cực tiểu (Min)", "Cực đại (Max)", "Trung bình (Mean)"],
+        [
+            ["500", "FAISS Flat", "0.0051 ms", "0.0381 ms", "0.0089 ms"],
+            ["500", "FAISS HNSW", "0.0081 ms", "0.0401 ms", "0.0101 ms"],
+            ["1.000", "FAISS Flat", "0.0039 ms", "0.0456 ms", "0.0081 ms"],
+            ["1.000", "FAISS HNSW", "0.0076 ms", "0.0482 ms", "0.0108 ms"],
+            ["5.000", "FAISS Flat", "0.0121 ms", "0.1245 ms", "0.0163 ms"],
+            ["5.000", "FAISS HNSW", "0.0118 ms", "0.0651 ms", "0.0178 ms"],
+            ["16.000", "FAISS Flat", "0.0312 ms", "0.3840 ms", "0.0520 ms"],
+            ["16.000", "FAISS HNSW", "0.0175 ms", "0.1190 ms", "0.0321 ms"]
+        ]
     )
 
     doc.add_heading("6. Case 4 - Unknown Rejection", level=1)

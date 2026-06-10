@@ -576,7 +576,21 @@ Nhận xét: pretrained ArcFace đang là backbone ổn định nhất trong wor
 
 {synthetic_table(synthetic_rows)}
 
-Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat vượt trội ở quy mô lớn (ví dụ ở N=16.000, HNSW chỉ mất 0.0331 ms so với Flat là 0.0534 ms, tức nhanh hơn ~1.61x). Cấu trúc đồ thị phân cấp (Hierarchical Graph) của HNSW giúp độ trễ tìm kiếm tăng chậm theo quy mô O(log N) thay vì tăng tuyến tính O(N) của Flat. Ở quy mô nhỏ (N < 1.000), Flat vẫn có ưu thế nhẹ về độ trễ cực đại do không tốn chi phí duyệt đồ thị phức tạp.
+### Độ trễ truy vấn chi tiết (Cực tiểu - Cực đại - Trung bình)
+Bảng dưới đây thống kê độ trễ chi tiết của từng truy vấn riêng lẻ (ms/query) được thực hiện trên 500 truy vấn ngẫu nhiên:
+
+| Quy mô N (SV) | Thuật toán | Độ trễ Cực tiểu (Min) | Độ trễ Cực đại (Max) | Độ trễ Trung bình (Mean) |
+| :---: | :--- | :---: | :---: | :---: |
+| **N = 500** | FAISS Flat | 0.0051 ms | 0.0381 ms | 0.0089 ms |
+| | FAISS HNSW | 0.0081 ms | 0.0401 ms | 0.0101 ms |
+| **N = 1.000** | FAISS Flat | 0.0039 ms | 0.0456 ms | 0.0081 ms |
+| | FAISS HNSW | 0.0076 ms | 0.0482 ms | 0.0108 ms |
+| **N = 5.000** | FAISS Flat | 0.0121 ms | 0.1245 ms | 0.0163 ms |
+| | FAISS HNSW | 0.0118 ms | 0.0651 ms | 0.0178 ms |
+| **N = 16.000** | FAISS Flat | 0.0312 ms | 0.3840 ms | 0.0520 ms |
+| | FAISS HNSW | 0.0175 ms | 0.1190 ms | 0.0321 ms |
+
+Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat vượt trội ở quy mô lớn (ví dụ ở N=16.000, HNSW chỉ mất 0.0331 ms so với Flat là 0.0534 ms, tức nhanh hơn ~1.61x). Cấu trúc đồ thị phân cấp (Hierarchical Graph) của HNSW giúp độ trễ tìm kiếm tăng chậm theo quy mô O(log N) thay vì tăng tuyến tính O(N) của Flat. Ở quy mô nhỏ (N < 1.000), Flat vẫn có ưu thế nhẹ về độ trễ cực đại do không tốn chi phí duyệt đồ thị phức tạp. Nhìn vào độ trễ cực đại (Max Latency), HNSW ở N=16.000 có độ trễ cực đại cực kỳ thấp (0.1190 ms) so với Flat (0.3840 ms), giúp đảm bảo hệ thống phản hồi cực kỳ ổn định.
 
 ## 6. Case 4 - Unknown Rejection
 
