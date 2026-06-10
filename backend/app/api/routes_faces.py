@@ -46,19 +46,8 @@ def _run_face_processing(pipeline: FacePipeline, img: np.ndarray):
     if not quality["ok"]:
         return {"error": "quality", "reasons": quality["reasons"]}
 
-    # Step 3: augmented embeddings (the slow part)
-    def process_for_augment(frame):
-        results = pipeline.process_frame_sync(frame, use_adaptive_clahe=True)
-        return results if results else []
-
-    embeddings = generate_augmented_embeddings(
-        img,
-        process_for_augment,
-        n_geometric=7,
-        n_photo=5,
-        n_combined=2,
-        n_occlusion=2,
-    )
+    # Step 3: augmented embeddings (disabled as requested by user)
+    embeddings = [face["embedding"]]
 
     return {
         "face": face,

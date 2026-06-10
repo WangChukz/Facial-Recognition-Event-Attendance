@@ -117,6 +117,19 @@ class FaissFaceIndex:
             )
         return out
 
+    def remove_by_user_id(self, user_id: uuid.UUID) -> None:
+        with self._lock:
+            idx = self._ensure_index()
+            to_remove = [k for k, v in self._meta.items() if v.user_id == str(user_id)]
+            if not to_remove:
+                return
+            import faiss
+            remove_arr = np.array(to_remove, dtype=np.int64)
+            idx.remove_ids(remove_arr)
+            for fid in to_remove:
+                self._meta.pop(fid, None)
+            self.persist()
+
     @property
     def total(self) -> int:
         with self._lock:

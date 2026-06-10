@@ -10,6 +10,12 @@ venv/
 ENV/
 backend/.venv/
 
+# Node modules (JavaScript)
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+
 # Large Model files (ONNX, Pickle, NPZ, index)
 *.onnx
 *.onnx.data

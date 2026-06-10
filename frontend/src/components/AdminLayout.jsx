@@ -80,6 +80,7 @@ const PAGE_TITLES = {
   "/admin/users": "Sinh viên",
   "/admin/events": "Sự kiện",
   "/admin/register-face": "Đăng ký Khuôn mặt",
+  "/admin/assignments": "Gán Sinh viên",
   "/admin/history": "Lịch sử Điểm danh",
 };
 
@@ -162,6 +163,7 @@ export default function AdminLayout() {
 
           <SideSection label="ĐIỂM DANH" />
           <SideLink to="/admin/register-face" icon={UserCheck} label="Đăng ký khuôn mặt" />
+          <SideLink to="/admin/assignments" icon={Shield} label="Gán sinh viên" />
           <SideLink to="/admin/history" icon={History} label="Lịch sử điểm danh" />
         </nav>
 

@@ -25,24 +25,18 @@ async def should_log_attendance(
     event_id: uuid.UUID,
     direction: AttendanceDirection,
 ) -> tuple[bool, str]:
-    """Chống duplicate: không ghi lại cùng hướng trong cửa sổ thời gian."""
-    settings = get_settings()
-    window = timedelta(seconds=settings.dedupe_window_seconds)
-    since = datetime.now(timezone.utc) - window
+    """Chống duplicate: không cho phép điểm danh 2 lần trong 1 sự kiện."""
     q = (
         select(AttendanceLog)
         .where(
             AttendanceLog.user_id == user_id,
             AttendanceLog.event_id == event_id,
-            AttendanceLog.direction == direction,
-            AttendanceLog.created_at >= since,
         )
-        .order_by(AttendanceLog.created_at.desc())
         .limit(1)
     )
     r = await session.execute(q)
     if r.scalar_one_or_none():
-        return False, "dedupe_window"
+        return False, "already_attended"
     return True, "ok"
 
 

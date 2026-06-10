@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { apiGet, apiPost } from "../api.js";
+import { apiGet, apiPost, apiDelete } from "../api.js";
 import { useToast } from "../context/ToastContext.jsx";
-import { Loader2 } from "lucide-react";
+import { Loader2, Play, Square, Trash2 } from "lucide-react";
 
 export default function Events() {
   const [events, setEvents] = useState([]);
@@ -15,7 +15,17 @@ export default function Events() {
 
   const load = async () => {
     const [ev, us] = await Promise.all([apiGet("/events"), apiGet("/users")]);
-    setEvents(ev);
+    const evWithSessions = await Promise.all(
+      ev.map(async (e) => {
+        try {
+          const sessions = await apiGet(`/events/${e.id}/sessions`);
+          return { ...e, sessions };
+        } catch {
+          return { ...e, sessions: [] };
+        }
+      })
+    );
+    setEvents(evWithSessions);
     setUsers(us);
     if (!createdBy && us[0]) setCreatedBy(us[0].id);
   };
@@ -50,11 +60,36 @@ export default function Events() {
     setErr("");
     try {
       await apiPost(`/events/${eventId}/sessions`, { name: "live" });
-      addToast("Mở session thành công!", "success");
+      addToast("Mở phiên điểm danh thành công!", "success");
       await load();
     } catch (e) {
       setErr(e.message);
-      addToast("Có lỗi xảy ra khi mở session.", "error");
+      addToast("Có lỗi xảy ra khi mở phiên.", "error");
+    }
+  };
+
+  const closeSession = async (sessionId) => {
+    setErr("");
+    try {
+      await apiPost(`/events/sessions/${sessionId}/close`, {});
+      addToast("Đóng phiên điểm danh thành công!", "success");
+      await load();
+    } catch (e) {
+      setErr(e.message);
+      addToast("Có lỗi xảy ra khi đóng phiên.", "error");
+    }
+  };
+
+  const deleteEvent = async (eventId, eventName) => {
+    if (!confirm(`Bạn có chắc muốn xóa sự kiện "${eventName}"? Các phiên và lịch sử điểm danh liên quan sẽ bị xóa sạch.`)) return;
+    setErr("");
+    try {
+      await apiDelete(`/events/${eventId}`);
+      addToast("Xóa sự kiện thành công!", "success");
+      await load();
+    } catch (e) {
+      setErr(e.message);
+      addToast("Có lỗi xảy ra khi xóa sự kiện.", "error");
     }
   };
 
@@ -74,7 +109,7 @@ export default function Events() {
               <input value={desc} onChange={(e) => setDesc(e.target.value)} />
             </label>
             <label>
-              Người tạo (UUID)
+              Người tạo
               <select value={createdBy} onChange={(e) => setCreatedBy(e.target.value)}>
                 <option value="">—</option>
                 {users.map((u) => (
@@ -92,29 +127,93 @@ export default function Events() {
           </form>
         </div>
         <div className="panel" style={{ minWidth: 0 }}>
-          <h2>Danh sách & phiên</h2>
+          <h2>Danh sách & Phiên điểm danh</h2>
           <table className="table">
             <thead>
               <tr>
-                <th>Tên</th>
-                <th>ID</th>
-                <th></th>
+                <th>Tên sự kiện</th>
+                <th>Phiên điểm danh</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
-              {events.map((ev) => (
-                <tr key={ev.id}>
-                  <td>{ev.name}</td>
-                  <td className="muted" style={{ fontSize: "0.72rem" }}>
-                    {ev.id}
-                  </td>
-                  <td style={{ textAlign: "right" }}>
-                    <button type="button" onClick={() => openSession(ev.id)} style={{ padding: "4px 12px", fontSize: "0.85rem", background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }}>
-                      Mở session
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {events.map((ev) => {
+                const activeSession = ev.sessions?.find((s) => !s.closed_at);
+
+                return (
+                  <tr key={ev.id}>
+                    <td>
+                      <div style={{ fontWeight: 600 }}>{ev.name}</div>
+                      <div className="muted" style={{ fontSize: "0.72rem" }}>ID: {ev.id}</div>
+                    </td>
+                    <td>
+                      {activeSession ? (
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#16a34a", fontWeight: 600 }}>
+                          <span style={{ height: 8, width: 8, borderRadius: "50%", backgroundColor: "#16a34a", display: "inline-block" }}></span>
+                          Đang mở (live)
+                          <button
+                            type="button"
+                            onClick={() => closeSession(activeSession.id)}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 4,
+                              padding: "4px 8px",
+                              fontSize: "0.8rem",
+                              backgroundColor: "#fef2f2",
+                              color: "#dc2626",
+                              border: "1px solid #fecaca",
+                              borderRadius: 4,
+                              cursor: "pointer"
+                            }}
+                          >
+                            <Square size={12} /> Đóng
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => openSession(ev.id)}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 4,
+                            padding: "4px 8px",
+                            fontSize: "0.8rem",
+                            backgroundColor: "#f0fdf4",
+                            color: "#16a34a",
+                            border: "1px solid #bbf7d0",
+                            borderRadius: 4,
+                            cursor: "pointer"
+                          }}
+                        >
+                          <Play size={12} /> Mở phiên
+                        </button>
+                      )}
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() => deleteEvent(ev.id, ev.name)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4,
+                          padding: "4px 8px",
+                          fontSize: "0.8rem",
+                          backgroundColor: "#fef2f2",
+                          color: "#dc2626",
+                          border: "none",
+                          borderRadius: 4,
+                          cursor: "pointer"
+                        }}
+                      >
+                        <Trash2 size={12} /> Xóa
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

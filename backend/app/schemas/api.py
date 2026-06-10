@@ -127,3 +127,8 @@ class CardImageUploadResponse(BaseModel):
     image_type: str
     image_path: str
     uploaded_at: datetime
+
+
+class EventAssignRequest(BaseModel):
+    user_ids: list[UUID]
+

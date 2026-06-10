@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { apiGet, apiPost } from "../api.js";
+import { apiGet, apiPost, apiDelete } from "../api.js";
 import { useToast } from "../context/ToastContext.jsx";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -40,6 +40,17 @@ export default function Users() {
       addToast("Có lỗi xảy ra khi tạo người dùng.", "error");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const deleteUser = async (userId, userName) => {
+    if (!confirm(`Bạn có chắc muốn xóa sinh viên/nhân sự "${userName}"? Thao tác này sẽ xóa sạch ảnh thẻ, dữ liệu đặc trưng nhận diện (FAISS) và lịch sử điểm danh của họ.`)) return;
+    try {
+      await apiDelete(`/users/${userId}`);
+      addToast("Xóa người dùng thành công!", "success");
+      await load();
+    } catch (e) {
+      addToast("Có lỗi xảy ra khi xóa người dùng: " + e.message, "error");
     }
   };
 
@@ -83,17 +94,44 @@ export default function Users() {
             <thead>
               <tr>
                 <th>Họ tên</th>
-                <th>Email</th>
+                <th>Email / MSSV</th>
                 <th>ID</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
               {users.map((u) => (
                 <tr key={u.id}>
-                  <td>{u.full_name}</td>
-                  <td>{u.email}</td>
-                  <td className="muted" style={{ fontSize: "0.75rem" }}>
+                  <td>
+                    <div style={{ fontWeight: 600 }}>{u.full_name}</div>
+                    <div className="muted" style={{ fontSize: "0.8rem" }}>Vai trò: {u.role}</div>
+                  </td>
+                  <td>
+                    <div>{u.email}</div>
+                    {u.student_code && <div className="muted" style={{ fontSize: "0.8rem" }}>MSSV: {u.student_code}</div>}
+                  </td>
+                  <td className="muted" style={{ fontSize: "0.72rem" }}>
                     {u.id}
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      onClick={() => deleteUser(u.id, u.full_name)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                        padding: "6px 10px",
+                        backgroundColor: "#fef2f2",
+                        color: "#dc2626",
+                        border: "none",
+                        borderRadius: 4,
+                        cursor: "pointer",
+                        fontSize: "0.8rem"
+                      }}
+                    >
+                      <Trash2 size={13} /> Xóa
+                    </button>
                   </td>
                 </tr>
               ))}

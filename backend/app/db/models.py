@@ -36,9 +36,10 @@ class User(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    embeddings: Mapped[list["FaceEmbedding"]] = relationship(back_populates="user")
-    attendance: Mapped[list["AttendanceLog"]] = relationship(back_populates="user")
-    card_images: Mapped[list["CardImage"]] = relationship(back_populates="user")
+    embeddings: Mapped[list["FaceEmbedding"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    attendance: Mapped[list["AttendanceLog"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    card_images: Mapped[list["CardImage"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    registrations: Mapped[list["EventRegistration"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
 
 class Event(Base):
@@ -53,8 +54,9 @@ class Event(Base):
     created_by: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    sessions: Mapped[list["EventSession"]] = relationship(back_populates="event")
-    attendance: Mapped[list["AttendanceLog"]] = relationship(back_populates="event")
+    sessions: Mapped[list["EventSession"]] = relationship(back_populates="event", cascade="all, delete-orphan")
+    attendance: Mapped[list["AttendanceLog"]] = relationship(back_populates="event", cascade="all, delete-orphan")
+    registrations: Mapped[list["EventRegistration"]] = relationship(back_populates="event", cascade="all, delete-orphan")
 
 
 class EventSession(Base):
@@ -118,3 +120,16 @@ class AttendanceLog(Base):
     user: Mapped["User"] = relationship(back_populates="attendance")
     event: Mapped["Event"] = relationship(back_populates="attendance")
     session: Mapped["EventSession | None"] = relationship(back_populates="attendance")
+
+
+class EventRegistration(Base):
+    __tablename__ = "event_registrations"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    event_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("events.id", ondelete="CASCADE"), nullable=False)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    event: Mapped["Event"] = relationship(back_populates="registrations")
+    user: Mapped["User"] = relationship(back_populates="registrations")
+

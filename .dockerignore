@@ -1,0 +1,13 @@
+**/node_modules
+**/dist
+**/build
+.git
+.gitignore
+.env
+backend/.venv
+backend/venv
+backend/__pycache__
+backend/uploads/*
+!backend/uploads/.gitignore
+faiss_indexes/*.index
+ai_models/*

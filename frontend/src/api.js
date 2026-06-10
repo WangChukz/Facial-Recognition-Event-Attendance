@@ -72,3 +72,10 @@ export async function apiPostForm(path, formData) {
   if (!r.ok) throw new Error(await extractErrorMessage(r));
   return r.json();
 }
+
+export async function apiDelete(path) {
+  const r = await fetch(`${API}${path}`, { method: "DELETE" });
+  if (!r.ok) throw new Error(await extractErrorMessage(r));
+  return r.json();
+}
+
