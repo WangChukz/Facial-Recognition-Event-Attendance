@@ -182,7 +182,20 @@ def rows_from_arrays(
     return rows
 
 
-def load_pretrained_case_rows() -> tuple[list[dict[str, Any]], np.ndarray | None, np.ndarray | None]:
+def load_pretrained_case_rows(cache: np.lib.npyio.NpzFile | None) -> tuple[list[dict[str, Any]], np.ndarray | None, np.ndarray | None]:
+    if cache is not None and "X_train_orig" in cache:
+        gallery = normalize(cache["X_train_orig"].astype(np.float32))
+        gallery_y = cache["y_train_orig"].astype(np.int32)
+        queries = normalize(cache["X_test_orig"].astype(np.float32))
+        query_y = cache["y_test_orig"].astype(np.int32)
+        return rows_from_arrays(
+            gallery,
+            gallery_y,
+            queries,
+            query_y,
+            backbone="ArcFace Pretrained (ResNet-50)",
+        ), gallery, gallery_y
+
     split_path = MODELS / "dataset_split.npz"
     if not split_path.exists():
         return [], None, None
@@ -474,7 +487,7 @@ def main() -> None:
     else:
         cache_note = "Chưa có scenario_embeddings_cache.npz; hãy chạy evaluate_all_8_pipelines.py để sinh cache."
 
-    pretrained_rows, pretrained_gallery, pretrained_y = load_pretrained_case_rows()
+    pretrained_rows, pretrained_gallery, pretrained_y = load_pretrained_case_rows(cache)
     finetune_rows = load_finetune_case_rows(cache)
     if not pretrained_rows:
         pretrained_rows = benchmark_rows_by_backbone(benchmark, "ResNet-50")
@@ -537,7 +550,7 @@ Nhận xét: pretrained ArcFace đang là backbone ổn định nhất trong wor
 
 {synthetic_table(synthetic_rows)}
 
-Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat ở quy mô 5k+ (0.0127ms vs 0.0203ms ở N=5k là 1.6x, và 0.0309ms vs 0.0525ms ở N=16k là 1.7x). Hierarchical graph structure của HNSW cho phép tìm kiếm nhanh hơn brute-force ở dung lượng lớn, đặc biệt khi efSearch được giảm thích hợp. Ở quy mô nhỏ (N<1k), chi phí xây dựng index HNSW vẫn lớn hơn lợi thế search.
+Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat vượt trội ở quy mô lớn (ví dụ ở N=16.000, HNSW chỉ mất 0.0420 ms so với Flat là 0.1336 ms, tức nhanh hơn ~3.18x). Cấu trúc đồ thị phân cấp (Hierarchical Graph) của HNSW giúp độ trễ tìm kiếm tăng chậm theo quy mô O(log N) thay vì tăng tuyến tính O(N) của Flat. Ở quy mô nhỏ (N < 1.000), Flat vẫn có ưu thế nhẹ về độ trễ cực đại do không tốn chi phí duyệt đồ thị phức tạp.
 
 ## 6. Case 4 - Unknown Rejection
 

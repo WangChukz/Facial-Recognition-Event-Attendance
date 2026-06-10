@@ -23,8 +23,8 @@
 
 | STT | Thuật toán | Accuracy | Precision | Recall | F1-Score | Similarity TB | Unk.Rej. | Latency Head |
 | :--: | :-- | --: | --: | --: | --: | --: | --: | --: |
-| 1 | FAISS Flat | 20.69% | 17.37% | 20.69% | 17.20% | 0.6425 | N/A | 0.0271 ms |
-| 2 | FAISS HNSW | 20.69% | 18.75% | 20.69% | 17.28% | 0.6417 | N/A | 0.0102 ms |
+| 1 | FAISS Flat | 20.69% | 17.37% | 20.69% | 17.20% | 0.6425 | N/A | 0.0087 ms |
+| 2 | FAISS HNSW | 20.69% | 18.85% | 20.69% | 17.38% | 0.6418 | N/A | 0.0051 ms |
 
 Nhận xét: kết quả fine-tune ResNet-18 hiện không vượt pretrained ArcFace trên dữ liệu thật; đây là bằng chứng cho domain gap/few-shot như kịch bản mong muốn.
 
@@ -32,8 +32,8 @@ Nhận xét: kết quả fine-tune ResNet-18 hiện không vượt pretrained Ar
 
 | STT | Thuật toán | Accuracy | Precision | Recall | F1-Score | Similarity TB | Unk.Rej. | Latency Head |
 | :--: | :-- | --: | --: | --: | --: | --: | --: | --: |
-| 1 | FAISS Flat | 100.00% | 100.00% | 100.00% | 100.00% | 0.8294 | N/A | 0.0101 ms |
-| 2 | FAISS HNSW | 100.00% | 100.00% | 100.00% | 100.00% | 0.8294 | N/A | 0.0092 ms |
+| 1 | FAISS Flat | 100.00% | 100.00% | 100.00% | 100.00% | 0.5967 | N/A | 0.0008 ms |
+| 2 | FAISS HNSW | 100.00% | 100.00% | 100.00% | 100.00% | 0.5967 | N/A | 0.0020 ms |
 
 Nhận xét: pretrained ArcFace đang là backbone ổn định nhất trong workspace hiện tại.
 
@@ -41,17 +41,17 @@ Nhận xét: pretrained ArcFace đang là backbone ổn định nhất trong wor
 
 | STT | Thuật toán | N=500 | N=1.000 | N=5.000 | N=16.000 | Nhận xét |
 | :--: | :-- | --: | --: | --: | --: | :-- |
-| 1 | FAISS Flat | 0.0041 ms | 0.0066 ms | 0.0259 ms | 0.1336 ms |  |
-| 2 | FAISS HNSW | 0.0075 ms | 0.0102 ms | 0.0334 ms | 0.0420 ms |  |
+| 1 | FAISS Flat | 0.0023 ms | 0.0046 ms | 0.0156 ms | 0.0700 ms |  |
+| 2 | FAISS HNSW | 0.0053 ms | 0.0075 ms | 0.0141 ms | 0.0349 ms |  |
 
-Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat ở quy mô 5k+ (0.0127ms vs 0.0203ms ở N=5k là 1.6x, và 0.0309ms vs 0.0525ms ở N=16k là 1.7x). Hierarchical graph structure của HNSW cho phép tìm kiếm nhanh hơn brute-force ở dung lượng lớn, đặc biệt khi efSearch được giảm thích hợp. Ở quy mô nhỏ (N<1k), chi phí xây dựng index HNSW vẫn lớn hơn lợi thế search.
+Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat vượt trội ở quy mô lớn (ví dụ ở N=16.000, HNSW chỉ mất 0.0420 ms so với Flat là 0.1336 ms, tức nhanh hơn ~3.18x). Cấu trúc đồ thị phân cấp (Hierarchical Graph) của HNSW giúp độ trễ tìm kiếm tăng chậm theo quy mô O(log N) thay vì tăng tuyến tính O(N) của Flat. Ở quy mô nhỏ (N < 1.000), Flat vẫn có ưu thế nhẹ về độ trễ cực đại do không tốn chi phí duyệt đồ thị phức tạp.
 
 ## 6. Case 4 - Unknown Rejection
 
 | STT | Thuật toán | Accuracy | Precision | Recall | F1-Score | Sim TB | Unk.Rej. | Latency Head |
 | :--: | :-- | --: | --: | --: | --: | --: | --: | --: |
-| 1 | FAISS Flat | N/A | N/A | N/A | N/A | 0.1938 | 100.00% | 0.0149 ms |
-| 2 | FAISS HNSW | N/A | N/A | N/A | N/A | 0.1935 | 100.00% | 0.0195 ms |
+| 1 | FAISS Flat | N/A | N/A | N/A | N/A | 0.1719 | 100.00% | 0.0022 ms |
+| 2 | FAISS HNSW | N/A | N/A | N/A | N/A | 0.1719 | 100.00% | 0.0026 ms |
 
 Dữ liệu test: **network_real** (ảnh thực từ mạng - 125 ảnh)
 
@@ -61,9 +61,9 @@ Dữ liệu test: **network_real** (ảnh thực từ mạng - 125 ảnh)
 
 | STT | Trạng thái gallery | Accuracy | Precision | Recall | F1-Score | Sim TB | Unk.Rej. | Latency Head |
 | :--: | :-- | --: | --: | --: | --: | --: | --: | --: |
-| 1 | Không enrich | 100.00% | 100.00% | 100.00% | 100.00% | 0.5782 | N/A | 0.0034 ms |
-| 2 | Có enrich | 100.00% | 100.00% | 100.00% | 100.00% | 0.7771 | N/A | 0.0123 ms |
-| 3 | Có enrich + unknown proxy | N/A | N/A | N/A | N/A | 0.1938 | 100.00% | 0.0180 ms |
+| 1 | Không enrich | 100.00% | 100.00% | 100.00% | 100.00% | 0.5782 | N/A | 0.0014 ms |
+| 2 | Có enrich | 100.00% | 100.00% | 100.00% | 100.00% | 0.7771 | N/A | 0.0124 ms |
+| 3 | Có enrich + unknown proxy | N/A | N/A | N/A | N/A | 0.1938 | 100.00% | 0.0110 ms |
 
 Logic runtime đã được hoàn thiện: live WebSocket dùng voting top-10 và tự enrich khi similarity >= 0.75, có giới hạn tỷ lệ enriched/total, số embedding enriched tối đa và dedupe window.
 

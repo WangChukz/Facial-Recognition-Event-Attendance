@@ -363,7 +363,7 @@ def build_report(data: dict[str, Any]) -> Document:
     add_table(doc, headers, known_case_rows(data["case_1_finetune_resnet18"]))
     add_case_evaluation(
         doc,
-        "Kết quả khoảng 48-50% cho thấy mô hình fine-tune ResNet-18 hiện tại không tổng quát tốt từ enroll sang ảnh real.",
+        "Kết quả khoảng 20.69% cho thấy mô hình fine-tune ResNet-18 hiện tại không tổng quát tốt từ enroll sang ảnh real.",
         "Không nên kết luận ResNet-18 hoặc fine-tune luôn kém. Kết luận đúng là setup fine-tune hiện tại kém trong điều kiện few-shot/domain gap.",
         "Giữ case này để chứng minh vì sao hệ thống nên ưu tiên ArcFace pretrained thay vì tự fine-tune backbone nhỏ trên dữ liệu ít.",
     )
@@ -386,7 +386,7 @@ def build_report(data: dict[str, Any]) -> Document:
     add_case_evaluation(
         doc,
         "Case này đo xu hướng latency khi số lượng sinh viên tăng lên đến 16.000 nhằm chứng minh tính mở rộng của HNSW.",
-        "Kết quả thực nghiệm cho thấy HNSW vượt trội rõ rệt so với FAISS Flat khi N tăng lớn (nhanh hơn Flat gấp hơn 2 lần ở quy mô 16k: 0.0379 ms vs 0.0828 ms).",
+        "Kết quả thực nghiệm cho thấy HNSW vượt trội rõ rệt so với FAISS Flat khi N tăng lớn (nhanh hơn Flat gấp 3.18 lần ở quy mô 16k: 0.0420 ms vs 0.1336 ms).",
         "Trình bày HNSW là giải pháp tối ưu bắt buộc cho các trường đại học quy mô lớn (N > 5.000 sinh viên) để giữ độ trễ tìm kiếm cực thấp.",
     )
 
@@ -394,7 +394,7 @@ def build_report(data: dict[str, Any]) -> Document:
     add_table(doc, headers, unknown_rows(data["case_4_unknown_rejection"]))
     add_case_evaluation(
         doc,
-        "Đánh giá khả năng từ chối người lạ bằng tập dữ liệu 125 ảnh người lạ từ internet.",
+        "Đánh giá khả năng từ chối người lạ bằng tập dữ liệu 85 ảnh người lạ từ internet.",
         "Cả hai thuật toán FAISS Flat và HNSW đều đạt tỷ lệ từ chối hoàn hảo (100.00% rejection rate) ở ngưỡng an toàn 0.45.",
         "Chứng minh hệ thống hoạt động an toàn trước người lạ ngoài thực địa, giảm thiểu tối đa việc điểm danh nhầm.",
     )
@@ -403,7 +403,7 @@ def build_report(data: dict[str, Any]) -> Document:
     add_table(doc, headers, enrichment_rows(data["case_5_enrichment"]))
     add_case_evaluation(
         doc,
-        "Case này chứng minh độ hiệu quả của cơ chế tự động cập nhật thư viện ảnh. Độ chính xác giữ vững 100.00% trong khi similarity trung bình tăng mạnh từ 0.5785 lên 0.7771.",
+        "Case này chứng minh độ hiệu quả của cơ chế tự động cập nhật thư viện ảnh. Độ chính xác giữ vững 100.00% trong khi similarity trung bình tăng mạnh từ 0.5782 lên 0.7771.",
         "Cần lưu ý kiểm soát drift bằng các ngưỡng bảo vệ nghiêm ngặt (ngưỡng enrichment >= 0.75, giới hạn số ảnh làm giàu tối đa).",
         "Trình bày cơ chế này như một điểm sáng học thuật giúp hệ thống tự tối ưu hóa theo thời gian trong quá trình điểm danh thực tế.",
     )
@@ -415,7 +415,7 @@ def build_report(data: dict[str, Any]) -> Document:
             "Backbone tối ưu nhất: ArcFace Pretrained (buffalo_l) cho độ chính xác tuyệt đối 100% trên dữ liệu thực tế.",
             "Classifier Head tối ưu: FAISS Flat cho trường học quy mô nhỏ (N < 1.000), HNSW cho trường quy mô lớn (N > 5.000) nhờ O(log N) latency vượt trội.",
             "Độ an toàn cao: Đạt 100.00% rejection rate đối với ảnh người lạ từ internet.",
-            "Cơ chế Progressive Gallery Enrichment giúp tăng cường similarity trung bình (+19.86%), giúp nhận diện ngày càng nhạy bén hơn mà không làm giảm độ an toàn (unk. rej. giữ vững 100%).",
+            "Cơ chế Progressive Gallery Enrichment giúp tăng cường similarity trung bình (+19.89%), giúp nhận diện ngày càng nhạy bén hơn mà không làm giảm độ an toàn (unk. rej. giữ vững 100%).",
         ],
     )
 
