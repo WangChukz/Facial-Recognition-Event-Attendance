@@ -15,7 +15,7 @@
       "recall": "20.69%",
       "f1_score": "17.20%",
       "similarity_avg": "0.6425",
-      "head_latency": "0.0271 ms",
+      "head_latency": "0.0221 ms",
       "unknown_rejection": "N/A",
       "test_samples": 174
     },
@@ -24,11 +24,11 @@
       "backbone": "Fine-tune ResNet-18 ArcFace",
       "head": "HNSW",
       "accuracy": "20.69%",
-      "precision": "18.75%",
+      "precision": "18.72%",
       "recall": "20.69%",
-      "f1_score": "17.28%",
-      "similarity_avg": "0.6417",
-      "head_latency": "0.0102 ms",
+      "f1_score": "17.24%",
+      "similarity_avg": "0.6409",
+      "head_latency": "0.0071 ms",
       "unknown_rejection": "N/A",
       "test_samples": 174
     }
@@ -42,10 +42,10 @@
       "precision": "100.00%",
       "recall": "100.00%",
       "f1_score": "100.00%",
-      "similarity_avg": "0.8294",
-      "head_latency": "0.0101 ms",
+      "similarity_avg": "0.5967",
+      "head_latency": "0.0017 ms",
       "unknown_rejection": "N/A",
-      "test_samples": 50
+      "test_samples": 174
     },
     {
       "name": "ArcFace Pretrained (ResNet-50) + HNSW",
@@ -55,68 +55,68 @@
       "precision": "100.00%",
       "recall": "100.00%",
       "f1_score": "100.00%",
-      "similarity_avg": "0.8294",
-      "head_latency": "0.0092 ms",
+      "similarity_avg": "0.5967",
+      "head_latency": "0.0035 ms",
       "unknown_rejection": "N/A",
-      "test_samples": 50
+      "test_samples": 174
     }
   ],
   "case_3_synthetic_scalability": [
     {
       "head": "FAISS",
       "n": 500,
-      "latency_ms": 0.004097400000318885
+      "latency_ms": 0.031915200000184996
     },
     {
       "head": "HNSW",
       "n": 500,
-      "latency_ms": 0.007493400000385009
+      "latency_ms": 0.01991139999972802
     },
     {
       "head": "FAISS",
       "n": 1000,
-      "latency_ms": 0.006574399987584911
+      "latency_ms": 0.05165740000029473
     },
     {
       "head": "HNSW",
       "n": 1000,
-      "latency_ms": 0.010205800004769117
+      "latency_ms": 0.029333200000110082
     },
     {
       "head": "FAISS",
       "n": 5000,
-      "latency_ms": 0.02589980000630021
+      "latency_ms": 0.2662140000002182
     },
     {
       "head": "HNSW",
       "n": 5000,
-      "latency_ms": 0.033356999992975034
+      "latency_ms": 0.04370160000053147
     },
     {
       "head": "FAISS",
       "n": 16000,
-      "latency_ms": 0.13363720000779722
+      "latency_ms": 1.1379571999996188
     },
     {
       "head": "HNSW",
       "n": 16000,
-      "latency_ms": 0.042025200003990903
+      "latency_ms": 0.04911420000007638
     }
   ],
   "case_4_unknown_rejection": [
     {
       "head": "FAISS",
       "unknown_rejection": 100.0,
-      "similarity_avg": 0.1938030868768692,
-      "head_latency_ms": 0.014872941178242291,
+      "similarity_avg": 0.17194300889968872,
+      "head_latency_ms": 0.0032435294141417697,
       "unknown_samples": 85,
       "source": "network_real"
     },
     {
       "head": "HNSW",
       "unknown_rejection": 100.0,
-      "similarity_avg": 0.19348835945129395,
-      "head_latency_ms": 0.0195341176175348,
+      "similarity_avg": 0.17194296419620514,
+      "head_latency_ms": 0.004002352943643928,
       "unknown_samples": 85,
       "source": "network_real"
     }
@@ -131,7 +131,7 @@
       "f1_score": 100.0,
       "similarity_avg": 0.5782358566640129,
       "unknown_rejection": null,
-      "head_latency_ms": 0.003404225346560157,
+      "head_latency_ms": 0.00315352112728517,
       "test_samples": 71,
       "enrich_samples": 0
     },
@@ -144,7 +144,7 @@
       "f1_score": 100.0,
       "similarity_avg": 0.777127163510927,
       "unknown_rejection": null,
-      "head_latency_ms": 0.01231549296636318,
+      "head_latency_ms": 0.00564084507139239,
       "test_samples": 71,
       "enrich_samples": 102
     },
@@ -157,7 +157,7 @@
       "f1_score": null,
       "similarity_avg": 0.19381624460220337,
       "unknown_rejection": 100.0,
-      "head_latency_ms": 0.018028235353995115,
+      "head_latency_ms": 0.007388235291514052,
       "test_samples": 85,
       "enrich_samples": 102,
       "unknown_source": "network_real"

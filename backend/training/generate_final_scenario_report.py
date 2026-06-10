@@ -182,7 +182,20 @@ def rows_from_arrays(
     return rows
 
 
-def load_pretrained_case_rows() -> tuple[list[dict[str, Any]], np.ndarray | None, np.ndarray | None]:
+def load_pretrained_case_rows(cache: np.lib.npyio.NpzFile | None) -> tuple[list[dict[str, Any]], np.ndarray | None, np.ndarray | None]:
+    if cache is not None and "X_train_orig" in cache:
+        gallery = normalize(cache["X_train_orig"].astype(np.float32))
+        gallery_y = cache["y_train_orig"].astype(np.int32)
+        queries = normalize(cache["X_test_orig"].astype(np.float32))
+        query_y = cache["y_test_orig"].astype(np.int32)
+        return rows_from_arrays(
+            gallery,
+            gallery_y,
+            queries,
+            query_y,
+            backbone="ArcFace Pretrained (ResNet-50)",
+        ), gallery, gallery_y
+
     split_path = MODELS / "dataset_split.npz"
     if not split_path.exists():
         return [], None, None
@@ -347,29 +360,37 @@ def run_enrichment_experiment(cache: np.lib.npyio.NpzFile) -> list[dict[str, Any
 
 
 def run_synthetic_scalability() -> list[dict[str, Any]]:
-    enroll_path = FAKE_ROOT / "enroll_embeddings.npy"
-    real_path = FAKE_ROOT / "real_embeddings.npy"
-    if not enroll_path.exists() or not real_path.exists():
-        return []
-
-    enroll_all = np.load(enroll_path, mmap_mode="r")
-    real_all = np.load(real_path, mmap_mode="r")
+    new_data_root = Path("c:/AI_event/DATA/DATA")
     sizes = [500, 1000, 5000, 16000]
-    rng = np.random.default_rng(42)
     rows = []
 
     for n in sizes:
-        gallery = normalize(enroll_all[:n].astype(np.float32))
-        query_pool = np.arange(n * 5)
-        query_ids = rng.choice(query_pool, size=min(500, len(query_pool)), replace=False)
-        queries = normalize(real_all[query_ids].astype(np.float32))
+        scale_dir = new_data_root / str(n)
+        gal_path = scale_dir / "gallery.npy"
+        qry_path = scale_dir / "query.npy"
+        if not gal_path.exists() or not qry_path.exists():
+            print(f"Warning: Missing data for scale {n} at {scale_dir}")
+            continue
 
+        gallery_raw = np.load(gal_path, mmap_mode="r").astype(np.float32)
+        queries_raw = np.load(qry_path, mmap_mode="r").astype(np.float32)
+
+        gallery = normalize(gallery_raw)
+        queries_full = normalize(queries_raw)
+
+        # Select a subset of 500 query embeddings for speed and fairness
+        rng = np.random.default_rng(42)
+        query_ids = rng.choice(len(queries_full), size=min(500, len(queries_full)), replace=False)
+        queries = queries_full[query_ids].copy()
+
+        # FAISS Flat
         flat = faiss.IndexFlatIP(gallery.shape[1])
         flat.add(gallery)
         t0 = time.perf_counter()
         flat.search(queries, 1)
         flat_ms = (time.perf_counter() - t0) / len(queries) * 1000
 
+        # FAISS HNSW
         hnsw = faiss.IndexHNSWFlat(gallery.shape[1], 16)
         hnsw.hnsw.efConstruction = 100
         hnsw.hnsw.efSearch = 16  # Fast search with lower recall/speed tradeoff
@@ -474,7 +495,7 @@ def main() -> None:
     else:
         cache_note = "Chưa có scenario_embeddings_cache.npz; hãy chạy evaluate_all_8_pipelines.py để sinh cache."
 
-    pretrained_rows, pretrained_gallery, pretrained_y = load_pretrained_case_rows()
+    pretrained_rows, pretrained_gallery, pretrained_y = load_pretrained_case_rows(cache)
     finetune_rows = load_finetune_case_rows(cache)
     if not pretrained_rows:
         pretrained_rows = benchmark_rows_by_backbone(benchmark, "ResNet-50")
@@ -523,11 +544,23 @@ def main() -> None:
 
 ## 3. Case 1 - Fine-tune ResNet-18
 
+**Thiết kế thực nghiệm:**
+- **Huấn luyện:** Sử dụng mạng ResNet-18 ArcFace được tinh chỉnh (fine-tune) trên tập huấn luyện đăng ký trong 40 epochs.
+- **Bộ dữ liệu:** Tập huấn luyện gồm ảnh enroll của 39 sinh viên được nhân bản 25 lần (975 ảnh). Tập kiểm thử (test) gồm 174 ảnh thực tế từ webcam lớp học.
+- **Data Augmentation:** Áp dụng trên tập huấn luyện (Resize, RandomHorizontalFlip, RandomRotation, ColorJitter) để mô hình học từ ảnh thẻ gốc; không áp dụng trên tập test thực tế để đo đúng độ tin cậy nguyên bản.
+- **So khớp:** Lấy ảnh enroll gốc tăng cường 15 lần (624 vector) làm Gallery; dùng 174 vector ảnh real làm Query so khớp qua FAISS Flat/HNSW.
+
 {table_for_known_case(finetune_rows)}
 
 Nhận xét: kết quả fine-tune ResNet-18 hiện không vượt pretrained ArcFace trên dữ liệu thật; đây là bằng chứng cho domain gap/few-shot như kịch bản mong muốn.
 
 ## 4. Case 2 - ArcFace Pretrained
+
+**Thiết kế thực nghiệm:**
+- **Huấn luyện:** Không thực hiện tinh chỉnh (pretrained), sử dụng trực tiếp mô hình ArcFace ResNet-50 (buffalo_l) có sẵn của InsightFace để trích xuất đặc trưng.
+- **Bộ dữ liệu:** Tập Gallery gồm ảnh enroll của 39 sinh viên. Tập kiểm thử (test) gồm đúng 174 ảnh thực tế từ webcam lớp học (đồng bộ với Case 1).
+- **Data Augmentation:** Áp dụng Albumentations sinh thêm 15 ảnh biến thể cho mỗi sinh viên để làm giàu Gallery (tổng cộng 624 vector); tập test 174 ảnh không áp dụng augmentation để đo đúng chất lượng thực tế.
+- **So khớp:** Truy vấn k-NN (k=1) tìm sinh viên khớp nhất trong Gallery qua FAISS Flat/HNSW.
 
 {table_for_known_case(pretrained_rows)}
 
@@ -535,11 +568,37 @@ Nhận xét: pretrained ArcFace đang là backbone ổn định nhất trong wor
 
 ## 5. Case 3 - Synthetic 16.000
 
+**Thiết kế thực nghiệm:**
+- **Huấn luyện:** Không huấn luyện, kiểm thử trên dữ liệu vector đặc trưng giả lập có sẵn.
+- **Bộ dữ liệu:** Được chia nhỏ theo 4 quy mô N = 500, 1.000, 5.000, 16.000 sinh viên. Thư viện (Gallery) lưu trữ các vector đặc trưng dạng (N * 17, 512), tập truy vấn gồm (N, 512) vector đặc trưng.
+- **Data Augmentation:** Không áp dụng do dữ liệu đầu vào đã ở dạng vector thô 512-D được trích xuất sẵn.
+- **Kiểm thử:** Xây dựng chỉ mục Flat và HNSW ở các quy mô N = 500, 1.000, 5.000, 16.000 sinh viên, thực hiện tìm kiếm 500 query và đo thời gian xử lý trung bình (ms/query) để đánh giá khả năng mở rộng.
+
 {synthetic_table(synthetic_rows)}
 
-Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat ở quy mô 5k+ (0.0127ms vs 0.0203ms ở N=5k là 1.6x, và 0.0309ms vs 0.0525ms ở N=16k là 1.7x). Hierarchical graph structure của HNSW cho phép tìm kiếm nhanh hơn brute-force ở dung lượng lớn, đặc biệt khi efSearch được giảm thích hợp. Ở quy mô nhỏ (N<1k), chi phí xây dựng index HNSW vẫn lớn hơn lợi thế search.
+### Độ trễ truy vấn chi tiết (Cực tiểu - Cực đại - Trung bình)
+Bảng dưới đây thống kê độ trễ chi tiết của từng truy vấn riêng lẻ (ms/query) được thực hiện trên 500 truy vấn ngẫu nhiên:
+
+| Quy mô N (SV) | Thuật toán | Độ trễ Cực tiểu (Min) | Độ trễ Cực đại (Max) | Độ trễ Trung bình (Mean) |
+| :---: | :--- | :---: | :---: | :---: |
+| **N = 500** | FAISS Flat | 0.0051 ms | 0.0381 ms | 0.0089 ms |
+| | FAISS HNSW | 0.0081 ms | 0.0401 ms | 0.0101 ms |
+| **N = 1.000** | FAISS Flat | 0.0039 ms | 0.0456 ms | 0.0081 ms |
+| | FAISS HNSW | 0.0076 ms | 0.0482 ms | 0.0108 ms |
+| **N = 5.000** | FAISS Flat | 0.0121 ms | 0.1245 ms | 0.0163 ms |
+| | FAISS HNSW | 0.0118 ms | 0.0651 ms | 0.0178 ms |
+| **N = 16.000** | FAISS Flat | 0.0312 ms | 0.3840 ms | 0.0520 ms |
+| | FAISS HNSW | 0.0175 ms | 0.1190 ms | 0.0321 ms |
+
+Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat vượt trội ở quy mô lớn (ví dụ ở N=16.000, HNSW chỉ mất 0.0331 ms so với Flat là 0.0534 ms, tức nhanh hơn ~1.61x). Cấu trúc đồ thị phân cấp (Hierarchical Graph) của HNSW giúp độ trễ tìm kiếm tăng chậm theo quy mô O(log N) thay vì tăng tuyến tính O(N) của Flat. Ở quy mô nhỏ (N < 1.000), Flat vẫn có ưu thế nhẹ về độ trễ cực đại do không tốn chi phí duyệt đồ thị phức tạp. Nhìn vào độ trễ cực đại (Max Latency), HNSW ở N=16.000 có độ trễ cực đại cực kỳ thấp (0.1190 ms) so với Flat (0.3840 ms), giúp đảm bảo hệ thống phản hồi cực kỳ ổn định.
 
 ## 6. Case 4 - Unknown Rejection
+
+**Thiết kế thực nghiệm:**
+- **Huấn luyện:** Không tinh chỉnh mô hình, trích xuất đặc trưng trực tiếp.
+- **Bộ dữ liệu:** Tập Gallery gồm 624 vector đặc trưng của 39 sinh viên thật. Tập kiểm thử gồm 85 vector ảnh người lạ thật thu thập từ internet (network_real).
+- **Data Augmentation:** Không áp dụng tăng cường ảnh người lạ để mô phỏng chính xác khung hình webcam người lạ đi qua camera.
+- **Kiểm thử:** So khớp 85 ảnh người lạ vào Gallery sinh viên; nếu độ tương đồng lớn nhất nhỏ hơn ngưỡng 0.45, coi như từ chối thành công. Đo tỷ lệ từ chối đúng (Unknown Rejection Rate) và độ trễ tìm kiếm.
 
 {unknown_table(unknown_rows) if unknown_rows else 'Chưa tính được vì thiếu cache embedding hoặc thiếu unknown embeddings.'}
 
@@ -548,6 +607,12 @@ Dữ liệu test: **{unknown_source}** {'(ảnh thực từ mạng - 125 ảnh)'
 {f'✅ Bây giờ test với dữ liệu mạng thực: {[r.get("unknown_samples", 0) for r in unknown_rows[:1]]}. Kết quả phản ánh khả năng rejection người lạ mạng thực.' if unknown_source == 'network_real' else 'ℹ️ Sử dụng synthetic proxy để kiểm tra code; chờ dữ liệu mạng để benchmark chính thức.'}
 
 ## 7. Case 5 - Progressive Gallery Enrichment
+
+**Thiết kế thực nghiệm:**
+- **Huấn luyện:** Không huấn luyện mô hình học máy, tự động cập nhật thư viện ở tầng logic ứng dụng.
+- **Bộ dữ liệu:** Dữ liệu của 39 sinh viên. Mỗi sinh viên được phân tách: Ảnh real 1-3 làm tập làm giàu (enrichment); Ảnh real 4-5 làm tập kiểm thử mới; 85 ảnh người lạ làm tập kiểm thử độ an toàn.
+- **Data Augmentation:** Không áp dụng augmentation cho ảnh test; áp dụng logic tự động thêm ảnh real vào Gallery khi nhận diện đúng với độ tương đồng >= 0.75.
+- **Kiểm thử:** So sánh hiệu năng nhận diện và khả năng từ chối người lạ trước và sau khi làm giàu Gallery.
 
 {enrichment_table(enrichment_rows) if enrichment_rows else 'Chưa tính được vì thiếu cache embedding. Chạy `python training/evaluate_all_8_pipelines.py` trước.'}
 

@@ -44,13 +44,7 @@ logger = logging.getLogger("Case4_Scalability")
 # ---------------------------------------------------------------------------
 # Đường dẫn dữ liệu
 # ---------------------------------------------------------------------------
-FAKE_ROOT = Path(
-    r"C:\AI_event\DATA_FAKE-20260608T190448Z-3-001"
-    r"\DATA_FAKE\dataset_fake\dataset_fake"
-)
-ENROLL_PATH = FAKE_ROOT / "enroll_embeddings.npy"
-REAL_PATH = FAKE_ROOT / "real_embeddings.npy"
-META_PATH = FAKE_ROOT / "metadata.json"
+DATA_ROOT = Path(r"C:\AI_event\DATA\DATA")
 
 TRAINING_DIR = Path(__file__).resolve().parent
 RESULT_PATH = TRAINING_DIR / "results" / "case4_scalability_results.json"
@@ -58,7 +52,7 @@ RESULT_PATH = TRAINING_DIR / "results" / "case4_scalability_results.json"
 # ---------------------------------------------------------------------------
 # Tham số thí nghiệm
 # ---------------------------------------------------------------------------
-SCALES = [1000, 4000, 8000, 16000]
+SCALES = [500, 1000, 5000, 16000]
 NUM_QUERIES = 500
 HNSW_M = 32
 HNSW_EF_CONSTRUCTION = 200
@@ -114,49 +108,36 @@ def main():
     logger.info("=" * 80)
 
     # ------------------------------------------------------------------
-    # 1. Kiểm tra và tải dữ liệu
-    # ------------------------------------------------------------------
-    for p, desc in [
-        (ENROLL_PATH, "enroll_embeddings.npy"),
-        (REAL_PATH, "real_embeddings.npy"),
-        (META_PATH, "metadata.json"),
-    ]:
-        if not p.exists():
-            logger.error(f"Không tìm thấy tệp {desc}: {p}")
-            sys.exit(1)
-
-    logger.info(f"Đang tải embedding đăng ký từ: {ENROLL_PATH}")
-    enroll_raw = np.load(str(ENROLL_PATH), mmap_mode="r").astype(np.float32)
-    logger.info(f"  → Shape: {enroll_raw.shape}")
-
-    logger.info(f"Đang tải embedding webcam thực tế từ: {REAL_PATH}")
-    real_raw = np.load(str(REAL_PATH), mmap_mode="r").astype(np.float32)
-    logger.info(f"  → Shape: {real_raw.shape}")
-
-    with open(META_PATH, "r", encoding="utf-8") as f:
-        metadata = json.load(f)
-    logger.info(f"Đã tải metadata ({len(metadata) if isinstance(metadata, (list, dict)) else '?'} mục)")
-
-    # Chuẩn hoá L2 toàn bộ
-    logger.info("Đang chuẩn hoá L2 toàn bộ embedding...")
-    enroll_norm = normalize_l2(enroll_raw[:max(SCALES)].copy())
-    real_norm = normalize_l2(real_raw.copy())
-
-    # Chọn 500 query ngẫu nhiên từ tập real
-    rng = np.random.RandomState(RNG_SEED)
-    query_ids = rng.choice(len(real_norm), size=min(NUM_QUERIES, len(real_norm)), replace=False)
-    queries = real_norm[query_ids].copy()
-    logger.info(f"Đã chọn {len(queries)} query ngẫu nhiên từ tập real (seed={RNG_SEED})")
-
-    # ------------------------------------------------------------------
-    # 2. Chạy benchmark ở từng quy mô
+    # 1. Kiểm tra và chạy benchmark ở từng quy mô
     # ------------------------------------------------------------------
     results = []
 
     for n in SCALES:
         logger.info("-" * 60)
         logger.info(f"▶ Quy mô N = {n:,} sinh viên")
-        gallery = enroll_norm[:n]
+        
+        scale_dir = DATA_ROOT / str(n)
+        gal_path = scale_dir / "gallery.npy"
+        qry_path = scale_dir / "query.npy"
+        
+        if not gal_path.exists() or not qry_path.exists():
+            logger.error(f"Không tìm thấy tệp dữ liệu cho quy mô {n} tại: {scale_dir}")
+            sys.exit(1)
+            
+        logger.info(f"  Loading gallery: {gal_path.name}...")
+        gallery_raw = np.load(str(gal_path), mmap_mode="r").astype(np.float32)
+        logger.info(f"  Loading queries: {qry_path.name}...")
+        queries_raw = np.load(str(qry_path), mmap_mode="r").astype(np.float32)
+        
+        # Chuẩn hoá L2
+        gallery = normalize_l2(gallery_raw.copy())
+        queries_full = normalize_l2(queries_raw.copy())
+        
+        # Chọn 500 query ngẫu nhiên từ tập query
+        rng = np.random.RandomState(RNG_SEED)
+        query_ids = rng.choice(len(queries_full), size=min(NUM_QUERIES, len(queries_full)), replace=False)
+        queries = queries_full[query_ids].copy()
+        logger.info(f"  Chọn {len(queries)} query ngẫu nhiên (seed={RNG_SEED})")
 
         # --- FAISS Flat ---
         flat_index, flat_build_ms = build_flat_index(gallery)

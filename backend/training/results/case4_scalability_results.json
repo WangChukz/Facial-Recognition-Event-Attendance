@@ -2,9 +2,9 @@
     "experiment": "Case 4 — Scalability Benchmark: FAISS Flat vs HNSW",
     "parameters": {
         "scales": [
+            500,
             1000,
-            4000,
-            8000,
+            5000,
             16000
         ],
         "num_queries": 500,
@@ -16,41 +16,41 @@
     },
     "results": [
         {
+            "N": 500,
+            "flat_build_ms": 4.71,
+            "flat_search_ms_per_query": 0.0746,
+            "hnsw_build_ms": 1397.81,
+            "hnsw_search_ms_per_query": 0.0914,
+            "hnsw_speedup_vs_flat": 0.82
+        },
+        {
             "N": 1000,
-            "flat_build_ms": 0.97,
-            "flat_search_ms_per_query": 0.0092,
-            "hnsw_build_ms": 60.14,
-            "hnsw_search_ms_per_query": 0.0264,
-            "hnsw_speedup_vs_flat": 0.35
+            "flat_build_ms": 8.03,
+            "flat_search_ms_per_query": 0.0491,
+            "hnsw_build_ms": 5709.28,
+            "hnsw_search_ms_per_query": 0.1471,
+            "hnsw_speedup_vs_flat": 0.33
         },
         {
-            "N": 4000,
-            "flat_build_ms": 2.13,
-            "flat_search_ms_per_query": 0.0126,
-            "hnsw_build_ms": 579.32,
-            "hnsw_search_ms_per_query": 0.0514,
-            "hnsw_speedup_vs_flat": 0.25
-        },
-        {
-            "N": 8000,
-            "flat_build_ms": 4.79,
-            "flat_search_ms_per_query": 0.0259,
-            "hnsw_build_ms": 2028.49,
-            "hnsw_search_ms_per_query": 0.1104,
-            "hnsw_speedup_vs_flat": 0.23
+            "N": 5000,
+            "flat_build_ms": 46.24,
+            "flat_search_ms_per_query": 0.3118,
+            "hnsw_build_ms": 92491.71,
+            "hnsw_search_ms_per_query": 0.3839,
+            "hnsw_speedup_vs_flat": 0.81
         },
         {
             "N": 16000,
-            "flat_build_ms": 7.31,
-            "flat_search_ms_per_query": 0.0558,
-            "hnsw_build_ms": 6856.74,
-            "hnsw_search_ms_per_query": 0.1724,
-            "hnsw_speedup_vs_flat": 0.32
+            "flat_build_ms": 212.76,
+            "flat_search_ms_per_query": 2.4378,
+            "hnsw_build_ms": 647572.11,
+            "hnsw_search_ms_per_query": 0.2844,
+            "hnsw_speedup_vs_flat": 8.57
         }
     ],
     "analysis": {
-        "flat_latency_growth": "×6.07 (N: 1,000 → 16,000)",
-        "hnsw_latency_growth": "×6.53 (N: 1,000 → 16,000)",
-        "conclusion": "FAISS Flat tăng tuyến tính O(N), HNSW gần như không đổi O(log N). Ở N=16,000, HNSW nhanh hơn 0.3x."
+        "flat_latency_growth": "×32.68 (N: 500 → 16,000)",
+        "hnsw_latency_growth": "×3.11 (N: 500 → 16,000)",
+        "conclusion": "FAISS Flat tăng tuyến tính O(N), HNSW gần như không đổi O(log N). Ở N=16,000, HNSW nhanh hơn 8.6x."
     }
 }
