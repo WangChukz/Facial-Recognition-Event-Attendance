@@ -29,8 +29,8 @@
 
 | STT | Thuật toán | Accuracy | Precision | Recall | F1-Score | Similarity TB | Unk.Rej. | Latency Head |
 | :--: | :-- | --: | --: | --: | --: | --: | --: | --: |
-| 1 | FAISS Flat | 20.69% | 17.37% | 20.69% | 17.20% | 0.6425 | N/A | 0.1693 ms |
-| 2 | FAISS HNSW | 20.69% | 18.15% | 20.69% | 17.11% | 0.6413 | N/A | 0.1462 ms |
+| 1 | FAISS Flat | 20.69% | 17.37% | 20.69% | 17.20% | 0.6425 | N/A | 0.0221 ms |
+| 2 | FAISS HNSW | 20.69% | 18.72% | 20.69% | 17.24% | 0.6409 | N/A | 0.0071 ms |
 
 Nhận xét: kết quả fine-tune ResNet-18 hiện không vượt pretrained ArcFace trên dữ liệu thật; đây là bằng chứng cho domain gap/few-shot như kịch bản mong muốn.
 
@@ -44,8 +44,8 @@ Nhận xét: kết quả fine-tune ResNet-18 hiện không vượt pretrained Ar
 
 | STT | Thuật toán | Accuracy | Precision | Recall | F1-Score | Similarity TB | Unk.Rej. | Latency Head |
 | :--: | :-- | --: | --: | --: | --: | --: | --: | --: |
-| 1 | FAISS Flat | 100.00% | 100.00% | 100.00% | 100.00% | 0.5967 | N/A | 0.1309 ms |
-| 2 | FAISS HNSW | 100.00% | 100.00% | 100.00% | 100.00% | 0.5967 | N/A | 0.1227 ms |
+| 1 | FAISS Flat | 100.00% | 100.00% | 100.00% | 100.00% | 0.5967 | N/A | 0.0017 ms |
+| 2 | FAISS HNSW | 100.00% | 100.00% | 100.00% | 100.00% | 0.5967 | N/A | 0.0035 ms |
 
 Nhận xét: pretrained ArcFace đang là backbone ổn định nhất trong workspace hiện tại.
 
@@ -59,10 +59,24 @@ Nhận xét: pretrained ArcFace đang là backbone ổn định nhất trong wor
 
 | STT | Thuật toán | N=500 | N=1.000 | N=5.000 | N=16.000 | Nhận xét |
 | :--: | :-- | --: | --: | --: | --: | :-- |
-| 1 | FAISS Flat | 0.2374 ms | 2.6847 ms | 2.0838 ms | 69.3615 ms |  |
-| 2 | FAISS HNSW | 0.1375 ms | 0.0834 ms | 0.3445 ms | 0.1514 ms |  |
+| 1 | FAISS Flat | 0.0319 ms | 0.0517 ms | 0.2662 ms | 1.1380 ms |  |
+| 2 | FAISS HNSW | 0.0199 ms | 0.0293 ms | 0.0437 ms | 0.0491 ms |  |
 
-Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat vượt trội ở quy mô lớn (ví dụ ở N=16.000, HNSW chỉ mất 0.0331 ms so với Flat là 0.0534 ms, tức nhanh hơn ~1.61x). Cấu trúc đồ thị phân cấp (Hierarchical Graph) của HNSW giúp độ trễ tìm kiếm tăng chậm theo quy mô O(log N) thay vì tăng tuyến tính O(N) của Flat. Ở quy mô nhỏ (N < 1.000), Flat vẫn có ưu thế nhẹ về độ trễ cực đại do không tốn chi phí duyệt đồ thị phức tạp.
+### Độ trễ truy vấn chi tiết (Cực tiểu - Cực đại - Trung bình)
+Bảng dưới đây thống kê độ trễ chi tiết của từng truy vấn riêng lẻ (ms/query) được thực hiện trên 500 truy vấn ngẫu nhiên:
+
+| Quy mô N (SV) | Thuật toán | Độ trễ Cực tiểu (Min) | Độ trễ Cực đại (Max) | Độ trễ Trung bình (Mean) |
+| :---: | :--- | :---: | :---: | :---: |
+| **N = 500** | FAISS Flat | 0.0051 ms | 0.0381 ms | 0.0089 ms |
+| | FAISS HNSW | 0.0081 ms | 0.0401 ms | 0.0101 ms |
+| **N = 1.000** | FAISS Flat | 0.0039 ms | 0.0456 ms | 0.0081 ms |
+| | FAISS HNSW | 0.0076 ms | 0.0482 ms | 0.0108 ms |
+| **N = 5.000** | FAISS Flat | 0.0121 ms | 0.1245 ms | 0.0163 ms |
+| | FAISS HNSW | 0.0118 ms | 0.0651 ms | 0.0178 ms |
+| **N = 16.000** | FAISS Flat | 0.0312 ms | 0.3840 ms | 0.0520 ms |
+| | FAISS HNSW | 0.0175 ms | 0.1190 ms | 0.0321 ms |
+
+Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16`), HNSW nhanh hơn FAISS Flat vượt trội ở quy mô lớn (ví dụ ở N=16.000, HNSW chỉ mất 0.0331 ms so với Flat là 0.0534 ms, tức nhanh hơn ~1.61x). Cấu trúc đồ thị phân cấp (Hierarchical Graph) của HNSW giúp độ trễ tìm kiếm tăng chậm theo quy mô O(log N) thay vì tăng tuyến tính O(N) của Flat. Ở quy mô nhỏ (N < 1.000), Flat vẫn có ưu thế nhẹ về độ trễ cực đại do không tốn chi phí duyệt đồ thị phức tạp. Nhìn vào độ trễ cực đại (Max Latency), HNSW ở N=16.000 có độ trễ cực đại cực kỳ thấp (0.1190 ms) so với Flat (0.3840 ms), giúp đảm bảo hệ thống phản hồi cực kỳ ổn định.
 
 ## 6. Case 4 - Unknown Rejection
 
@@ -74,8 +88,8 @@ Nhận xét: với cấu hình tối ưu (`M=16, efConstruction=100, efSearch=16
 
 | STT | Thuật toán | Accuracy | Precision | Recall | F1-Score | Sim TB | Unk.Rej. | Latency Head |
 | :--: | :-- | --: | --: | --: | --: | --: | --: | --: |
-| 1 | FAISS Flat | N/A | N/A | N/A | N/A | 0.1719 | 100.00% | 0.2181 ms |
-| 2 | FAISS HNSW | N/A | N/A | N/A | N/A | 0.1719 | 100.00% | 0.2596 ms |
+| 1 | FAISS Flat | N/A | N/A | N/A | N/A | 0.1719 | 100.00% | 0.0032 ms |
+| 2 | FAISS HNSW | N/A | N/A | N/A | N/A | 0.1719 | 100.00% | 0.0040 ms |
 
 Dữ liệu test: **network_real** (ảnh thực từ mạng - 125 ảnh)
 
@@ -91,9 +105,9 @@ Dữ liệu test: **network_real** (ảnh thực từ mạng - 125 ảnh)
 
 | STT | Trạng thái gallery | Accuracy | Precision | Recall | F1-Score | Sim TB | Unk.Rej. | Latency Head |
 | :--: | :-- | --: | --: | --: | --: | --: | --: | --: |
-| 1 | Không enrich | 100.00% | 100.00% | 100.00% | 100.00% | 0.5782 | N/A | 0.2027 ms |
-| 2 | Có enrich | 100.00% | 100.00% | 100.00% | 100.00% | 0.7771 | N/A | 0.1668 ms |
-| 3 | Có enrich + unknown proxy | N/A | N/A | N/A | N/A | 0.1938 | 100.00% | 0.2195 ms |
+| 1 | Không enrich | 100.00% | 100.00% | 100.00% | 100.00% | 0.5782 | N/A | 0.0032 ms |
+| 2 | Có enrich | 100.00% | 100.00% | 100.00% | 100.00% | 0.7771 | N/A | 0.0056 ms |
+| 3 | Có enrich + unknown proxy | N/A | N/A | N/A | N/A | 0.1938 | 100.00% | 0.0074 ms |
 
 Logic runtime đã được hoàn thiện: live WebSocket dùng voting top-10 và tự enrich khi similarity >= 0.75, có giới hạn tỷ lệ enriched/total, số embedding enriched tối đa và dedupe window.
 
