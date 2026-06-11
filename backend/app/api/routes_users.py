@@ -2,6 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import User, UserRole
@@ -21,22 +22,31 @@ async def create_user(body: UserCreate, session: AsyncSession = Depends(get_db))
         full_name=body.full_name,
         role=UserRole(body.role.value),
         student_code=body.student_code,
+        class_name=body.class_name,
     )
     session.add(u)
     await session.commit()
-    await session.refresh(u)
-    return u
+    # Eager load embeddings on refresh
+    r = await session.execute(
+        select(User).options(selectinload(User.embeddings)).where(User.id == u.id)
+    )
+    return r.scalar_one()
 
 
 @router.get("", response_model=list[UserOut])
 async def list_users(session: AsyncSession = Depends(get_db)) -> list[User]:
-    r = await session.execute(select(User).order_by(User.created_at.desc()))
+    r = await session.execute(
+        select(User).options(selectinload(User.embeddings)).order_by(User.created_at.desc())
+    )
     return list(r.scalars().all())
 
 
 @router.get("/{user_id}", response_model=UserOut)
 async def get_user(user_id: UUID, session: AsyncSession = Depends(get_db)) -> User:
-    u = await session.get(User, user_id)
+    r = await session.execute(
+        select(User).options(selectinload(User.embeddings)).where(User.id == user_id)
+    )
+    u = r.scalar_one_or_none()
     if not u:
         raise HTTPException(404, "User not found")
     return u

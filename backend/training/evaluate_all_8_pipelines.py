@@ -63,20 +63,32 @@ def extract_resnet18_single(img: np.ndarray, session, input_name, output_name) -
     return outputs[0][0]
 
 def main():
-    train_dir = "c:/AI_event/dataset/dataset/enroll"
-    test_dir = "c:/AI_event/dataset/dataset/real"
-    meta_path = "c:/AI_event/dataset/dataset/metadata.xlsx"
-    onnx_path = "c:/AI_event/AI_Project_2526/backend/app/models/student_resnet18_arcface.onnx"
+    # Use local workspace paths for dataset
+    base_dataset_dir = os.path.join(backend_dir, "..", "dataset")
+    train_dir = os.path.join(base_dataset_dir, "enroll")
+    test_dir = os.path.join(base_dataset_dir, "real")
+    meta_path = os.path.join(base_dataset_dir, "metadata.xlsx")
+    onnx_path = os.path.join(backend_dir, "app", "models", "student_resnet18_arcface.onnx")
     
     if not os.path.exists(train_dir) or not os.path.exists(test_dir):
-        logger.error("Không tìm thấy các thư mục dataset. Vui lòng chạy tiền xử lý trước.")
+        logger.error(f"Không tìm thấy các thư mục dataset. Thử tìm ở: {train_dir}")
         sys.exit(1)
         
-    # Khởi tạo pipeline gốc và custom ONNX session
+    # Khởi tạo pipeline gốc và custom ONNX session nếu có
     pipeline = FacePipeline()
-    session = ort.InferenceSession(onnx_path, providers=['CPUExecutionProvider'])
-    input_name = session.get_inputs()[0].name
-    output_name = session.get_outputs()[0].name
+    session = None
+    input_name = None
+    output_name = None
+    if os.path.exists(onnx_path):
+        try:
+            session = ort.InferenceSession(onnx_path, providers=['CPUExecutionProvider'])
+            input_name = session.get_inputs()[0].name
+            output_name = session.get_outputs()[0].name
+            logger.info("Đã tải mô hình fine-tuned ONNX.")
+        except Exception as e:
+            logger.warning(f"Không thể khởi tạo ONNX session: {e}")
+    else:
+        logger.info("Không tìm thấy mô hình fine-tuned ONNX, sẽ bỏ qua luồng ArcFace Tinh chỉnh.")
 
     # Đọc metadata để đồng bộ lớp
     meta_map = {}
@@ -151,20 +163,21 @@ def main():
                 # Cắt mặt để làm đầu vào cho custom ResNet-18 và Augmentation
                 face_crop = crop_face_with_margin(img, face["bbox"], margin=0.25)
                 
-                # Lưu đặc trưng gốc ResNet-18
-                emb_ft = extract_resnet18_single(face_crop, session, input_name, output_name)
-                X_train_ft_list.append(emb_ft)
-                y_train_ft_list.append(class_id)
+                # Lưu đặc trưng gốc ResNet-18 nếu có session
+                if session is not None:
+                    emb_ft = extract_resnet18_single(face_crop, session, input_name, output_name)
+                    X_train_ft_list.append(emb_ft)
+                    y_train_ft_list.append(class_id)
                 
                 # 2. Sinh thêm 15 ảnh tăng cường giống như kịch bản chạy thực tế
-                configs = [
+                configs_aug = [
                     (GEO_AUG, 5),      # Hình học
                     (PHOTO_AUG, 5),    # Ánh sáng
                     (COMBINED_AUG, 3), # Kết hợp
                     (OCC_AUG, 2)       # Giả lập che khuất
                 ]
                 
-                for aug_pipe, count in configs:
+                for aug_pipe, count in configs_aug:
                     for _ in range(count):
                         try:
                             aug_res = aug_pipe(image=face_crop)
@@ -177,10 +190,11 @@ def main():
                                 X_train_orig_list.append(aug_faces[0]["embedding"])
                                 y_train_orig_list.append(class_id)
                                 
-                            # Trích xuất với ResNet-18 custom
-                            emb_ft_aug = extract_resnet18_single(aug_img, session, input_name, output_name)
-                            X_train_ft_list.append(emb_ft_aug)
-                            y_train_ft_list.append(class_id)
+                            # Trích xuất với ResNet-18 custom nếu có session
+                            if session is not None:
+                                emb_ft_aug = extract_resnet18_single(aug_img, session, input_name, output_name)
+                                X_train_ft_list.append(emb_ft_aug)
+                                y_train_ft_list.append(class_id)
                         except Exception:
                             continue
             else:
@@ -191,8 +205,8 @@ def main():
 
     X_train_orig = np.array(X_train_orig_list, dtype=np.float32)
     y_train_orig = np.array(y_train_orig_list, dtype=np.int32)
-    X_train_ft = np.array(X_train_ft_list, dtype=np.float32)
-    y_train_ft = np.array(y_train_ft_list, dtype=np.int32)
+    X_train_ft = np.array(X_train_ft_list, dtype=np.float32) if X_train_ft_list else np.empty((0, 512), dtype=np.float32)
+    y_train_ft = np.array(y_train_ft_list, dtype=np.int32) if y_train_ft_list else np.empty((0,), dtype=np.int32)
     
     # ------------------ 2. TRÍCH XUẤT TẬP KIỂM THỬ THỰC TẾ (REAL) ------------------
     logger.info("--- Bắt đầu trích xuất tập kiểm thử thực tế (Real) ---")
@@ -233,18 +247,19 @@ def main():
                     X_test_orig_list.append(face["embedding"])
                     y_test_orig_list.append(class_id)
                     
-                    # Cắt mặt cho ResNet-18
-                    face_crop = crop_face_with_margin(img, face["bbox"], margin=0.25)
-                    emb_ft = extract_resnet18_single(face_crop, session, input_name, output_name)
-                    X_test_ft_list.append(emb_ft)
-                    y_test_ft_list.append(class_id)
+                    # Cắt mặt cho ResNet-18 nếu có session
+                    if session is not None:
+                        face_crop = crop_face_with_margin(img, face["bbox"], margin=0.25)
+                        emb_ft = extract_resnet18_single(face_crop, session, input_name, output_name)
+                        X_test_ft_list.append(emb_ft)
+                        y_test_ft_list.append(class_id)
             except Exception:
                 continue
 
     X_test_orig = np.array(X_test_orig_list, dtype=np.float32)
     y_test_orig = np.array(y_test_orig_list, dtype=np.int32)
-    X_test_ft = np.array(X_test_ft_list, dtype=np.float32)
-    y_test_ft = np.array(y_test_ft_list, dtype=np.int32)
+    X_test_ft = np.array(X_test_ft_list, dtype=np.float32) if X_test_ft_list else np.empty((0, 512), dtype=np.float32)
+    y_test_ft = np.array(y_test_ft_list, dtype=np.int32) if y_test_ft_list else np.empty((0,), dtype=np.int32)
     
     logger.info(f"Đã chuẩn bị xong dữ liệu đối chứng:")
     logger.info(f"  - Train Set (Orig): {X_train_orig.shape[0]} mẫu | Train Set (FT): {X_train_ft.shape[0]} mẫu")
@@ -253,8 +268,10 @@ def main():
     # Chuẩn hóa L2 cho các tập vector đặc trưng
     faiss.normalize_L2(X_train_orig)
     faiss.normalize_L2(X_test_orig)
-    faiss.normalize_L2(X_train_ft)
-    faiss.normalize_L2(X_test_ft)
+    if X_train_ft.size > 0:
+        faiss.normalize_L2(X_train_ft)
+    if X_test_ft.size > 0:
+        faiss.normalize_L2(X_test_ft)
     cache_path = os.path.join(current_dir, "results", "scenario_embeddings_cache.npz")
     np.savez_compressed(
         cache_path,
@@ -304,10 +321,13 @@ def main():
         # Nhóm A: ArcFace Gốc (ResNet-50)
         ("Luồng 1: ArcFace Gốc + FAISS", X_train_orig, X_test_orig, y_train_orig, y_test_orig, "faiss", "ArcFace Gốc (ResNet-50)"),
         ("Luồng 2: ArcFace Gốc + HNSW", X_train_orig, X_test_orig, y_train_orig, y_test_orig, "hnsw", "ArcFace Gốc (ResNet-50)"),
-        # Nhóm B: ArcFace Tinh chỉnh (ResNet-18)
-        ("Luồng 3: ArcFace Tinh chỉnh + FAISS", X_train_ft, X_test_ft, y_train_ft, y_test_ft, "faiss", "ResNet-18 ArcFace FT"),
-        ("Luồng 4: ArcFace Tinh chỉnh + HNSW", X_train_ft, X_test_ft, y_train_ft, y_test_ft, "hnsw", "ResNet-18 ArcFace FT"),
     ]
+    if session is not None:
+        configs.extend([
+            # Nhóm B: ArcFace Tinh chỉnh (ResNet-18)
+            ("Luồng 3: ArcFace Tinh chỉnh + FAISS", X_train_ft, X_test_ft, y_train_ft, y_test_ft, "faiss", "ResNet-18 ArcFace FT"),
+            ("Luồng 4: ArcFace Tinh chỉnh + HNSW", X_train_ft, X_test_ft, y_train_ft, y_test_ft, "hnsw", "ResNet-18 ArcFace FT"),
+        ])
 
     for name, X_tr, X_te, y_tr, y_te, head, model_desc in configs:
         logger.info(f"Đang thực thi đánh giá {name}...")

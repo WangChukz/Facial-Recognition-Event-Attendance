@@ -15,7 +15,7 @@ from pathlib import Path
 from datetime import datetime
 import unicodedata
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
 
 import numpy as np
 from openpyxl import load_workbook
@@ -26,12 +26,14 @@ from app.db.models import Base, User, UserRole, CardImage, FaceEmbedding
 from app.services.face_pipeline import FacePipeline
 from app.services.faiss_indexer import FaissFaceIndex
 from app.config import get_settings
+from app.services.enrollment_v2 import generate_augmented_embeddings
 
 
 def remove_accents(text: str) -> str:
     """Remove Vietnamese accents."""
+    text = text.replace('Đ', 'D').replace('đ', 'd')
     nfd = unicodedata.normalize('NFD', text)
-    return ''.join(c for c in nfd if unicodedata.category(c) != 'Mn').replace(' ', '')
+    return ''.join(c for c in nfd if unicodedata.category(c) != 'Mn').replace(' ', '').replace(' ', '')
 
 
 async def import_users_from_metadata():
@@ -48,11 +50,13 @@ async def import_users_from_metadata():
         if row[0] is None:
             continue
         stt, student_code, full_name, lop, dob = row
+        email_prefix = remove_accents(str(full_name).strip()).lower()
         users_data.append({
             'student_code': str(student_code).strip(),
             'full_name': str(full_name).strip(),
-            'email': f"{str(student_code).strip()}@student.edu.vn",
+            'email': f"{email_prefix}@gmail.com",
             'role': UserRole.student,
+            'class_name': str(lop).strip() if lop else None,
         })
 
     print(f"📋 Found {len(users_data)} users in metadata")
@@ -189,80 +193,114 @@ async def enrollment_all_cards():
     enrolled = 0
     errors = []
 
+    # Get all card images
     async with async_session_maker() as session:
-        # Get all card images
         r = await session.execute(select(CardImage))
         cards = r.scalars().all()
 
-        print(f"📸 Processing {len(cards)} card images...")
+    print(f"📸 Processing {len(cards)} card images...")
+    import sys
 
-        for card in cards:
-            try:
-                # Read image
-                if not Path(card.image_path).exists():
-                    errors.append((card.original_filename, "File not found"))
-                    continue
-
-                with open(card.image_path, 'rb') as f:
-                    img_data = f.read()
-
-                img = pipeline.decode_image_bytes(img_data)
-
-                # Process frame - detect face and extract embedding
-                faces = pipeline.process_frame_sync(img, use_adaptive_clahe=True)
-
-                if not faces:
-                    errors.append((card.original_filename, "No face detected"))
-                    continue
-
-                # Use best face
-                best_face = max(faces, key=lambda x: x['det_score'])
-
-                if best_face['det_score'] < 0.65:
-                    errors.append((card.original_filename, f"Low confidence: {best_face['det_score']}"))
-                    continue
-
-                # Extract embedding
-                emb = best_face['embedding']
-
-                # Store in database
-                from app.services.attendance_logic import next_faiss_id
-                fid = await next_faiss_id(session)
-                emb_bytes = np.asarray(emb, dtype=np.float32).tobytes()
-
-                fe = FaceEmbedding(
-                    user_id=card.user_id,
-                    faiss_id=fid,
-                    embedding_dim=len(emb),
-                    embedding_vector=emb_bytes,
-                    image_path=card.image_path,
+    for card in cards:
+        try:
+            # Check if this user already has embeddings
+            async with async_session_maker() as session:
+                existing_emb = await session.execute(
+                    select(FaceEmbedding).where(FaceEmbedding.user_id == card.user_id)
                 )
-                session.add(fe)
-                await session.flush()
+                if existing_emb.scalars().all():
+                    print(f"  ⏭️  Skipping {card.original_filename} (already has embeddings)")
+                    sys.stdout.flush()
+                    continue
 
-                # Add to FAISS
-                faiss_index.add_with_id(emb, fid, fe.id, card.user_id)
-                enrolled += 1
+            # Read image
+            if not Path(card.image_path).exists():
+                errors.append((card.original_filename, "File not found"))
+                continue
 
-                # Print progress
+            with open(card.image_path, 'rb') as f:
+                img_data = f.read()
+
+            img = pipeline.decode_image_bytes(img_data)
+
+            # Process frame - detect face and extract embedding
+            faces = pipeline.process_frame_sync(img, use_adaptive_clahe=True)
+
+            if not faces:
+                errors.append((card.original_filename, "No face detected"))
+                continue
+
+            # Use best face
+            best_face = max(faces, key=lambda x: x['det_score'])
+
+            if best_face['det_score'] < 0.50:
+                errors.append((card.original_filename, f"Low confidence: {best_face['det_score']}"))
+                continue
+
+            # Extract augmented embeddings sequentially
+            def process_for_augment(frame):
+                results = pipeline.process_frame_sync(frame, use_adaptive_clahe=True)
+                return results if results else []
+
+            embeddings = generate_augmented_embeddings(
+                img,
+                process_for_augment,
+                n_geometric=3,
+                n_photo=2,
+                n_combined=1,
+                n_occlusion=1,
+            )
+
+            if not embeddings:
+                errors.append((card.original_filename, "Could not extract augmented embeddings"))
+                continue
+
+            from app.services.attendance_logic import next_faiss_id
+            
+            # Store all augmented embeddings in DB and FAISS
+            async with async_session_maker() as session:
+                for i, emb in enumerate(embeddings):
+                    fid = await next_faiss_id(session)
+                    emb_bytes = np.asarray(emb, dtype=np.float32).tobytes()
+                    fe = FaceEmbedding(
+                        user_id=card.user_id,
+                        faiss_id=fid,
+                        embedding_dim=len(emb),
+                        embedding_vector=emb_bytes,
+                        is_primary=(i == 0),
+                        image_path=f"{card.image_path}_aug{i:02d}" if i > 0 else card.image_path,
+                    )
+                    session.add(fe)
+                    await session.flush()
+                    faiss_index.add_with_id(emb, fid, fe.id, card.user_id)
+                
+                await session.commit()
+            
+            enrolled += 1
+
+            # Print progress and flush
+            async with async_session_maker() as session:
                 user = await session.get(User, card.user_id)
-                print(f"  ✅ {user.full_name} (confidence: {best_face['det_score']:.2f})")
+                user_name = user.full_name if user else "Unknown"
+            print(f"  ✅ {user_name} (confidence: {best_face['det_score']:.2f}, embeddings: {len(embeddings)})")
+            sys.stdout.flush()
 
-            except Exception as e:
-                print(f"  ❌ Error: {card.original_filename}: {e}")
-                errors.append((card.original_filename, str(e)))
-
-        await session.commit()
+        except Exception as e:
+            print(f"  ❌ Error: {card.original_filename}: {e}")
+            sys.stdout.flush()
+            errors.append((card.original_filename, str(e)))
 
     # Persist FAISS index
     print("\n💾 Persisting FAISS index...")
+    sys.stdout.flush()
     faiss_index.persist()
 
-    print(f"\n✅ Enrolled: {enrolled} embeddings")
+    print(f"\n✅ Enrolled: {enrolled} users with augmented embeddings")
     if errors:
         print(f"❌ Errors: {len(errors)}")
         for fname, err in errors[:3]:
             print(f"   - {fname}: {err}")
+    sys.stdout.flush()
 
     return enrolled
 

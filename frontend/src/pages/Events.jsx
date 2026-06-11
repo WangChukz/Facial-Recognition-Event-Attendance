@@ -108,17 +108,6 @@ export default function Events() {
               Mô tả
               <input value={desc} onChange={(e) => setDesc(e.target.value)} />
             </label>
-            <label>
-              Người tạo
-              <select value={createdBy} onChange={(e) => setCreatedBy(e.target.value)}>
-                <option value="">—</option>
-                {users.map((u) => (
-                  <option key={u.id} value={u.id}>
-                    {u.full_name}
-                  </option>
-                ))}
-              </select>
-            </label>
             {err && <p style={{ color: "var(--danger)" }}>{err}</p>}
             <button type="submit" className="primary" disabled={loading} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
               {loading && <Loader2 size={16} className="animate-spin" style={{ animation: "kiosk-spin 1s linear infinite" }} />}
@@ -144,7 +133,6 @@ export default function Events() {
                   <tr key={ev.id}>
                     <td>
                       <div style={{ fontWeight: 600 }}>{ev.name}</div>
-                      <div className="muted" style={{ fontSize: "0.72rem" }}>ID: {ev.id}</div>
                     </td>
                     <td>
                       {activeSession ? (

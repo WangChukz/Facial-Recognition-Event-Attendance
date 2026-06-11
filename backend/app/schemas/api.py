@@ -18,6 +18,7 @@ class UserCreate(BaseModel):
     full_name: str
     role: UserRoleEnum = UserRoleEnum.student
     student_code: str | None = None
+    class_name: str | None = None
 
 
 class UserOut(BaseModel):
@@ -28,7 +29,9 @@ class UserOut(BaseModel):
     full_name: str
     role: str
     student_code: str | None
+    class_name: str | None
     is_active: bool
+    has_face: bool
     created_at: datetime
 
 

@@ -71,10 +71,13 @@ nav a {
   border-radius: 6px;
 }
 
+/* styles.css active nav link override disabled to prevent sidebar leakage */
+/*
 nav a.active {
   background: var(--panel);
   border: 1px solid var(--border);
 }
+*/
 
 .panel {
   background: var(--panel);

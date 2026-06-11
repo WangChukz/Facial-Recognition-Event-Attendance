@@ -126,25 +126,18 @@ export default function AdminLayout() {
             borderBottom: `1px solid rgba(255,255,255,0.08)`,
           }}
         >
-          <div
+          <img 
+            src="/logo.png" 
+            alt="BAV" 
             style={{
               height: 44,
-              width: 44,
-              backgroundColor: "#60a5fa",
-              padding: 8,
-              borderRadius: 8,
+              width: "auto",
               objectFit: "contain",
-              border: `1px solid rgba(255,255,255,0.2)`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 800,
-              color: "#ffffff",
-              fontSize: 18,
-            }}
-          >
-            BAV
-          </div>
+              borderRadius: 4,
+              backgroundColor: "#ffffff",
+              padding: 2
+            }} 
+          />
           <div style={{ minWidth: 0 }}>
             <div style={{ fontSize: 12, fontWeight: 800, color: C.text, lineHeight: 1.3 }}>
               HỌC VIỆN NGÂN HÀNG

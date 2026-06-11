@@ -71,7 +71,7 @@ def assess_image_quality(bgr: np.ndarray) -> dict:
         'blur_score': blur_score,
         'brightness': mean_brightness,
         'contrast': contrast,
-        'ok': blur_score > 50 and contrast > 20 and mean_brightness > 40 and mean_brightness < 220,
+        'ok': blur_score > 15 and contrast > 10 and mean_brightness > 40 and mean_brightness < 220,
     }
 
 def crop_face_with_margin(bgr: np.ndarray, bbox: list, margin: float = 0.25) -> np.ndarray:

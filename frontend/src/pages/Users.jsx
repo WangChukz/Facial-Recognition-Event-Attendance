@@ -9,6 +9,7 @@ export default function Users() {
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState("student");
   const [code, setCode] = useState("");
+  const [userClass, setUserClass] = useState("");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
   const { addToast } = useToast();
@@ -29,10 +30,12 @@ export default function Users() {
         full_name: fullName,
         role,
         student_code: code || null,
+        class_name: role === "student" ? (userClass || null) : null,
       });
       setEmail("");
       setFullName("");
       setCode("");
+      setUserClass("");
       addToast("Tạo người dùng thành công!", "success");
       await load();
     } catch (e) {
@@ -81,6 +84,10 @@ export default function Users() {
               Mã SV (tuỳ chọn)
               <input value={code} onChange={(e) => setCode(e.target.value)} />
             </label>
+            <label>
+              Lớp niên chế (tuỳ chọn)
+              <input value={userClass} onChange={(e) => setUserClass(e.target.value)} placeholder="Nhập lớp niên chế (ví dụ: D17PM1)" />
+            </label>
             {err && <p className="muted" style={{ color: "var(--danger)" }}>{err}</p>}
             <button type="submit" className="primary" disabled={loading} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
               {loading && <Loader2 size={16} className="animate-spin" style={{ animation: "kiosk-spin 1s linear infinite" }} />}
@@ -95,6 +102,7 @@ export default function Users() {
               <tr>
                 <th>Họ tên</th>
                 <th>Email / MSSV</th>
+                <th>Ảnh nhận diện</th>
                 <th>ID</th>
                 <th>Hành động</th>
               </tr>
@@ -104,11 +112,48 @@ export default function Users() {
                 <tr key={u.id}>
                   <td>
                     <div style={{ fontWeight: 600 }}>{u.full_name}</div>
-                    <div className="muted" style={{ fontSize: "0.8rem" }}>Vai trò: {u.role}</div>
+                    <div className="muted" style={{ fontSize: "0.8rem" }}>
+                      Vai trò: {u.role} | Lớp: {u.role === "student" ? (u.class_name || "Chưa xếp lớp") : "—"}
+                    </div>
                   </td>
                   <td>
                     <div>{u.email}</div>
                     {u.student_code && <div className="muted" style={{ fontSize: "0.8rem" }}>MSSV: {u.student_code}</div>}
+                  </td>
+                  <td>
+                    {u.has_face ? (
+                      <span style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        backgroundColor: "#ecfdf5",
+                        border: "1px solid #a7f3d0",
+                        color: "#047857",
+                        padding: "4px 10px",
+                        borderRadius: "999px",
+                        fontSize: "0.75rem",
+                        fontWeight: 600
+                      }}>
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#10b981" }}></span>
+                        Đã đăng ký ảnh
+                      </span>
+                    ) : (
+                      <span style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        backgroundColor: "#fef2f2",
+                        border: "1px solid #fecaca",
+                        color: "#dc2626",
+                        padding: "4px 10px",
+                        borderRadius: "999px",
+                        fontSize: "0.75rem",
+                        fontWeight: 600
+                      }}>
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#ef4444" }}></span>
+                        Chưa đăng ký ảnh
+                      </span>
+                    )}
                   </td>
                   <td className="muted" style={{ fontSize: "0.72rem" }}>
                     {u.id}

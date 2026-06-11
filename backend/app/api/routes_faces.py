@@ -34,7 +34,7 @@ def _run_face_processing(pipeline: FacePipeline, img: np.ndarray):
     """
     # Step 1: face detection + quality gate
     faces = pipeline.process_frame_sync(img, use_adaptive_clahe=True)
-    v = pipeline.validate_single_face(faces, min_det=0.65, min_face_size=80)
+    v = pipeline.validate_single_face(faces, min_det=0.50, min_face_size=60)
 
     if not v["ok"]:
         return {"error": v["reason"]}
@@ -54,10 +54,10 @@ def _run_face_processing(pipeline: FacePipeline, img: np.ndarray):
     embeddings = generate_augmented_embeddings(
         img,
         process_for_augment,
-        n_geometric=7,
-        n_photo=5,
-        n_combined=2,
-        n_occlusion=2,
+        n_geometric=3,
+        n_photo=2,
+        n_combined=1,
+        n_occlusion=1,
     )
 
     return {

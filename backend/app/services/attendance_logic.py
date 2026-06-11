@@ -168,7 +168,8 @@ def match_identity_with_voting(
         return {"status": "uncertain", "user_id": uuid.UUID(best["user_id"]), "similarity": sim, "hits": hits}
 
     best_user = votes.most_common(1)[0][0]
-    vote_ratio = votes[best_user] / len(hits)
+    total_votes = sum(votes.values())
+    vote_ratio = votes[best_user] / total_votes if total_votes > 0 else 0
 
     if vote_ratio >= vote_threshold:
         return {

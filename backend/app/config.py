@@ -12,8 +12,8 @@ class Settings(BaseSettings):
     faiss_meta_path: str = "./faiss_indexes/faces_meta.json"
     insightface_model: str = "buffalo_l"
     insightface_ctx_id: int = -1  # -1 CPU, 0 first GPU
-    det_size_width: int = 640
-    det_size_height: int = 640
+    det_size_width: int = 320
+    det_size_height: int = 320
     recognition_threshold: float = 0.45
     unknown_threshold: float = 0.35
     enrichment_threshold: float = 0.75

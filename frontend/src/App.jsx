@@ -19,7 +19,7 @@ export default function App() {
   return (
     <AuthProvider>
       <ToastProvider>
-        <div className={isAdminRoute ? "app-shell app-shell--admin" : "layout"} style={{ display: "block" }}>
+        <div className={isAdminRoute ? "app-shell app-shell--admin" : ""} style={{ display: "block" }}>
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<ClientSimulation />} />

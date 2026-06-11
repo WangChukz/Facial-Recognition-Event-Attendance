@@ -43,7 +43,7 @@ async def check_in(
     )
     reg_r = await session.execute(reg_q)
     if not reg_r.scalar_one_or_none():
-        raise HTTPException(400, "Sinh viên chưa được gán vào sự kiện này")
+        raise HTTPException(400, "Sinh viên chưa đăng ký tham gia sự kiện")
 
     log = AttendanceLog(
         user_id=body.user_id,
@@ -75,7 +75,7 @@ async def check_out(
     )
     reg_r = await session.execute(reg_q)
     if not reg_r.scalar_one_or_none():
-        raise HTTPException(400, "Sinh viên chưa được gán vào sự kiện này")
+        raise HTTPException(400, "Sinh viên chưa đăng ký tham gia sự kiện")
 
     log = AttendanceLog(
         user_id=body.user_id,

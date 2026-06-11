@@ -30,6 +30,7 @@ class User(Base):
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     role: Mapped[UserRole] = mapped_column(Enum(UserRole, name="user_role"), default=UserRole.student)
     student_code: Mapped[str | None] = mapped_column(String(64), unique=True, nullable=True)
+    class_name: Mapped[str | None] = mapped_column(String(128), nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
@@ -40,6 +41,10 @@ class User(Base):
     attendance: Mapped[list["AttendanceLog"]] = relationship(back_populates="user", cascade="all, delete-orphan")
     card_images: Mapped[list["CardImage"]] = relationship(back_populates="user", cascade="all, delete-orphan")
     registrations: Mapped[list["EventRegistration"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+
+    @property
+    def has_face(self) -> bool:
+        return len(self.embeddings) > 0
 
 
 class Event(Base):

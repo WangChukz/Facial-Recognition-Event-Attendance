@@ -49,33 +49,35 @@ const s = {
 
   /* Header */
   header: {
-    backgroundColor: COLOR.navy, color: COLOR.white,
+    backgroundColor: COLOR.white, color: COLOR.gray800,
     padding: "10px 24px",
     display: "flex", justifyContent: "space-between", alignItems: "center",
-    flexShrink: 0, boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
+    flexShrink: 0, boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+    borderBottom: `1px solid ${COLOR.gray200}`,
   },
   logoRow: { display: "flex", alignItems: "center", gap: 12 },
   logoImg: {
     height: 48, padding: 4, borderRadius: 6,
     backgroundColor: COLOR.white, objectFit: "contain",
+    border: `1px solid ${COLOR.gray200}`,
   },
-  headerTitle: { margin: 0, fontSize: 18, fontWeight: 700, letterSpacing: 1 },
-  headerSub:   { margin: 0, fontSize: 12, color: "#93c5fd" },
+  headerTitle: { margin: 0, fontSize: 18, fontWeight: 700, letterSpacing: 0.5, color: COLOR.navy },
+  headerSub:   { margin: 0, fontSize: 12, color: COLOR.gray500 },
   clockBox: { textAlign: "right" },
-  clockTime: { display: "flex", alignItems: "center", gap: 6, fontSize: 20, fontWeight: 700, fontVariantNumeric: "tabular-nums" },
-  clockDate: { fontSize: 12, color: "#93c5fd", marginTop: 2 },
+  clockTime: { display: "flex", alignItems: "center", gap: 6, fontSize: 18, fontWeight: 700, fontVariantNumeric: "tabular-nums", color: COLOR.gray800 },
+  clockDate: { fontSize: 11, color: COLOR.gray500, marginTop: 2 },
 
   /* Main */
   main: {
     flex: 1, minHeight: 0,
     display: "flex", flexDirection: "column",
-    padding: "12px 24px 8px", gap: 10, overflow: "hidden",
+    padding: "16px 24px 12px", gap: 12, overflow: "hidden",
   },
 
   /* Title */
-  titleBox: { textAlign: "center", flexShrink: 0 },
-  titleH:   { margin: 0, fontSize: 20, fontWeight: 800, color: COLOR.navy, textTransform: "uppercase", letterSpacing: 1 },
-  titleSub: { margin: "2px 0 0", fontSize: 13, color: COLOR.gray500 },
+  headerTitleBox: { textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" },
+  headerTitleH:   { margin: 0, fontSize: 18, fontWeight: 800, color: COLOR.navy, textTransform: "uppercase", letterSpacing: 0.5 },
+  headerTitleSub: { margin: "2px 0 0", fontSize: 12, color: COLOR.gray500 },
 
   /* Event bar */
   eventBar: {
@@ -144,7 +146,7 @@ const s = {
     display: "flex", alignItems: "center", justifyContent: "center",
     pointerEvents: "none",
   },
-  bracketInner: { width: 220, height: 220, position: "relative" },
+  bracketInner: { width: 340, height: 340, position: "relative" },
   corner: (pos) => {
     const [t,r,b,l] = pos;
     return {
@@ -181,12 +183,16 @@ const s = {
   /* Action row */
   actionRow: { display: "flex", gap: 12, flexShrink: 0 },
   btnCapture: (disabled) => ({
-    flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-    padding: "12px 0", borderRadius: 12, border: "none",
-    backgroundColor: disabled ? COLOR.gray300 : COLOR.navy,
-    color: disabled ? COLOR.gray500 : COLOR.white,
+    flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+    padding: "14px 0", borderRadius: 12, border: "none",
+    background: disabled 
+      ? "#e2e8f0" 
+      : `linear-gradient(135deg, ${COLOR.navy}, ${COLOR.navyDk || "#152550"})`,
+    color: disabled ? "#94a3b8" : COLOR.white,
     fontWeight: 700, fontSize: 16, cursor: disabled ? "not-allowed" : "pointer",
-    boxShadow: "0 3px 10px rgba(0,0,0,0.15)", letterSpacing: 0.5,
+    boxShadow: disabled ? "none" : "0 4px 12px rgba(30,50,102,0.25)",
+    transition: "all 0.2s ease",
+    letterSpacing: 0.5,
     fontFamily: "inherit",
   }),
   hintText: { textAlign: "center", fontSize: 12, color: COLOR.gray400, margin: 0 },
@@ -337,6 +343,26 @@ export default function ClientSimulation() {
   const [showModal,setShowModal]= useState(false);
   const [camOk,    setCamOk]    = useState(false);
   const [liveState,setLiveState]= useState("idle");
+  
+  const [errorMsg, setErrorMsg] = useState("");
+  useEffect(() => {
+    const handleErr = (e) => {
+      setErrorMsg(prev => prev + "\n" + e.message + " at " + e.filename + ":" + e.lineno);
+    };
+    window.addEventListener("error", handleErr);
+    return () => window.removeEventListener("error", handleErr);
+  }, []);
+
+  // New States for Custom flow
+  const [isFrozen, setIsFrozen] = useState(false);
+  const [frozenImage, setFrozenImage] = useState(null);
+  const [detectedFaces, setDetectedFaces] = useState([]);
+
+  const isFrozenRef = useRef(false);
+  useEffect(() => {
+    isFrozenRef.current = isFrozen;
+  }, [isFrozen]);
+
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const wsRef = useRef(null);
@@ -344,6 +370,27 @@ export default function ClientSimulation() {
   const lastFrameRef = useRef(null);
   const lastSuccessRef = useRef("");
   const lastFailureAtRef = useRef(0);
+
+  const handleReset = () => {
+    isFrozenRef.current = false; // Set ref synchronously to avoid stale check in sendRealtimeFrame
+    setIsFrozen(false);
+    setFrozenImage(null);
+    setResult(null);
+    setDetectedFaces([]);
+    // Clear overlay
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    // Resume video
+    if (videoRef.current) {
+      videoRef.current.play().catch(console.error);
+    }
+    // Resume WebSocket frame transmission
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      sendRealtimeFrame(wsRef.current);
+    }
+  };
 
   /* Clock */
   useEffect(() => {
@@ -427,76 +474,43 @@ export default function ClientSimulation() {
       const py = y1 * scale + oy;
       const pw = (x2 - x1) * scale;
       const ph = (y2 - y1) * scale;
-      const stroke = f.status === "known" ? COLOR.green500 : f.status === "uncertain" ? "#f59e0b" : COLOR.red500;
-      const label = f.full_name || (f.status === "unknown" ? "Chưa xác định" : "Đang xác minh");
-      const sim = f.similarity != null ? f.similarity.toFixed(2) : "";
-      const text = `${label} ${sim}`.trim();
-      const barH = 28;
-      const padX = 8;
+      
+      // Force all bounding boxes to be green
+      const stroke = COLOR.green500;
 
       ctx.strokeStyle = stroke;
       ctx.lineWidth = 3;
       ctx.strokeRect(px, py, pw, ph);
-      ctx.font = "700 14px system-ui, sans-serif";
-      const textW = Math.min(ctx.measureText(text).width + padX * 2, w - Math.max(4, px) - 4);
-      const bx = Math.max(4, px);
-      const by = Math.max(4, py - barH - 5);
-
-      ctx.fillStyle = "rgba(15,23,42,0.82)";
-      ctx.fillRect(bx, by, textW, barH);
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = 1;
-      ctx.strokeRect(bx, by, textW, barH);
-      ctx.fillStyle = COLOR.white;
-      ctx.fillText(text, bx + padX, by + 19);
     });
   }, []);
 
-  const updateRealtimeResult = useCallback((data) => {
-    const faces = data?.faces || [];
-    const known = faces.find((f) => f.status === "known");
-    if (known) {
-      const key = `${selSession?.id || ""}:${known.user_id || known.full_name || ""}`;
-      if (lastSuccessRef.current !== key) {
-        lastSuccessRef.current = key;
-        if (known.attendance_logged) {
-          setResult({
-            ok: true,
-            data: {
-              name: known.full_name || "Sinh viên",
-              code: known.student_code || "N/A",
-              time: new Date().toLocaleTimeString("vi-VN"),
-              sim: known.similarity ? known.similarity.toFixed(2) : "N/A",
-            },
-          });
-        } else {
-          const reasonMsg = known.skip_reason === "not_assigned"
-            ? `Chưa được gán vào sự kiện (${known.full_name}).`
-            : known.skip_reason === "dedupe_window"
-            ? `Bạn vừa mới điểm danh xong (${known.full_name}).`
-            : `Không thể điểm danh (${known.full_name}).`;
-          setResult({ ok: false, msg: reasonMsg });
-        }
+  const sendRealtimeFrame = useCallback((ws) => {
+    if (isFrozenRef.current) return;
+    const video = videoRef.current;
+    if (!video || video.readyState < 2 || ws.readyState !== WebSocket.OPEN) {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        setTimeout(() => sendRealtimeFrame(ws), 200);
       }
       return;
     }
-
-    if (faces.length > 0 && Date.now() - lastFailureAtRef.current > 1500) {
-      lastFailureAtRef.current = Date.now();
-      setResult({ ok: false, msg: "Khuôn mặt chưa được đăng ký trong hệ thống." });
+    const videoW = video.videoWidth;
+    const videoH = video.videoHeight;
+    if (!videoW || !videoH) {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        setTimeout(() => sendRealtimeFrame(ws), 200);
+      }
+      return;
     }
-  }, [selSession?.id]);
-
-  const sendRealtimeFrame = useCallback((ws) => {
-    const video = videoRef.current;
-    if (!video || video.readyState < 2 || ws.readyState !== WebSocket.OPEN) return;
-    const w = video.videoWidth;
-    const h = video.videoHeight;
-    if (!w || !h) return;
+    
+    // Scale down the frame sent to backend to 480x270 (maintaining 16:9 ratio)
+    // This reduces payload size by ~70% and speeds up CPU processing/network transmission
+    const targetW = 480;
+    const targetH = 270;
+    
     const c = document.createElement("canvas");
-    c.width = w;
-    c.height = h;
-    c.getContext("2d")?.drawImage(video, 0, 0, w, h);
+    c.width = targetW;
+    c.height = targetH;
+    c.getContext("2d")?.drawImage(video, 0, 0, targetW, targetH);
     const b64 = c.toDataURL("image/jpeg", 0.55).split(",")[1];
     ws.send(JSON.stringify({ type: "frame", image: b64 }));
   }, []);
@@ -541,19 +555,38 @@ export default function ClientSimulation() {
   };
 
   const capture = useCallback(() => {
-    if (!videoRef.current || !camOk || loading) return;
+    if (!videoRef.current || !camOk || loading || isFrozen) return;
+    if (detectedFaces.length !== 1) return;
+
+    const video = videoRef.current;
+    const w = video.videoWidth;
+    const h = video.videoHeight;
+    if (!w || !h) return;
+
+    // Draw frame to show frozen image
     const c = document.createElement("canvas");
-    c.width  = videoRef.current.videoWidth;
-    c.height = videoRef.current.videoHeight;
-    c.getContext("2d").drawImage(videoRef.current, 0, 0);
+    c.width = w;
+    c.height = h;
+    c.getContext("2d").drawImage(video, 0, 0, w, h);
+    
+    const dataUrl = c.toDataURL("image/jpeg", 0.85);
+    setFrozenImage(dataUrl);
+    setIsFrozen(true);
+    
+    // Pause video stream
+    video.pause();
+
+    // Clear bounding boxes
+    clearOverlay();
+
     c.toBlob(blob => processAttendance(blob), "image/jpeg", 0.85);
-  }, [camOk, loading, selEvent, selSession]);
+  }, [camOk, loading, isFrozen, detectedFaces, clearOverlay]);
 
   useEffect(() => {
-    const h = e => { if (e.code === "Space" && mode === "camera" && !showModal && !loading) { e.preventDefault(); capture(); } };
+    const h = e => { if (e.code === "Space" && mode === "camera" && !showModal && !loading && !isFrozen && detectedFaces.length === 1) { e.preventDefault(); capture(); } };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
-  }, [capture, mode, showModal, loading]);
+  }, [capture, mode, showModal, loading, isFrozen, detectedFaces.length]);
 
   useEffect(() => {
     if (mode !== "camera" || !camOk || !selEvent?.id || !selSession?.id || showModal) {
@@ -585,14 +618,17 @@ export default function ClientSimulation() {
       if (!active) return;
       const data = JSON.parse(ev.data);
       lastFrameRef.current = data;
-      requestAnimationFrame(() => drawOverlay(data));
-      updateRealtimeResult(data);
+      
+      if (!isFrozenRef.current) {
+        requestAnimationFrame(() => drawOverlay(data));
+        setDetectedFaces(data.faces || []);
+      }
 
       capRef.current = setTimeout(() => {
         if (active && ws.readyState === WebSocket.OPEN) {
           sendRealtimeFrame(ws);
         }
-      }, 120);
+      }, 40);
     };
 
     ws.onerror = () => {
@@ -618,7 +654,6 @@ export default function ClientSimulation() {
     selSession?.id,
     sendRealtimeFrame,
     showModal,
-    updateRealtimeResult,
   ]);
 
   useEffect(() => {
@@ -639,40 +674,43 @@ export default function ClientSimulation() {
           <img src="/logo.png" alt="BAV" style={s.logoImg} onError={e => e.target.style.display="none"} />
           <div>
             <h1 style={s.headerTitle}>Học viện Ngân hàng</h1>
-            <p style={s.headerSub}>Hệ thống điểm danh bằng khuôn mặt</p>
+            <p style={s.headerSub}>Hệ thống điểm danh</p>
           </div>
         </div>
+
+        <div style={s.headerTitleBox}>
+          <h2 style={s.headerTitleH}>Điểm danh sự kiện bằng khuôn mặt</h2>
+          
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginTop: 4 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: COLOR.navy, backgroundColor: "#eff6ff", padding: "3px 8px", borderRadius: 4, border: `1px solid ${COLOR.blue100}` }}>
+              📌 {selEvent ? selEvent.name : "Chưa chọn sự kiện"}
+            </span>
+            <span style={{ fontSize: 12, fontWeight: 500, color: COLOR.gray600 }}>
+              ⏱️ Phiên: {selSession?.name || "N/A"}
+            </span>
+            <button 
+              style={{
+                background: "none", border: "none", color: COLOR.blue600, fontSize: 12, fontWeight: 600,
+                cursor: "pointer", display: "flex", alignItems: "center", gap: 4, padding: "2px 6px",
+                borderRadius: 4, backgroundColor: "#f3f4f6"
+              }} 
+              onClick={() => setShowModal(true)}
+            >
+              <RotateCcw size={12}/> Đổi sự kiện
+            </button>
+          </div>
+
+          <p style={{ ...s.headerTitleSub, margin: "6px 0 0" }}>Vui lòng nhìn thẳng vào camera để hệ thống xác thực</p>
+        </div>
+
         <div style={s.clockBox}>
-          <div style={s.clockTime}><Clock size={18} color="#93c5fd" />{fmtTime(time)}</div>
+          <div style={s.clockTime}><Clock size={16} color={COLOR.navy} />{fmtTime(time)}</div>
           <div style={s.clockDate}>{fmtDate(time)}</div>
         </div>
       </header>
 
       {/* ── Main ── */}
       <main style={s.main}>
-
-        {/* Title */}
-        <div style={s.titleBox}>
-          <h2 style={s.titleH}>Điểm danh sự kiện bằng khuôn mặt</h2>
-          <p style={s.titleSub}>Vui lòng nhìn thẳng vào camera để hệ thống xác thực</p>
-        </div>
-
-        {/* Event bar */}
-        <div style={s.eventBar}>
-          <div style={s.eventLeft}>
-            <div style={s.eventIcon}><Calendar size={22} /></div>
-            <div>
-              <h3 style={s.eventName}>Sự kiện: {selEvent ? selEvent.name : "Chưa chọn sự kiện"}</h3>
-              <div style={s.eventMeta}>
-                <span style={s.eventMetaItem}><MapPin size={13}/>&nbsp;{selEvent?.location || "N/A"}</span>
-                <span style={s.eventMetaItem}><Clock size={13}/>&nbsp;Phiên: {selSession?.name || "N/A"}</span>
-              </div>
-            </div>
-          </div>
-          <button style={s.btnOutline} onClick={() => setShowModal(true)}>
-            <RotateCcw size={14}/> Đổi sự kiện
-          </button>
-        </div>
 
         {/* Grid */}
         <div style={s.grid}>
@@ -683,7 +721,11 @@ export default function ClientSimulation() {
             <div style={s.videoWrap}>
               {mode === "camera" ? (
                 <>
-                  <video ref={videoRef} playsInline muted style={s.videoEl} />
+                  <video ref={videoRef} playsInline muted style={{ ...s.videoEl, display: isFrozen ? "none" : "block" }} />
+                  {isFrozen && <img src={frozenImage} style={s.videoEl} alt="Frozen capture" />}
+
+                  {/* Canvas overlay for bounding boxes */}
+                  <canvas ref={canvasRef} style={s.videoOverlay} />
 
                   {/* Status badge */}
                   <div style={s.cameraStatus}>
@@ -691,15 +733,51 @@ export default function ClientSimulation() {
                     {camOk ? "Camera đang hoạt động" : "Camera đang tắt"}
                   </div>
 
-                  {/* Brackets */}
-                  <div style={s.bracketWrap}>
-                    <div style={s.bracketInner}>
-                      <div style={s.corner([0,null,null,0])} />
-                      <div style={s.corner([0,0,null,null])} />
-                      <div style={s.corner([null,null,0,0])} />
-                      <div style={s.corner([null,0,0,null])} />
+                  {/* People detection overlay message */}
+                  {camOk && !isFrozen && (
+                    <div style={{
+                      position: "absolute",
+                      bottom: 16,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      backgroundColor: detectedFaces.length === 1 
+                        ? "rgba(34, 197, 94, 0.95)" 
+                        : detectedFaces.length >= 2
+                        ? "rgba(239, 68, 68, 0.95)" 
+                        : "rgba(245, 158, 11, 0.95)",
+                      color: "#ffffff",
+                      padding: "8px 16px",
+                      borderRadius: 8,
+                      fontSize: 13,
+                      fontWeight: 600,
+                      backdropFilter: "blur(4px)",
+                      boxShadow: "0 2px 10px rgba(0,0,0,0.25)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      zIndex: 5,
+                      whiteSpace: "nowrap"
+                    }}>
+                      {detectedFaces.length === 1 && (
+                        <>
+                          <CheckCircle2 size={16} />
+                          <span>Khuôn mặt hợp lệ - Sẵn sàng chụp ảnh</span>
+                        </>
+                      )}
+                      {detectedFaces.length >= 2 && (
+                        <>
+                          <XCircle size={16} />
+                          <span>Phát hiện {detectedFaces.length} người - Không thể chụp ảnh</span>
+                        </>
+                      )}
+                      {detectedFaces.length === 0 && (
+                        <>
+                          <Info size={16} />
+                          <span>Vui lòng hướng khuôn mặt vào camera để chụp ảnh</span>
+                        </>
+                      )}
                     </div>
-                  </div>
+                  )}
                 </>
               ) : (
                 <div style={s.uploadPlaceholder}>
@@ -719,9 +797,19 @@ export default function ClientSimulation() {
             {/* Action */}
             <div style={s.actionRow}>
               {mode === "camera" ? (
-                <button style={s.btnCapture(!camOk || loading)} onClick={capture} disabled={!camOk || loading}>
-                  <Camera size={20}/> Chụp ảnh xác thực
-                </button>
+                isFrozen ? (
+                  <button style={s.btnCapture(loading)} onClick={handleReset} disabled={loading}>
+                    <RotateCcw size={20}/> Quay lại quét camera
+                  </button>
+                ) : (
+                  <button 
+                    style={s.btnCapture(!camOk || loading || detectedFaces.length !== 1)} 
+                    onClick={capture} 
+                    disabled={!camOk || loading || detectedFaces.length !== 1}
+                  >
+                    <Camera size={20}/> Chụp ảnh xác thực
+                  </button>
+                )
               ) : (
                 <label style={{ ...s.btnCapture(loading), flex:1, cursor: loading ? "not-allowed":"pointer" }}>
                   <ImagePlus size={20}/> Chọn ảnh tải lên
@@ -732,48 +820,83 @@ export default function ClientSimulation() {
               )}
             </div>
 
-            {mode === "camera" && (
-              <p style={s.hintText}>
-                Hoặc nhấn phím <kbd style={{ backgroundColor:"#e5e7eb", padding:"1px 7px", borderRadius:4, fontFamily:"monospace" }}>Space</kbd> để chụp
-              </p>
-            )}
-            <button style={s.switchLink}
-              onClick={() => setMode(m => m === "camera" ? "upload" : "camera")}>
-              Chuyển sang chế độ {mode === "camera" ? "Tải ảnh lên" : "Quét Camera"}
-            </button>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8, padding: "0 4px" }}>
+              {mode === "camera" ? (
+                <span style={{ fontSize: 12, color: COLOR.gray500 }}>
+                  💡 Nhấn phím <kbd style={{ backgroundColor:"#e2e8f0", padding:"2px 6px", borderRadius:4, fontFamily:"monospace", fontWeight: 600 }}>Space</kbd> để chụp nhanh
+                </span>
+              ) : <span />}
+              <button 
+                style={{ ...s.switchLink, textDecoration: "none", fontWeight: 600, color: COLOR.blue600 }}
+                onClick={() => setMode(m => m === "camera" ? "upload" : "camera")}
+              >
+                Chuyển sang {mode === "camera" ? "Tải ảnh lên 📤" : "Quét Camera 📷"}
+              </button>
+            </div>
           </div>
 
           {/* ── Right column ── */}
           <div style={s.rightCol}>
 
-            {/* Guide card */}
-            <div style={s.card}>
-              <div style={s.cardHead}>Hướng dẫn</div>
-              <div style={s.cardBody}>
-                <ul style={s.guideList}>
-                  {[
-                    [Camera,       "Nhìn thẳng vào camera"],
-                    [Info,         "Đảm bảo đủ ánh sáng"],
-                    [User,         "Không đeo khẩu trang, kính râm"],
-                    [CheckCircle2, "Giữ khuôn mặt trong khung hình"],
-                    [XCircle,      "Không di chuyển khi chụp ảnh"],
-                  ].map(([Icon, text], i) => (
-                    <li key={i} style={s.guideItem}>
-                      <Icon size={18} color={COLOR.blue600} style={{ flexShrink:0 }} /> {text}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
             {/* Result card */}
             <div style={s.resultCard}>
               <div style={s.cardHead}>Kết quả xác thực</div>
               <div style={s.resultBody}>
+                {errorMsg && (
+                  <div style={{ color: "red", fontSize: 11, background: "#fef2f2", padding: 8, borderRadius: 6, marginBottom: 8, whiteSpace: "pre-wrap", textAlign: "left" }}>
+                    ⚠️ JS Error: {errorMsg}
+                  </div>
+                )}
                 {!result ? (
                   <div style={s.waitBox}>
-                    <div style={s.spinner} />
-                    <p style={{ margin:0, fontSize:13 }}>Đang chờ xác thực...</p>
+                    {loading ? (
+                      <>
+                        <div style={s.spinner} />
+                        <p style={{ margin:0, fontSize:14, fontWeight: 600, color: COLOR.navy }}>Đang xử lý xác thực...</p>
+                      </>
+                    ) : (
+                      <div style={{ textAlign: "left", width: "100%" }}>
+                        {detectedFaces.length === 0 && (
+                          <div style={{
+                            backgroundColor: "#fef3c7", border: "1px solid #fde68a",
+                            borderRadius: 12, padding: "20px 16px", color: "#b45309",
+                            display: "flex", flexDirection: "column", gap: 10, alignItems: "center", textAlign: "center"
+                          }}>
+                            <Info size={40} color="#d97706" />
+                            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>Chờ quét khuôn mặt</h3>
+                            <p style={{ margin: 0, fontSize: 13, opacity: 0.9, lineHeight: 1.4 }}>Không tìm thấy khuôn mặt nào trước camera. Vui lòng đứng vào vị trí chính giữa.</p>
+                          </div>
+                        )}
+                        {detectedFaces.length === 1 && (
+                          <div style={{
+                            backgroundColor: "#f0fdf4", border: "1px solid #bbf7d0",
+                            borderRadius: 12, padding: "20px 16px", color: "#15803d",
+                            display: "flex", flexDirection: "column", gap: 10, alignItems: "center", textAlign: "center"
+                          }}>
+                            <CheckCircle2 size={40} color="#22c55e" />
+                            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>Sẵn sàng điểm danh</h3>
+                            <p style={{ margin: 0, fontSize: 13, opacity: 0.9, lineHeight: 1.4 }}>Khuôn mặt hợp lệ. Vui lòng nhấn nút <strong>Chụp ảnh</strong> hoặc phím <strong>Space</strong> để xác thực.</p>
+                          </div>
+                        )}
+                        {detectedFaces.length >= 2 && (
+                          <div style={{
+                            backgroundColor: "#fef2f2", border: "1px solid #fecaca",
+                            borderRadius: 12, padding: "20px 16px", color: "#b91c1c",
+                            display: "flex", flexDirection: "column", gap: 10, alignItems: "center", textAlign: "center"
+                          }}>
+                            <XCircle size={40} color="#ef4444" />
+                            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>Phát hiện nhiều người</h3>
+                            <p style={{ margin: 0, fontSize: 13, opacity: 0.9, lineHeight: 1.4 }}>Có <strong>{detectedFaces.length} người</strong> trước camera. Vui lòng chỉ giữ 1 người trong khung hình.</p>
+                          </div>
+                        )}
+                        
+                        <div style={{ marginTop: 20, fontSize: 12, color: COLOR.gray400, textAlign: "center", borderTop: `1px solid ${COLOR.gray100}`, paddingTop: 12 }}>
+                          Trạng thái: <span style={{ fontWeight: 600, color: liveState === "running" ? "#22c55e" : "#eab308" }}>
+                            {liveState === "running" ? "Đang quét liên tục 🟢" : "Đang chuẩn bị camera 🟡"}
+                          </span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ) : result.ok ? (
                   <div>
@@ -802,7 +925,7 @@ export default function ClientSimulation() {
                         <p style={{ margin:"2px 0 0", opacity:0.7 }}>Thông tin điểm danh đã ghi nhận.</p>
                       </div>
                     </div>
-                    <button style={s.btnReset} onClick={() => setResult(null)}>
+                    <button style={s.btnReset} onClick={handleReset}>
                       <RotateCcw size={14}/> Quay lại chờ xác thực
                     </button>
                   </div>
@@ -815,7 +938,7 @@ export default function ClientSimulation() {
                         <p style={s.resultSub(false)}>{result.msg}</p>
                       </div>
                     </div>
-                    <button style={s.btnReset} onClick={() => setResult(null)}>
+                    <button style={s.btnReset} onClick={handleReset}>
                       <RotateCcw size={14}/> Thử lại
                     </button>
                   </div>

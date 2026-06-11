@@ -100,22 +100,33 @@ def assess_enrollment_quality(
 
     Returns dict with 'ok' bool and 'reasons' list.
     """
-    quality = assess_image_quality(bgr)
+    target_img = bgr
+    if faces:
+        h, w = bgr.shape[:2]
+        bbox = faces[0]["bbox"]
+        x1 = max(0, int(bbox[0]))
+        y1 = max(0, int(bbox[1]))
+        x2 = min(w, int(bbox[2]))
+        y2 = min(h, int(bbox[3]))
+        if (x2 - x1) > 10 and (y2 - y1) > 10:
+            target_img = bgr[y1:y2, x1:x2]
+
+    quality = assess_image_quality(target_img)
     reasons = []
 
-    # Image quality checks
-    if quality["blur_score"] <= 50:
-        reasons.append("Image is blurry (Laplacian variance too low)")
-    if quality["contrast"] <= 20:
-        reasons.append("Low image contrast")
-    if quality["brightness"] < 40 or quality["brightness"] > 220:
-        reasons.append("Image brightness out of acceptable range")
+    # Image quality checks (relaxed thresholds for portrait/card photos)
+    if quality["blur_score"] <= 8:
+        reasons.append("Ảnh bị mờ (Độ sắc nét quá thấp)")
+    if quality["contrast"] <= 5:
+        reasons.append("Độ tương phản của ảnh quá thấp")
+    if quality["brightness"] < 25 or quality["brightness"] > 235:
+        reasons.append("Độ sáng của ảnh nằm ngoài phạm vi cho phép")
 
     # Face size check
     if faces:
         face = faces[0]
-        if not validate_face_size(face["bbox"], face["frame_shape"], min_px=80):
-            reasons.append("Face region too small (< 80px)")
+        if not validate_face_size(face["bbox"], face["frame_shape"], min_px=60):
+            reasons.append("Khuôn mặt quá nhỏ (phải lớn hơn 60px)")
 
     return {
         "ok": len(reasons) == 0,

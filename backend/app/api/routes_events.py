@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import selectinload
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -120,7 +121,12 @@ async def list_assigned_users(event_id: UUID, session: AsyncSession = Depends(ge
     if not ev:
         raise HTTPException(404, "Event not found")
     
-    q = select(User).join(EventRegistration).where(EventRegistration.event_id == event_id)
+    q = (
+        select(User)
+        .options(selectinload(User.embeddings))
+        .join(EventRegistration)
+        .where(EventRegistration.event_id == event_id)
+    )
     r = await session.execute(q)
     return list(r.scalars().all())
 

@@ -82,9 +82,9 @@ class FacePipeline:
             )
         return results
 
-    async def process_frame(self, bgr: np.ndarray) -> list[dict[str, Any]]:
+    async def process_frame(self, bgr: np.ndarray, use_adaptive_clahe: bool = True) -> list[dict[str, Any]]:
         loop = __import__("asyncio").get_event_loop()
-        return await loop.run_in_executor(self._executor, self.process_frame_sync, bgr)
+        return await loop.run_in_executor(self._executor, self.process_frame_sync, bgr, use_adaptive_clahe)
 
     def process_b64_sync(self, b64: str) -> tuple[np.ndarray, list[dict[str, Any]]]:
         img = self.decode_image_b64(b64)
