@@ -13,6 +13,14 @@ import numpy as np
 
 @dataclass
 class HNSWMetaRow:
+    """
+    Lớp dữ liệu lưu trữ siêu dữ liệu (metadata) của một vector trong chỉ mục HNSW.
+    
+    Thuộc tính:
+        faiss_id (int): ID số nguyên tự tăng trong cơ sở dữ liệu dùng để liên kết ngược.
+        embedding_id (str): Mã UUID định danh duy nhất của bản ghi vector đặc trưng.
+        user_id (str): Mã UUID của người dùng sở hữu khuôn mặt này.
+    """
     faiss_id: int
     embedding_id: str
     user_id: str
@@ -20,54 +28,72 @@ class HNSWMetaRow:
 
 class HNSWFaceIndex:
     """
-    HNSW-based face index with L2-normalized embeddings + IndexHNSWFlat (METRIC_INNER_PRODUCT) 
-    => inner-product similarity score.
-    
-    Key differences from FaissFaceIndex:
-    - Uses IndexHNSWFlat (HNSW does NOT support IndexIDMap2)
-    - HNSW add() only accepts sequential indices (0, 1, 2, ...), not custom IDs
-    - Maintains position_to_meta[] list to map vector position → (faiss_id, user_id, embedding_id)
-    - HNSW does NOT support deleting vectors
-    - Thread-safe with threading.RLock()
-    
-    Params: M=32, efConstruction=200, efSearch=64
+    Bộ chỉ mục khuôn mặt sử dụng thuật toán HNSW (Hierarchical Navigable Small World) của thư viện FAISS.
+    - Sử dụng độ đo khoảng cách tích vô hướng (METRIC_INNER_PRODUCT) trên các vector đã chuẩn hóa L2
+      để tính toán trực tiếp độ tương đồng Cosine (Cosine Similarity).
+      
+    Sự khác biệt quan trọng so với FaissFaceIndex thông thường:
+    - Sử dụng IndexHNSWFlat thay vì IndexIDMap (HNSW không hỗ trợ gắn ID tùy ý khi thêm vector trực tiếp).
+    - HNSW yêu cầu chỉ số vector tự tăng liên tục (0, 1, 2, ...). Vì thế, hệ thống duy trì danh sách
+      `position_to_meta` để tự ánh xạ: vị trí vật lý trong chỉ mục -> thông tin định danh thực tế.
+    - HNSW mặc định KHÔNG hỗ trợ việc xóa vector đơn lẻ.
+    - Đảm bảo an toàn đa luồng bằng cơ chế khóa threading.RLock().
     """
 
     def __init__(self, index_path: str, meta_path: str, dim: int = 512) -> None:
+        """
+        Khởi tạo bộ chỉ mục HNSW.
+
+        Tham số:
+            index_path (str): Đường dẫn lưu trữ file chỉ mục HNSW (.bin hoặc .index).
+            meta_path (str): Đường dẫn lưu trữ file siêu dữ liệu JSON chứa ánh xạ vị trí sang ID người dùng.
+            dim (int): Số chiều của vector khuôn mặt (mặc định là 512 chiều của mô hình ArcFace).
+        """
         self.index_path = index_path
         self.meta_path = meta_path
         self.dim = dim
-        self._lock = threading.RLock()
+        self._lock = threading.RLock() # Khóa chống xung đột truy cập đa luồng
         self._index: faiss.IndexHNSWFlat | None = None
-        # position_to_meta[i] = FaissMetaRow corresponding to vector at position i in HNSW
+        # Danh sách ánh xạ: vị trí i trong mảng -> thông tin người dùng tương ứng
         self._position_to_meta: list[HNSWMetaRow] = []
 
     def _make_empty(self) -> faiss.IndexHNSWFlat:
-        """Create a new empty HNSW index with inner product metric."""
-        index = faiss.IndexHNSWFlat(self.dim, 32)  # M=32
+        """
+        Khởi tạo một đồ thị HNSW rỗng với các cấu hình tối ưu.
+        
+        Các cấu hình HNSW:
+            - M = 32: Số lượng liên kết tối đa của mỗi node đồ thị tới các node lân cận trong quá trình dựng.
+                     Màng lưới càng dày (M lớn) thì tìm kiếm càng chính xác nhưng tốn RAM hơn.
+            - efConstruction = 200: Số lượng liên kết ứng viên được đánh giá trong quá trình xây dựng đồ thị.
+                                  Giá trị càng cao độ chính xác càng tăng nhưng xây dựng chỉ mục chậm hơn.
+            - efSearch = 64: Số lượng liên kết ứng viên được đánh giá trong quá trình tìm kiếm truy vấn.
+                            Giá trị càng cao tìm kiếm càng chính xác, bù lại thời gian tìm kiếm tăng nhẹ.
+        """
+        index = faiss.IndexHNSWFlat(self.dim, 32)  # M=32, độ đo mặc định là METRIC_INNER_PRODUCT
         index.hnsw.efConstruction = 200
         index.hnsw.efSearch = 64
         return index
 
     def _ensure_index(self) -> faiss.IndexHNSWFlat:
+        """Đảm bảo đối tượng Index luôn tồn tại (khởi tạo rỗng nếu chưa có)."""
         if self._index is None:
             self._index = self._make_empty()
         return self._index
 
     def load(self) -> None:
-        """Load index and metadata from disk, rebuild position_to_meta mapping."""
+        """Tải chỉ mục HNSW và siêu dữ liệu từ ổ đĩa lên bộ nhớ RAM."""
         with self._lock:
             os.makedirs(os.path.dirname(self.index_path) or ".", exist_ok=True)
+            # 1. Đọc file chỉ mục HNSW từ đĩa
             if os.path.isfile(self.index_path) and os.path.getsize(self.index_path) > 0:
                 self._index = faiss.read_index(self.index_path)
-                # Verify it's an HNSW index
                 if not isinstance(self._index, faiss.IndexHNSWFlat):
-                    raise TypeError(f"Expected IndexHNSWFlat, got {type(self._index)}")
+                    raise TypeError(f"Yêu cầu định dạng IndexHNSWFlat, nhận được {type(self._index)}")
                 self.dim = int(self._index.d)
             else:
                 self._index = self._make_empty()
 
-            # Load metadata from JSON file
+            # 2. Đọc file JSON lưu trữ siêu dữ liệu ánh xạ vị trí
             if os.path.isfile(self.meta_path):
                 with open(self.meta_path, encoding="utf-8") as f:
                     raw = json.load(f)
@@ -84,13 +110,14 @@ class HNSWFaceIndex:
                 self._position_to_meta = []
 
     def persist(self) -> None:
-        """Save index and metadata to disk."""
+        """Ghi chỉ mục HNSW và siêu dữ liệu ánh xạ hiện tại từ RAM xuống ổ đĩa cứng."""
         with self._lock:
             os.makedirs(os.path.dirname(self.index_path) or ".", exist_ok=True)
+            # 1. Ghi tệp chỉ mục nhị phân FAISS
             if self._index is not None:
                 faiss.write_index(self._index, self.index_path)
 
-            # Serialize position_to_meta list
+            # 2. Ghi tệp siêu dữ liệu ánh xạ dưới dạng JSON
             position_list = [
                 {
                     "faiss_id": meta.faiss_id,
@@ -103,7 +130,7 @@ class HNSWFaceIndex:
                 json.dump({"position_to_meta": position_list}, f, indent=2)
 
     def clear_memory(self) -> None:
-        """Clear index and metadata from memory."""
+        """Giải phóng toàn bộ chỉ mục và siêu dữ liệu ánh xạ khỏi bộ nhớ RAM."""
         with self._lock:
             self._index = self._make_empty()
             self._position_to_meta = []
@@ -116,31 +143,29 @@ class HNSWFaceIndex:
         user_id: uuid.UUID
     ) -> None:
         """
-        Add embedding to HNSW index.
+        Thêm một vector khuôn mặt mới vào đồ thị HNSW.
+        Do HNSW gán nhãn vị trí tự tăng (0, 1, 2...), hàm này sẽ lưu thông tin ánh xạ tương ứng vào danh sách siêu dữ liệu.
         
-        HNSW automatically assigns sequential indices (0, 1, 2, ...).
-        We track custom faiss_id via position_to_meta[position].
-        
-        Args:
-            embedding: face embedding vector
-            faiss_id: custom ID for this embedding
-            embedding_uuid: UUID of the embedding record
-            user_id: UUID of the user
+        Tham số:
+            embedding (np.ndarray): Vector đặc trưng khuôn mặt (512 chiều).
+            faiss_id (int): Mã định danh số nguyên tự tăng của bản ghi trong cơ sở dữ liệu.
+            embedding_uuid (uuid.UUID): UUID định danh duy nhất của đặc trưng khuôn mặt.
+            user_id (uuid.UUID): UUID của sinh viên sở hữu khuôn mặt này.
         """
+        # Chuẩn hóa vector đầu vào trước khi thêm
         vec = np.asarray(embedding, dtype=np.float32).reshape(1, -1)
         faiss.normalize_L2(vec)
         
         with self._lock:
             idx = self._ensure_index()
             if vec.shape[1] != self.dim:
-                raise ValueError(f"Embedding dim {vec.shape[1]} != index dim {self.dim}")
+                raise ValueError(f"Số chiều vector thêm vào {vec.shape[1]} không khớp cấu hình {self.dim}")
             
-            # HNSW add() returns the assigned position (sequential)
-            # Current position = current ntotal
+            # Vị trí lưu trữ trong HNSW chính bằng tổng số lượng phần tử hiện tại
             position = idx.ntotal
             idx.add(vec)
             
-            # Store metadata at this position
+            # Lưu siêu dữ liệu ứng với vị trí vừa thêm
             self._position_to_meta.append(
                 HNSWMetaRow(
                     faiss_id=faiss_id,
@@ -151,11 +176,20 @@ class HNSWFaceIndex:
 
     def search(self, embedding: np.ndarray, top_k: int = 5) -> list[dict[str, Any]]:
         """
-        Search for top-k nearest neighbors using inner product on normalized vectors.
+        Tìm kiếm Top-k khuôn mặt có khoảng cách gần nhất trong đồ thị HNSW.
         
-        Returns:
-            List of dicts with keys: faiss_id, similarity, user_id, embedding_id
+        Tham số:
+            embedding (np.ndarray): Vector đặc trưng khuôn mặt cần đối khớp.
+            top_k (int): Số lượng kết quả gần nhất cần lấy ra (mặc định lấy 5 kết quả).
+            
+        Trả về:
+            list[dict[str, Any]]: Danh sách kết quả tìm được, mỗi phần tử gồm:
+                - faiss_id (int): ID số nguyên tự tăng của bản ghi.
+                - similarity (float): Độ tương đồng Cosine (0.0 đến 1.0).
+                - user_id (str): UUID người dùng.
+                - embedding_id (str): UUID của đặc trưng khuôn mặt.
         """
+        # Chuẩn hóa vector truy vấn
         vec = np.asarray(embedding, dtype=np.float32).reshape(1, -1)
         faiss.normalize_L2(vec)
         
@@ -164,11 +198,12 @@ class HNSWFaceIndex:
             if idx.ntotal == 0:
                 return []
             
+            # Truy vấn tìm kiếm trên đồ thị HNSW nhị phân
             sims, positions = idx.search(vec, min(top_k, idx.ntotal))
         
         out: list[dict[str, Any]] = []
         for sim, pos in zip(sims[0], positions[0]):
-            if int(pos) == -1:
+            if int(pos) == -1: # Không tìm thấy kết quả phù hợp
                 continue
             
             pos_idx = int(pos)
@@ -191,11 +226,12 @@ class HNSWFaceIndex:
 
     @property
     def total(self) -> int:
-        """Return total number of vectors in index."""
+        """Trả về tổng số lượng vector đặc trưng đang lưu trữ trong chỉ mục."""
         with self._lock:
             if self._index is None:
                 return 0
             return int(self._index.ntotal)
+
 
 
 # Note: HNSW does NOT support deletion of vectors.
