@@ -103,6 +103,7 @@ export default function Users() {
                 <th>Họ tên</th>
                 <th>Email / MSSV</th>
                 <th>Ảnh nhận diện</th>
+                <th>Dữ liệu mẫu</th>
                 <th>ID</th>
                 <th>Hành động</th>
               </tr>
@@ -153,6 +154,48 @@ export default function Users() {
                         <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#ef4444" }}></span>
                         Chưa đăng ký ảnh
                       </span>
+                    )}
+                  </td>
+                  <td>
+                    {u.has_face ? (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                        <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)" }}>
+                          1 mẫu gốc
+                        </span>
+                        {u.augmented_count > 0 && (
+                          <span style={{
+                            fontSize: "0.75rem",
+                            color: "#4b5563",
+                            backgroundColor: "#f3f4f6",
+                            border: "1px solid #e5e7eb",
+                            padding: "2px 8px",
+                            borderRadius: "999px",
+                            fontWeight: 500,
+                            width: "fit-content"
+                          }}>
+                            📸 Tăng cường: +{u.augmented_count}
+                          </span>
+                        )}
+                        {u.enriched_count > 0 && (
+                          <span style={{
+                            fontSize: "0.75rem",
+                            color: "#1d4ed8",
+                            backgroundColor: "#eff6ff",
+                            border: "1px solid #bfdbfe",
+                            padding: "2px 8px",
+                            borderRadius: "999px",
+                            fontWeight: 600,
+                            width: "fit-content",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 4
+                          }}>
+                            ✨ Tự học: +{u.enriched_count}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <span className="muted" style={{ fontSize: "0.85rem" }}>—</span>
                     )}
                   </td>
                   <td className="muted" style={{ fontSize: "0.72rem" }}>

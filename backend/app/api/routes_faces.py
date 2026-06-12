@@ -54,10 +54,10 @@ def _run_face_processing(pipeline: FacePipeline, img: np.ndarray):
     embeddings = generate_augmented_embeddings(
         img,
         process_for_augment,
-        n_geometric=3,
-        n_photo=2,
-        n_combined=1,
-        n_occlusion=1,
+        n_geometric=7,
+        n_photo=5,
+        n_combined=2,
+        n_occlusion=2,
     )
 
     return {
@@ -145,6 +145,7 @@ async def register_face(
 async def match_debug(
     request: Request,
     file: UploadFile = File(...),
+    session: AsyncSession = Depends(get_db),
 ) -> dict:
     pipeline = get_pipeline(request)
     faiss_index = get_faiss(request)
@@ -162,8 +163,28 @@ async def match_debug(
     faces.sort(key=lambda x: x["det_score"], reverse=True)
     emb = faces[0]["embedding"]
     m = match_identity_with_voting(faiss_index, emb, top_k=10, vote_threshold=0.6)
+    
+    # Trigger progressive enrichment for upload check-ins too
+    gallery_enriched = False
+    if m.get("status") == "known":
+        user_id = m.get("user_id")
+        from app.services.attendance_logic import maybe_enrich_gallery
+        enriched, reason, fid = await maybe_enrich_gallery(
+            session,
+            faiss_index,
+            user_id=user_id,
+            embedding=emb,
+            similarity=m.get("similarity"),
+            source="upload_api",
+        )
+        if enriched:
+            gallery_enriched = True
+            await loop.run_in_executor(None, faiss_index.persist)
+            await session.commit()
+            
     return {
         "match": m,
         "bbox": faces[0]["bbox"],
+        "gallery_enriched": gallery_enriched,
         "settings": {"threshold": get_settings().recognition_threshold},
     }

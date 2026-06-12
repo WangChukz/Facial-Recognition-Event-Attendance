@@ -546,6 +546,7 @@ export default function ClientSimulation() {
           code:  user?.student_code ?? "N/A",
           time:  new Date().toLocaleTimeString("vi-VN"),
           sim:   match.similarity ? match.similarity.toFixed(2) : "N/A",
+          gallery_enriched: mr.gallery_enriched,
         },
       });
     } catch (e) {
@@ -925,6 +926,23 @@ export default function ClientSimulation() {
                         <p style={{ margin:"2px 0 0", opacity:0.7 }}>Thông tin điểm danh đã ghi nhận.</p>
                       </div>
                     </div>
+                    {result.data.gallery_enriched && (
+                      <div style={{
+                        marginTop: 12,
+                        backgroundColor: "#eff6ff",
+                        border: "1px solid #bfdbfe",
+                        color: "#1d4ed8",
+                        padding: "10px 14px",
+                        borderRadius: 10,
+                        fontSize: 13,
+                        fontWeight: 600,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6
+                      }}>
+                        <span>✨ Tự động tối ưu mẫu ảnh vào thư viện thành công!</span>
+                      </div>
+                    )}
                     <button style={s.btnReset} onClick={handleReset}>
                       <RotateCcw size={14}/> Quay lại chờ xác thực
                     </button>

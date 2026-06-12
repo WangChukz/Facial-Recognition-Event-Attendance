@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1 libglib2.0-0 libxcb1 \
     && rm -rf /var/lib/apt/lists/*
 COPY backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --default-timeout=1000 --prefer-binary -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 
 COPY backend/app ./app
 COPY faiss_indexes ./faiss_indexes

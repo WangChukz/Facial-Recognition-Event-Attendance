@@ -263,6 +263,23 @@ export default function Live() {
                     <span className="live-result-meta">
                       sim {f.similarity?.toFixed?.(3) ?? "—"}
                       {f.attendance_logged ? " · đã check-in" : ""}
+                      {f.gallery_enriched && (
+                        <span style={{
+                          color: "#1d4ed8",
+                          backgroundColor: "#eff6ff",
+                          border: "1px solid #bfdbfe",
+                          padding: "1px 6px",
+                          borderRadius: "4px",
+                          fontSize: "0.7rem",
+                          fontWeight: 600,
+                          marginLeft: "6px",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 2
+                        }}>
+                          ✨ Tối ưu mẫu
+                        </span>
+                      )}
                     </span>
                   </div>
                 ))}

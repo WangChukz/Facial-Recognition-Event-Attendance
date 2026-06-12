@@ -32,6 +32,9 @@ class UserOut(BaseModel):
     class_name: str | None
     is_active: bool
     has_face: bool
+    embedding_count: int
+    augmented_count: int
+    enriched_count: int
     created_at: datetime
 
 

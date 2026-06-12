@@ -245,10 +245,10 @@ async def enrollment_all_cards():
             embeddings = generate_augmented_embeddings(
                 img,
                 process_for_augment,
-                n_geometric=3,
-                n_photo=2,
-                n_combined=1,
-                n_occlusion=1,
+                n_geometric=7,
+                n_photo=5,
+                n_combined=2,
+                n_occlusion=2,
             )
 
             if not embeddings:

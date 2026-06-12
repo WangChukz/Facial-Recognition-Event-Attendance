@@ -46,6 +46,18 @@ class User(Base):
     def has_face(self) -> bool:
         return len(self.embeddings) > 0
 
+    @property
+    def embedding_count(self) -> int:
+        return len(self.embeddings)
+
+    @property
+    def augmented_count(self) -> int:
+        return sum(1 for e in self.embeddings if e.image_path and "_aug" in e.image_path)
+
+    @property
+    def enriched_count(self) -> int:
+        return sum(1 for e in self.embeddings if e.image_path and e.image_path.startswith("enriched:"))
+
 
 class Event(Base):
     __tablename__ = "events"

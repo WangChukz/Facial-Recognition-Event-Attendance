@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     recognition_threshold: float = 0.45
     unknown_threshold: float = 0.35
     enrichment_threshold: float = 0.75
-    enrichment_max_ratio: float = 0.35
+    enrichment_max_ratio: float = 1.0
     enrichment_max_embeddings_per_user: int = 20
     enrichment_dedupe_seconds: int = 60
     dedupe_window_seconds: int = 120
