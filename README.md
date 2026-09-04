@@ -1,68 +1,96 @@
-# Hệ thống điểm danh sự kiện — nhận diện khuôn mặt (AI)
+<div align="center">
+  <img src="assets/banner.jpg" alt="Facial Recognition Event Attendance Banner" width="100%">
+  <br>
+  <h1>🤖 Smart Event Attendance System</h1>
+  <p><strong>A highly optimized, AI-driven facial recognition framework for real-time event attendance.</strong></p>
+</div>
 
-## Chạy nhanh (dev)
+<br>
 
-1. **PostgreSQL** (port 5432), tạo DB `attendance` hoặc dùng Docker Compose.
-2. **Backend** (Python 3.11+):
+## 📖 Overview
 
+The **Smart Event Attendance System** is a robust and scalable solution designed to automate event check-ins using advanced facial recognition. By leveraging deep learning models and high-performance vector search databases, the system offers ultra-low latency inference, minimizing false alarms and ensuring strict attendance control.
+
+This project was built with a strong focus on **Data Engineering** and **AI System Architecture**, implementing automated data pipelines for feature extraction, storage, and real-time inference.
+
+---
+
+## ✨ Key Features
+
+- **🧠 Real-Time Inference (InsightFace):** Utilizes the `buffalo_l` model for highly accurate face detection and feature extraction.
+- **⚡ Lightning-Fast Vector Search (FAISS):** Embeddings are indexed using Facebook AI Similarity Search (FAISS) for sub-millisecond retrieval.
+- **🛡️ AI Voting Logic:** Employs a Top-10 Nearest Neighbors voting mechanism in FAISS to drastically reduce false positives and ensure accurate identification.
+- **📈 Gallery Enrichment (Auto-Learning):** The system continuously enriches its dataset by capturing and storing new facial vectors during real-time attendance when confidence scores exceed `0.75`.
+- **🔐 Strict Access Control:** Enforces strict attendance logic, ensuring only pre-assigned individuals can check in, preventing unauthorized access.
+- **🐳 Dockerized Architecture:** Fully containerized backend, frontend, and database services optimized for seamless deployment across environments (including Windows I/O watchfile optimizations).
+
+---
+
+## 🛠️ Technology Stack
+
+- **Backend:** Python 3.11, FastAPI, WebSocket
+- **AI/ML:** InsightFace, OpenCV, FAISS (Facebook AI Similarity Search)
+- **Database:** PostgreSQL (asyncpg)
+- **Frontend:** React, Vite, Tailwind CSS
+- **DevOps:** Docker, Docker Compose, Nginx
+
+---
+
+## 🚀 Quick Start (Development)
+
+### 1. Database Setup
+Ensure PostgreSQL is running on port `5432` and create a database named `attendance`. Alternatively, you can spin it up using Docker Compose.
+
+### 2. Backend Setup
 ```bash
 cd backend
 python -m venv .venv
-.venv\Scripts\activate   # Windows
+# Activate virtual environment (Windows)
+.venv\Scripts\activate 
+# Install dependencies
 pip install -r requirements.txt
+
+# Set database URL
 set DATABASE_URL=postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/attendance
+
+# Run the server
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
+*Note: On the first run, InsightFace will automatically download the `buffalo_l` model.*
 
-Lần đầu **InsightFace** sẽ tải model `buffalo_l` (~ vài trăm MB).
-
-3. **Frontend**:
-
+### 3. Frontend Setup
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
+Access the application at `http://127.0.0.1:5173`. API requests will be proxied to the backend at port `8000`.
 
-Mở `http://127.0.0.1:5173` — API được proxy tới `http://127.0.0.1:8000`.
+---
 
-## Docker (tất cả trong một)
+## 🐳 Docker Deployment (All-in-One)
 
-Từ thư mục `docker`:
+Deploy the entire stack seamlessly using Docker.
 
 ```bash
+cd docker
 docker compose up --build
 ```
+- **UI Dashboard:** `http://localhost:8080`
+- **REST API:** `http://localhost:8080/api/...`
+- **WebSocket:** `ws://localhost:8080/api/ws/live?...`
 
-### Windows: lỗi `dockerDesktopLinuxEngine` / `The system cannot find the file specified`
+*Windows Users: Ensure Docker Desktop is running. If using WSL2, execute the `docker compose` command inside the WSL terminal.*
 
-Docker CLI đang cố nối tới **Docker Desktop** qua pipe `//./pipe/dockerDesktopLinuxEngine`, nhưng **daemon không chạy** (hoặc chưa cài Docker Desktop).
+---
 
-1. Cài [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/) (bật WSL2 nếu trình cài yêu cầu).
-2. Mở **Docker Desktop** và đợi tới khi trạng thái là **Running** (không còn “Starting…”).
-3. Trong PowerShell chạy: `docker version` — phải thấy cả **Client** và **Server**; nếu chỉ có Client thì engine vẫn chưa lên.
-4. Chạy lại: `cd docker` rồi `docker compose up --build`.
+## 📂 Project Structure
 
-Nếu bạn dùng Docker qua WSL, hãy chạy `docker compose` **bên trong WSL** sau khi Docker Desktop tích hợp WSL đã bật.
-
-- UI: `http://localhost:8080`
-- API qua Nginx: `http://localhost:8080/api/...`
-- WebSocket: `ws://localhost:8080/api/ws/live?...`
-
-## Cấu trúc thư mục
-
-- `backend/` — FastAPI, WebSocket, FAISS, InsightFace pipeline
-- `frontend/` — React + Vite, webcam + dashboard
-- `database/init.sql` — schema tham chiếu (ERD trong comment)
-- `faiss_indexes/` — file index FAISS + metadata JSON (volume khi chạy Docker)
-- `docker/` — Dockerfile + compose + nginx
-
-Chi tiết kiến trúc AI, FAISS, API, bảo mật và mở rộng: xem phản hồi chi tiết trong chat (bài làm mô tả đầy đủ các mục 1–20).
-
-## 🚀 Tính năng nổi bật mới (Nhánh Hieu)
-
-Nhánh `Hieu` đã gộp (merge) và bổ sung các tính năng nâng cao sau:
-1. **Thuật toán bỏ phiếu AI (Voting Logic):** Sử dụng Top-10 kết quả lân cận gần nhất trong FAISS và cơ chế biểu quyết để nhận diện chính xác, giảm thiểu tối đa sai số.
-2. **Tự động làm phong phú thư viện ảnh (Gallery Enrichment):** Tự động học và lưu thêm các vector đặc trưng khuôn mặt của sinh viên trong quá trình điểm danh thực tế (khi độ tin cậy đạt mức $\ge 0.75$).
-3. **Kiểm soát điểm danh chặt chẽ:** Chỉ cho phép điểm danh đối với những sinh viên đã được gán (assign) vào sự kiện đó trong phần quản trị Admin (chống điểm danh tự do / người ngoài).
-4. **Tối ưu hóa Docker trên Windows:** Loại bỏ cơ chế auto-reload của uvicorn trong file compose để tránh lỗi crash I/O watchfiles trên hệ điều hành Windows.
+```text
+├── backend/          # FastAPI server, WebSocket, FAISS logic, InsightFace pipeline
+├── frontend/         # React + Vite application, webcam streaming, analytics dashboard
+├── database/         # SQL initialization scripts (init.sql) and schemas
+├── faiss_indexes/    # Persistent storage for FAISS index files and metadata JSON
+├── docker/           # Dockerfiles, Compose configs, and Nginx reverse proxy
+└── assets/           # Project images and banners
+```
