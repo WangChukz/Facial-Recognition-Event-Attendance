@@ -1,6 +1,4 @@
 <div align="center">
-  <img src="assets/banner.jpg" alt="Facial Recognition Event Attendance Banner" width="100%">
-  <br>
   <h1>🤖 Smart Event Attendance System</h1>
   <p><strong>A highly optimized, AI-driven facial recognition framework for real-time event attendance.</strong></p>
 </div>
@@ -94,3 +92,13 @@ docker compose up --build
 ├── docker/           # Dockerfiles, Compose configs, and Nginx reverse proxy
 └── assets/           # Project images and banners
 ```
+
+---
+
+## 📸 System Demo
+
+Below is a live screenshot of the web-based attendance dashboard, featuring real-time webcam feed, face boundary detection, and immediate attendance verification against the FAISS vector database.
+
+<div align="center">
+  <img src="assets/demo.png" alt="System Demo" width="100%">
+</div>
